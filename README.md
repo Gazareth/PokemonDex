@@ -1,6 +1,9 @@
+<img alt="PokeApi" src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" height="48px"/> &nbsp; <img alt="Material UI" src="https://material-ui.com/static/logo_raw.svg" height="48px"/>
+
 ## PokemonDex
 
 A small Pokédex in React using [PokeAPI](https://pokeapi.co/docs/v2.html/) and [Material UI](https://material-ui.com/)
+
 
 ----
 
