@@ -48,7 +48,7 @@ const App = () => {
   return (
     <StoreProvider store={store}>
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme(store.theme.mode)}>
           <CssBaseline />
           <Box className={classes.rootBox} bgcolor="background.default">
             <AppBar

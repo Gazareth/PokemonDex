@@ -76,18 +76,19 @@ const backgrounds = darkLight =>
     }
   ][darkLight === "light" ? 0 : 1];
 
-export let theme = createMuiTheme({
-  palette: {
-    type: darkLight,
-    primary: {
-      light: "#a6d4fa",
-      main: "#90caf9",
-      dark: "#648dae",
-      contrastText: "#fff"
-    },
-    background: { ...backgrounds(darkLight) },
-    pokemonTypes: pokemonTypeColours(darkLight)
-  }
-});
+export let theme = mode =>
+  createMuiTheme({
+    palette: {
+      type: mode,
+      primary: {
+        light: "#a6d4fa",
+        main: "#90caf9",
+        dark: "#648dae",
+        contrastText: "#fff"
+      },
+      background: { ...backgrounds(mode) },
+      pokemonTypes: pokemonTypeColours(mode)
+    }
+  });
 
 console.log("THEME: ", theme);

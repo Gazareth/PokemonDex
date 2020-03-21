@@ -8,4 +8,9 @@ export const SEARCH_POKEMON = Object.freeze({
   FAILED: "POKEMON_SEARCH_FAILED"
 });
 
+export const THEME = Object.freeze({
+  SET_DARK_MODE: "THEME_SET_DARK",
+  SET_LIGHT_MODE: "THEME_SET_LIGHT"
+});
+
 export const ADD_FAVOURITE = "ADD_FAVOURITE";

@@ -1,6 +1,11 @@
 import axios from "axios";
-import { SEARCH_POKEMON } from "./types";
+import { SEARCH_POKEMON, THEME } from "./types";
 
+/***********
+ *
+ * POKEMON ACTIONS
+ *
+ *************/
 const apiUrl = "https://pokeapi.co/api/v2/";
 
 const sleepTime = process.env.REACT_APP_APIINTERVAL;
@@ -83,3 +88,16 @@ const setPokemonError = () => {
     type: SEARCH_POKEMON.FAILED
   };
 };
+
+/***********
+ *
+ * THEME ACTIONS
+ *
+ *************/
+const ThemeMap = {
+  dark: THEME.SET_DARK_MODE,
+  light: THEME.SET_LIGHT_MODE
+};
+
+//THEME
+export const setTheme = mode => dispatch => dispatch(ThemeMap[mode]);
