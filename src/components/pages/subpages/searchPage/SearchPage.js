@@ -37,26 +37,29 @@ const SearchPage = ({ displayContent, loading, searchPokemon }) => {
   useEffect(() => setLoadingState(loading), [loading]);
 
   const searchReady =
-    displayContent &&
-    (loadingState === SEARCH_POKEMON.NONE ||
-      loadingState === SEARCH_POKEMON.DONE);
+    loadingState === SEARCH_POKEMON.NONE ||
+    loadingState === SEARCH_POKEMON.DONE;
 
   const anim = useAnimEngine(3, displayContent, 450);
 
   return (
-    <>
-      <Grid item />
-      <SearchPanel
-        {...anim()}
-        animMagnitude={100}
-        {...{ anim, searchReady, loadingState, searchPokemon }}
-      />
-      {/* {!searchReady && <div>Loading: {loadingState}</div>} */}
-      {/* {searchReady && (
-        
-      )} */}
-      <Grid item style={{ height: "20%" }} />
-    </>
+    <Grid
+      container
+      direction="row"
+      style={{ height: "100%", flexFlow: "column", alignItems: "stretch" }}
+    >
+      <Grid item style={{ flex: "auto", flexGrow: "0.5" }} />
+      <Grid item container style={{ alignContent: "center", flex: "auto" }}>
+        <Grid item style={{ width: "100%" }}>
+          <SearchPanel
+            {...anim()}
+            animMagnitude={100}
+            {...{ anim, searchReady, loadingState, searchPokemon }}
+          />
+        </Grid>
+      </Grid>
+      <Grid item style={{ flex: "auto" }} />
+    </Grid>
   );
 };
 

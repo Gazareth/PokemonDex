@@ -2,9 +2,12 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import { connect } from "react-redux";
 import { SEARCH_POKEMON } from "../../store/actions/types";
 
-import useKeyDown from "../../hooks/KeyDown";
+import useKeyDown from "hooks/KeyDown";
+import useAnimEngine from "hooks/AnimEngine";
 
 import clsx from "clsx";
+
+import SmoothIn from "util/transitionSmoothIn";
 
 import PokemonPage from "./subpages/pokemonPage/PokemonPage";
 import SearchPage from "./subpages/searchPage/SearchPage";
@@ -43,7 +46,19 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "25px"
   },
   tabIndicator: {
-    backgroundColor: "#fff"
+    display: "flex",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    "& > div": {
+      width: "100%",
+      backgroundColor: "#fff"
+    }
+  },
+  //...tabIndicatorStyles,
+  tabIndicatorLoading: {
+    "& > div": {
+      backgroundColor: "#dadada"
+    }
   },
   svgRoot: {
     height: "1.95rem",
@@ -56,17 +71,33 @@ const useStyles = makeStyles(theme => ({
     filter: "drop-shadow(0 0 0.6rem white)",
     fontSize: "1.95em",
     transition: "font-size 0.325s cubic-bezier(.34,5.22,.52,1)"
+  },
+  tabSelectedLoading: {
+    fill: "#dadada",
+    filter: "none"
   }
 }));
 
-const TabComponents = (elements, tabIndex, classes) =>
+const AnimAppBar = SmoothIn(AppBar);
+
+const StyledTabs = props => (
+  <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />
+);
+
+const TabComponents = (elements, tabIndex, displayContent, classes) =>
   elements.map((el, i) => (
     <Tab
       key={i}
       fontSize="small"
       icon={React.createElement(el[0], {
         classes: {
-          root: clsx(classes.svgRoot, tabIndex === i && classes.tabSelected)
+          root: clsx(
+            classes.svgRoot,
+            tabIndex === i && [
+              classes.tabSelected,
+              !displayContent && classes.tabSelectedLoading
+            ]
+          )
         },
         pokealt: tabIndex === i ? "true" : ""
       })}
@@ -98,42 +129,50 @@ const TabPanel = props => {
   );
 };
 
-const TabbedScreens = ({ loadingState }) => {
+let switchTabsTimer = null;
+
+const TabbedScreens = ({ loadingState, havePokemon }) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
   const mounted = useRef();
-  const [loadingTab, setLoadingTab] = useState(0);
+  const loadingTab = useRef(0);
   const [currentTab, setCurrentTab] = useState(0);
   const [displayContent, setDisplayContent] = useState(true);
 
   //Handle change tab
-  let switchTabsTimer;
-
   const changeTab = useCallback(
     newCurrentTab => setCurrentTab(newCurrentTab),
     []
   );
 
-  const queueChangeTab = newCurrentTab => {
-    if (newCurrentTab === currentTab) return false;
-    setLoadingTab(newCurrentTab);
-    setDisplayContent(false);
-    clearTimeout(switchTabsTimer);
-    switchTabsTimer = setTimeout(() => {
-      setDisplayContent(true);
-      changeTab(newCurrentTab);
-    }, 750);
-  };
+  const queueChangeTab = useCallback(
+    newCurrentTab => {
+      if (
+        switchTabsTimer ||
+        newCurrentTab === currentTab ||
+        newCurrentTab === loadingTab.current
+      )
+        return false;
+      loadingTab.current = newCurrentTab;
+      setDisplayContent(false);
+      switchTabsTimer = setTimeout(() => {
+        setDisplayContent(true);
+        changeTab(newCurrentTab);
+        switchTabsTimer = null;
+      }, process.env.REACT_APP_TABSWITCHTIME);
+    },
+    [changeTab, currentTab]
+  );
 
   //Handle key down
   const handleLeftRight = useCallback(
     event => {
       switch (event.keyCode) {
         case 37:
-          if (loadingTab > 0) queueChangeTab(loadingTab => loadingTab - 1);
+          if (loadingTab.current > 0) queueChangeTab(loadingTab.current - 1);
           break;
         case 39:
-          if (loadingTab < 2) queueChangeTab(loadingTab => loadingTab + 1);
+          if (loadingTab.current < 2) queueChangeTab(loadingTab.current + 1);
           break;
         default:
           break;
@@ -142,7 +181,7 @@ const TabbedScreens = ({ loadingState }) => {
         //Do whatever when esc is pressed
       }
     },
-    [loadingTab]
+    [queueChangeTab]
   );
 
   //Detect KeyDown
@@ -155,17 +194,31 @@ const TabbedScreens = ({ loadingState }) => {
     } else {
       if (loadingState === SEARCH_POKEMON.DONE) queueChangeTab(1);
     }
-  }, [loadingState]);
+  }, [queueChangeTab, loadingState]);
+
+  const anim = useAnimEngine(3, havePokemon, 450);
 
   return (
     <>
-      <AppBar className={classes.appBarClass} position="static">
-        <Tabs
+      <AnimAppBar
+        {...anim()}
+        doHeight
+        className={classes.appBarClass}
+        position="static"
+      >
+        <StyledTabs
           value={currentTab}
           onChange={(e, v) => queueChangeTab(v)}
           variant="fullWidth"
           {...{
-            classes: { root: classes.tabsRoot, indicator: classes.tabIndicator }
+            classes: {
+              root: classes.tabsRoot,
+              indicator: clsx(
+                classes.tabIndicator,
+                classes["tabIndicator-" + currentTab],
+                !displayContent && classes.tabIndicatorLoading
+              )
+            }
           }}
           aria-label="select tab"
         >
@@ -176,10 +229,11 @@ const TabbedScreens = ({ loadingState }) => {
               [StarIcon, "FAVOURITES"]
             ],
             currentTab,
+            displayContent,
             classes
           )}
-        </Tabs>
-      </AppBar>
+        </StyledTabs>
+      </AnimAppBar>
       {[SearchPage, PokemonPage].map((el, i) => (
         <TabPanel
           value={currentTab}
@@ -202,7 +256,10 @@ const TabbedScreens = ({ loadingState }) => {
 };
 
 const mapStateToProps = state => {
-  return { loadingState: state.pokemon.loading };
+  return {
+    loadingState: state.pokemon.loading,
+    havePokemon: state.pokemon.haveData
+  };
 };
 
 export default connect(mapStateToProps)(TabbedScreens);

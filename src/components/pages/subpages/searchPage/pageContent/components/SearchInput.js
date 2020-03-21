@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
+import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-//import SmoothIn from "util/transitionSmoothIn";
 
-import { Grow } from "@material-ui/core";
+import { Fade } from "@material-ui/core";
 
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -12,7 +12,7 @@ import Input from "@material-ui/core/Input";
 import IconButton from "@material-ui/core/IconButton";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-//import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import FiberManualRecordOutlinedIcon from "@material-ui/icons/FiberManualRecordOutlined";
 import FiberManualRecordTwoToneIcon from "@material-ui/icons/FiberManualRecordTwoTone";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -21,31 +21,48 @@ import Color from "color";
 
 const useStyles = makeStyles(theme => ({
   searchWidth: {
-    width: "65%"
+    maxWidth: "70%",
+    transition:
+      "filter 275ms cubic-bezier(0.215, 0.61, 0.355, 1), max-width 275ms cubic-bezier(0.215, 0.61, 0.355, 1)",
+    //overflow: "hidden"
+    filter: "none"
+  },
+  searchWidthInactive: {
+    maxWidth: "65%",
+    filter: "opacity(100%)"
+  },
+  searchInputLabelBold: {
+    fontWeight: "bold"
+  },
+  inputAdornIcon: {
+    transition: "color 375ms linear"
+  },
+  inputAdornIconDelay: {
+    transitionDelay: "375ms"
   }
 }));
 
-const InputIcon = ({ searching, isFocused, searchString, ...props }) => {
-  let icon = <FiberManualRecordOutlinedIcon />;
-  //icon = <FiberManualRecordIcon />;
-  if (searching) {
-    icon = <CancelIcon />;
-  } else {
-    if (searchString.length > 1) {
-      icon = <FiberManualRecordTwoToneIcon />;
-    } else {
-      icon = <FiberManualRecordOutlinedIcon />;
-    }
-  }
-  return (
-    <Grow
-      in={searchString > 0}
-      {...props}
-      style={{ ...props.style, fontSize: "1.3rem" }}
-    >
-      {icon}
-    </Grow>
-  );
+const InputAdornState = (searching, isFocused, searchString) =>
+  isFocused
+    ? searchString.length > 2
+      ? 3
+      : Math.max(searchString.length, 1)
+    : searching === true
+    ? 4
+    : 0;
+
+const inputAdornOpacity = [0, 0.25, 0.35, 0.45];
+const inputAdornIcon = [
+  FiberManualRecordOutlinedIcon,
+  FiberManualRecordOutlinedIcon,
+  FiberManualRecordTwoToneIcon,
+  FiberManualRecordIcon,
+  CancelIcon
+];
+
+const InputIcon = ({ inputAdornState: state }) => {
+  const Icon = inputAdornIcon[state];
+  return <Icon style={{ fontSize: "1.25rem" }} />;
 };
 
 const handleChange = (e, f) => {
@@ -65,11 +82,14 @@ const SearchInput = ({
   handleFocus,
   handleUnfocus,
   searchPokemon,
+  error,
   helperText,
   ...props
 }) => {
   const classes = useStyles();
   const [searchString, setSearchString] = useState("");
+
+  const inputAdornState = InputAdornState(searching, isFocused, searchString);
 
   const parseSearchString = str => setSearchString(str.toLowerCase());
   const clearSearchString = () => {
@@ -83,15 +103,29 @@ const SearchInput = ({
 
   return (
     <FormControl
-      classes={{ root: classes.searchWidth }}
+      classes={{
+        root: clsx(
+          classes.searchWidth,
+          !isFocused && classes.searchWidthInactive
+        )
+      }}
       //variant="filled"
       disabled={searching}
     >
-      <InputLabel htmlFor="filled-adornment-search">
-        {searching ? "Searching..." : "Name or ID#"}
+      <InputLabel
+        htmlFor="filled-adornment-search"
+        //disabled={!isFocused}
+        classes={{ root: clsx(!isFocused && classes.searchInputLabelBold) }}
+      >
+        {isFocused
+          ? "Name or ID #"
+          : searching
+          ? "Searching for: "
+          : "Enter Name or ID #"}
       </InputLabel>
       <Input
         id="filled-adornment-search"
+        error={error}
         onFocus={() => handleFocus()}
         onBlur={() => handleUnfocus()}
         onChange={e => handleChange(e, parseSearchString)}
@@ -100,21 +134,23 @@ const SearchInput = ({
         endAdornment={
           <InputAdornment position="end">
             <IconButton
-              aria-label={searching ? "cancel search" : "search pokemon"}
+              aria-label={searching ? "Cancel Search" : "Clear Search"}
               onClick={clearSearchString}
               disabled={searchString.length === 0}
+              className={clsx(
+                classes.inputAdornIcon,
+                [1, 2].includes(inputAdornState) && classes.inputAdornIconDelay
+              )}
+              style={{
+                color: Color(theme.palette.text.primary)
+                  .fade(1 - inputAdornOpacity[inputAdornState])
+                  .toString()
+              }}
               edge="end"
             >
               <InputIcon
-                style={{
-                  color: Color(theme.palette.text.primary).fade(
-                    searchString.length > 1 ? 0.6 : 0.75
-                  )
-                }}
                 {...{
-                  searching,
-                  isFocused,
-                  searchString
+                  inputAdornState
                 }}
               />
             </IconButton>

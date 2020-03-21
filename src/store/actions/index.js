@@ -3,8 +3,8 @@ import { SEARCH_POKEMON } from "./types";
 
 const apiUrl = "https://pokeapi.co/api/v2/";
 
-const sleepTime = 325;
-const sleepErrorTime = 2500;
+const sleepTime = process.env.REACT_APP_APIINTERVAL;
+const sleepErrorTime = process.env.REACT_APP_APIERRORCOOLDOWN;
 
 const sleep = (sleepms = sleepTime) => response =>
   new Promise((resolve, reject) =>
@@ -42,6 +42,8 @@ export const searchPokemon = pokemonName => {
       })
       .then(sleep())
       .then(response => dispatch(setPokemonData(SEARCH_POKEMON.DONE)))
+      .then(sleep(process.env.REACT_APP_TABSWITCHTIME))
+      .then(response => dispatch(setPokemonData(SEARCH_POKEMON.NONE)))
       .catch(error => {
         dispatch(setPokemonError());
         setTimeout(

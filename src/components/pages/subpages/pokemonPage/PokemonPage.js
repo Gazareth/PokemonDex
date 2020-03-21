@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { SEARCH_POKEMON } from "store/actions/types";
 
 import PokemonDisplay from "./pageContent/PokemonDisplay";
 import PokemonNoDisplay from "./pageContent/PokemonNoDisplay";
@@ -12,32 +11,25 @@ const mapStateToProps = state => {
     pokemonData: state.pokemon.data,
     pokemonSpeciesData: state.pokemon.species,
     pokemonMovesData: state.pokemon.moves,
-    loading: state.pokemon.loading
+    loading: state.pokemon.loading,
+    havePokemon: state.pokemon.haveData
   };
 };
-
-// const checkData = dataSet => {
-//   return dataSet.reduce(
-//     (have, obj) => have && Object.entries(obj).length > 0,
-//     true
-//   );
-// };
 
 const PokemonPage = ({
   displayContent,
   pokemonData,
   pokemonSpeciesData,
   pokemonMovesData,
-  loading
+  loading,
+  havePokemon
 }) => {
   const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
 
-  const loadingDone = loading === SEARCH_POKEMON.DONE;
-
   return (
     <>
-      {!loadingDone && <PokemonNoDisplay />}
-      {loadingDone && (
+      {!havePokemon && <PokemonNoDisplay {...{ displayContent }} />}
+      {havePokemon && (
         <PokemonDisplay
           {...{
             pokemonInfo: ParsePokemonData(...dataArr),

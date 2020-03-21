@@ -2,10 +2,12 @@
 
 import { SEARCH_POKEMON } from "../actions/types";
 
+//Default store
 const pokemonData = Object.freeze({
   data: {},
   species: {},
-  moves: {}
+  moves: {},
+  haveData: false
 });
 
 const pokemonReducer = (
@@ -30,7 +32,7 @@ const pokemonReducer = (
     case SEARCH_POKEMON.MOVES_FOUND:
       return stateUpdater("moves");
     case SEARCH_POKEMON.DONE:
-      return { ...state, loading: SEARCH_POKEMON.DONE };
+      return { ...state, loading: SEARCH_POKEMON.DONE, haveData: true };
     case SEARCH_POKEMON.FAILED:
       return { ...state, loading: action.type };
     default:
