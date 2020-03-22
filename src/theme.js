@@ -78,10 +78,35 @@ const backgrounds = darkLight =>
       septenary: "#616161",
       octonary: "#757575",
       nonary: "#9e9e9e",
-      denary: "bdbdbd",
+      denary: "#bdbdbd",
       eleven: "#000"
     }
   ][darkLight === "light" ? 0 : 1];
+
+const buildTransition = (
+  theme,
+  props //[prop,duration,delay,easing]
+) => {
+  const propsArr = Array.isArray(props)
+    ? Array.isArray(props[0])
+      ? props
+      : [props]
+    : [[props]];
+  const trsn = theme.transitions;
+  return {
+    transition: propsArr
+      .map(p => {
+        const [
+          prop,
+          duration = trsn.duration.standard,
+          delay = 0,
+          easing = trsn.easing.easeOut
+        ] = p;
+        return `${prop} ${duration}ms ${easing} ${delay}ms`;
+      })
+      .join(", ")
+  };
+};
 
 export const theme = (mode = "dark") => {
   let theTheme = createMuiTheme({
@@ -95,7 +120,17 @@ export const theme = (mode = "dark") => {
       },
       background: { ...backgrounds(mode) },
       pokemonTypes: pokemonTypeColours(mode)
+    },
+    transitions: {
+      easing: {
+        bounceClick: "cubic-bezier(0.570, -5.600, 0.1, 8.650)",
+        pokeEase: "cubic-bezier(0.215, 0.61, 0.355, 1)",
+        pokeSwish: "cubic-bezier(0.68, -0.6, 0.32, 1)"
+      },
+      duration: { medium: 500, long: 600 }
     }
   });
+
+  theTheme.transitions.build = props => buildTransition(theTheme, props);
   return theTheme;
 };
