@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import Color from "color";
 
-import { Fade } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -16,8 +16,6 @@ import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import FiberManualRecordOutlinedIcon from "@material-ui/icons/FiberManualRecordOutlined";
 import FiberManualRecordTwoToneIcon from "@material-ui/icons/FiberManualRecordTwoTone";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { theme } from "theme";
-import Color from "color";
 
 const useStyles = makeStyles(theme => ({
   searchWidth: {
@@ -86,7 +84,8 @@ const SearchInput = ({
   helperText,
   ...props
 }) => {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const [searchString, setSearchString] = useState("");
 
   const inputAdornState = InputAdornState(searching, isFocused, searchString);

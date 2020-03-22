@@ -100,4 +100,4 @@ const ThemeMap = {
 };
 
 //THEME
-export const setTheme = mode => dispatch => dispatch(ThemeMap[mode]);
+export const setThemeMode = mode => ({ type: ThemeMap[mode] });

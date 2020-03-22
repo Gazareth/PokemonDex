@@ -61,7 +61,12 @@ const backgrounds = darkLight =>
       tertiary: "#eee",
       quaternary: "#e0e0e0",
       quinary: "#ccc",
-      senary: "#bdbdbd"
+      senary: "#bdbdbd",
+      septenary: "#9e9e9e",
+      octonary: "#757575",
+      nonary: "#616161",
+      denary: "#424242",
+      eleven: "#212121"
       //septenary, octonary, nonary, and denary
     },
     {
@@ -72,12 +77,15 @@ const backgrounds = darkLight =>
       quinary: "#393939",
       senary: "#424242",
       septenary: "#616161",
-      octonary: "#757575"
+      octonary: "#757575",
+      nonary: "#9e9e9e",
+      denary: "bdbdbd",
+      eleven: "#000"
     }
   ][darkLight === "light" ? 0 : 1];
 
-export let theme = mode =>
-  createMuiTheme({
+export const theme = (mode = "dark") => {
+  let theTheme = createMuiTheme({
     palette: {
       type: mode,
       primary: {
@@ -90,5 +98,5 @@ export let theme = mode =>
       pokemonTypes: pokemonTypeColours(mode)
     }
   });
-
-console.log("THEME: ", theme);
+  return theTheme;
+};

@@ -45,44 +45,22 @@ const store = createStore(
 const App = () => {
   const classes = useStyles();
 
+  console.log("Initial store... ", store);
+
   return (
     <StoreProvider store={store}>
       <BrowserRouter>
-        <ThemeProvider theme={theme(store.theme.mode)}>
+        <ConnectedTheme>
           <CssBaseline />
           <Box className={classes.rootBox} bgcolor="background.default">
-            <AppBar
-              position="absolute"
-              color="default"
-              className={classes.appBar}
-            >
-              <Toolbar>
-                <IconButton
-                  edge="start"
-                  className={classes.menuButton}
-                  color="inherit"
-                  aria-label="menu"
-                >
-                  <SvgIcon
-                    component={PokedexSVG}
-                    fontSize="large"
-                    style={{ fill: "#C30D22" }}
-                    viewBox="0 0 500 525"
-                  />
-                </IconButton>
-
-                <Typography variant="h6" color="textSecondary" noWrap>
-                  Pokémon Dex
-                </Typography>
-              </Toolbar>
-            </AppBar>
+            <PokeAppBar />
             <Route
               exact
               path={["/", "/home*", "/main*"]}
               render={() => <MainPage />}
             />
           </Box>
-        </ThemeProvider>
+        </ConnectedTheme>
       </BrowserRouter>
     </StoreProvider>
   );

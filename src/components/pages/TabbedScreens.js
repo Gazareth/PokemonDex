@@ -255,11 +255,9 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    loadingState: state.pokemon.loading,
-    havePokemon: state.pokemon.haveData
-  };
-};
+const mapStateToProps = state => ({
+  loadingState: state.pokemon.loading,
+  havePokemon: state.pokemon.haveData
+});
 
 export default connect(mapStateToProps)(TabbedScreens);
