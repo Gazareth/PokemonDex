@@ -21,114 +21,120 @@ import CardContent from "@material-ui/core/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SearchIcon from "@material-ui/icons/Search";
 
-const cardContentClasses = [
-  ["Open", "4em", "2.5em"],
-  ["Closed", "-3em", "0em"],
-  ["Busy", "0em", "1.125em"]
-].reduce(
-  (classes, info, i) => ({
-    ...classes,
-    ["cardContent-" + info[0]]: {
-      marginTop: info[1],
-      marginBottom: info[2],
-      ...(info[0] === "Open" ? { transitionDelay: "375ms" } : {})
-    }
-  }),
-  {}
-);
+const useStyles = makeStyles(theme => {
+  const trsn = theme.transitions;
+  const ease = trsn.easing;
+  const pokeShortTrsn = [
+    trsn.duration.short,
+    trsn.duration.short,
+    ease.pokeEase
+  ];
 
-const givenTransition = properties => {
-  const propertiesArr = Array.isArray(properties) ? properties : [properties];
+  const pokeDelayTrsn = [
+    trsn.duration.medium,
+    trsn.duration.medium,
+    ease.pokeEase
+  ];
   return {
-    transition: propertiesArr
-      .map(prop => prop + " 625ms cubic-bezier(0.215, 0.61, 0.355, 1) 325ms")
-      .join(", ")
+    card: {
+      ...trsn.build([
+        [
+          "background-color",
+          trsn.duration.long * 3,
+          trsn.duration.long * 2,
+          ease.pokeEase
+        ],
+        ["margin-left", ...pokeShortTrsn],
+        ["margin-right", ...pokeShortTrsn]
+      ]),
+      backgroundColor: Color(theme.palette.secondary.main)
+        .mix(Color(theme.palette.background.default), 0.15)
+        .toString(),
+      marginLeft: "24%",
+      marginRight: "24%"
+    },
+    cardOpen: {
+      backgroundColor: theme.palette.background.default,
+      ...trsn.build([
+        ["background-color", 650, 0, ease.pokeEase],
+        ["margin-left", ...pokeDelayTrsn],
+        ["margin-right", ...pokeDelayTrsn]
+      ]),
+      marginLeft: "10%",
+      marginRight: "10%"
+    },
+    cardBusy: {
+      backgroundColor: theme.palette.background.senary,
+      marginLeft: "15%",
+      marginRight: "15%"
+    },
+    cardActionArea: {
+      padding: "0.8em",
+      paddingBottom: "2.25em"
+    },
+    touchRippleColor: {
+      color: theme.palette.background.default,
+      opacity: 1
+    },
+    cardActionAreaOverlay: {
+      opacity: "0% !important"
+    },
+    cardHeader: {
+      ...trsn.build([
+        ["margin-top", ...pokeDelayTrsn],
+        ["margin-bottom", ...pokeDelayTrsn],
+        ["transform", 825, 425, ease.pokeSwish]
+      ]),
+      textAlign: "center",
+      marginBottom: "-2.25em",
+      marginTop: "1.5em",
+      transform: "scale(1.1,1.1)"
+    },
+    "cardHeader-Open": {
+      ...trsn.build([
+        ["margin", ...pokeShortTrsn],
+        ["transform", 425, 0, trsn.easing.bounceClick]
+      ]),
+      marginTop: "2.5em",
+      marginBottom: "5em",
+      transform: "scale(1,1)"
+    },
+    cardSubheaderText: {
+      transition: "none",
+      fontWeight: "bold",
+      opacity: "1"
+    },
+    cardSubheaderTextInactive: {
+      transition: "opacity 250ms linear",
+      opacity: "0"
+    },
+    cardSubheaderIcon: {
+      transition: "opacity 625ms linear 1.3s",
+      opacity: "1"
+    },
+    cardSubheaderIconInactive: {
+      transition: "opacity 250ms linear",
+      opacity: "0"
+    },
+    cardContent: {
+      ...trsn.build([["margin-bottom", ...pokeDelayTrsn]]),
+      display: "flex",
+      padding: "0px",
+      justifyContent: "center",
+      marginBottom: "0.75em"
+    },
+    "cardContent-Open": {
+      ...trsn.build([["margin-bottom", ...pokeShortTrsn]]),
+      marginBottom: "2.5em"
+    },
+    "cardContent-Busy": {
+      marginBottom: "1.125em"
+    },
+    inlineIcon: {
+      verticalAlign: "text-top"
+    }
   };
-};
-
-const useStyles = makeStyles(theme => ({
-  card: {
-    ...givenTransition(["background-color", "margin-left", "margin-right"]),
-    backgroundColor: Color(theme.palette.secondary.dark)
-      // .mix(
-      //   Color("#c30d22").mix(Color(theme.palette.background.secondary)),
-      //   0.35
-      // )
-      //.mix(Color(theme.palette.background.secondary), 0.35)
-      .toString(),
-    //maxWidth: "65%",
-    marginLeft: "22.5%",
-    marginRight: "22.5%"
-  },
-  cardOpen: {
-    backgroundColor: theme.palette.background.default,
-    transitionDelay: "375ms",
-    //maxWidth: "100%"
-    marginLeft: "10%",
-    marginRight: "10%"
-  },
-  cardBusy: {
-    backgroundColor: theme.palette.background.senary,
-    //maxWidth: "100%"
-    marginLeft: "15%",
-    marginRight: "15%"
-  },
-  cardActionArea: {
-    padding: "0.8em",
-    paddingBottom: "2.25em"
-  },
-  touchRippleColor: {
-    color: theme.palette.background.default
-  },
-  cardActionAreaOverlay: {
-    opacity: "0% !important"
-  },
-  cardHeader: {
-    transition:
-      "margin 625ms cubic-bezier(0.215, 0.61, 0.355, 1) 625ms, transform 625ms cubic-bezier(0.68, -0.6, 0.32, 1.6) 575ms",
-    textAlign: "center",
-    marginBottom: "-2.5em",
-    marginTop: "1.5em",
-    transform: "scale(1.1,1.1)"
-    //filter: "blur(0.03em)"
-  },
-  "cardHeader-Open": {
-    transition:
-      "margin 625ms cubic-bezier(0.215, 0.61, 0.355, 1) 375ms, transform 425ms cubic-bezier(0.570, -5.600, 0.1, 8.650) 75ms",
-    marginTop: "2.5em",
-    marginBottom: "0em",
-    transform: "scale(1,1)"
-  },
-  cardSubheaderText: {
-    transition: "none",
-    fontWeight: "bold",
-    opacity: "1"
-  },
-  cardSubheaderTextInactive: {
-    transition: "opacity 250ms linear",
-    opacity: "0"
-  },
-  cardSubheaderIcon: {
-    transition: "opacity 625ms linear 1.3s",
-    opacity: "1"
-  },
-  cardSubheaderIconInactive: {
-    transition: "opacity 250ms linear",
-    opacity: "0"
-  },
-  cardContentGrid: {
-    alignContent: "center"
-  },
-  cardContent: {
-    ...givenTransition("margin"),
-    display: "flex",
-    justifyContent: "center"
-  },
-  ...cardContentClasses,
-  inlineIcon: {
-    verticalAlign: "text-top"
-  }
-}));
+});
 
 const subheadingCharPoses = {
   exit: { opacity: 0, y: 10, delay: 625 },
@@ -137,7 +143,7 @@ const subheadingCharPoses = {
     opacity: 1,
     transition: ({ charIndex, numChars }) => ({
       type: "spring",
-      delay: 625 + (charIndex / numChars) * 625,
+      delay: 800 + (charIndex / numChars) * 625,
       stiffness: 5000 - 250 * Math.pow(charIndex / numChars, 0.5),
       damping: 1000
     })
