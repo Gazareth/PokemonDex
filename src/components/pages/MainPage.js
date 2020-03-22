@@ -10,7 +10,7 @@ import TabbedScreens from "./TabbedScreens";
 
 const Copyright = ({ theme }) => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="caption" color="textSecondary" align="center">
       {"Pokedex icon by "}
       <Link
         color="textPrimary"

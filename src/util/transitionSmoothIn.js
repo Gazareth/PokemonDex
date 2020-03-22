@@ -39,13 +39,7 @@ const stateStyles = (duration, doHeight) => ({
 
 const transitionStyles = (state, duration, magnitude, doHeight) => ({
   ...baseStyle({ duration, magnitude, doHeight }),
-  ...stateStyles(duration, doHeight)[state],
-  ...{
-    testStyle: console.log(
-      "adding stateStyles: ",
-      stateStyles({ duration, magnitude, doHeight })
-    )
-  }
+  ...stateStyles(duration, doHeight)[state]
 });
 
 const SmoothIn = ComponentToTransition => props => (
