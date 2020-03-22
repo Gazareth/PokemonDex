@@ -41,12 +41,12 @@ const useStyles = makeStyles(theme => {
       ...trsn.build([
         [
           "background-color",
-          trsn.duration.long * 3,
-          trsn.duration.long * 2,
+          trsn.duration.long * 3.5,
+          trsn.duration.long * 1.25,
           ease.pokeEase
         ],
-        ["margin-left", ...pokeShortTrsn],
-        ["margin-right", ...pokeShortTrsn]
+        ["margin-left", ...pokeDelayTrsn],
+        ["margin-right", ...pokeDelayTrsn]
       ]),
       backgroundColor: Color(theme.palette.secondary.main)
         .mix(Color(theme.palette.background.default), 0.15)
@@ -89,8 +89,8 @@ const useStyles = makeStyles(theme => {
     /* CARD HEADER */
     cardHeader: {
       ...trsn.build([
-        ["margin-top", ...pokeDelayTrsn],
-        ["margin-bottom", ...pokeDelayTrsn],
+        ["margin-top", ...pokeShortTrsn],
+        ["margin-bottom", ...pokeShortTrsn],
         ["transform", 825, 425, ease.pokeSwish]
       ]),
       textAlign: "center",
@@ -105,12 +105,12 @@ const useStyles = makeStyles(theme => {
         ["transform", 425, 0, trsn.easing.bounceClick]
       ]),
       marginTop: "2.5em",
-      marginBottom: "3.5em",
+      marginBottom: "5em",
       transform: "scale(1,1)"
     },
     "cardHeader-Busy": {
       marginTop: "1.5em",
-      marginBottom: "0em"
+      marginBottom: "-1.65em"
     },
     /* CARD SUBHEADER */
     cardSubheaderText: {
@@ -133,7 +133,7 @@ const useStyles = makeStyles(theme => {
     },
     /* CARD CONTENT */
     cardContent: {
-      ...trsn.build([["margin-bottom", ...pokeDelayTrsn]]),
+      ...trsn.build([["margin-bottom", ...pokeShortTrsn]]),
       display: "flex",
       padding: "0px",
       justifyContent: "center",
@@ -256,7 +256,7 @@ const SearchPanel = ({
   const handleUnfocus = () => {
     setIsFocused(false);
     clearTimeout(focusTimer.current);
-    //focusTimer.current = setTimeout(() => handleClick(), 1500);
+    //focusTimer.current = setTimeout(() => handleClick(), 1500); //REPEATEDLY REASSIGN FOCUS
   };
 
   useEffect(() => setSearching(!searchReady), [searchReady]);
