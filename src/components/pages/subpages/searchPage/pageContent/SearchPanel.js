@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => {
     ease.pokeEase
   ];
   return {
+    /* CARD */
     card: {
       ...trsn.build([
         [
@@ -53,21 +54,27 @@ const useStyles = makeStyles(theme => {
       marginLeft: "24%",
       marginRight: "24%"
     },
-    cardOpen: {
-      backgroundColor: theme.palette.background.default,
+    "card-Open": {
       ...trsn.build([
         ["background-color", 650, 0, ease.pokeEase],
         ["margin-left", ...pokeDelayTrsn],
         ["margin-right", ...pokeDelayTrsn]
       ]),
+      backgroundColor: theme.palette.background.default,
       marginLeft: "10%",
       marginRight: "10%"
     },
-    cardBusy: {
+    "card-Busy": {
+      ...trsn.build([
+        ["background-color", 650, 0, ease.pokeEase],
+        ["margin-left", ...pokeShortTrsn],
+        ["margin-right", ...pokeShortTrsn]
+      ]),
       backgroundColor: theme.palette.background.senary,
-      marginLeft: "15%",
-      marginRight: "15%"
+      marginLeft: "20%",
+      marginRight: "20%"
     },
+    /* CARD META */
     cardActionArea: {
       padding: "0.8em",
       paddingBottom: "2.25em"
@@ -79,6 +86,7 @@ const useStyles = makeStyles(theme => {
     cardActionAreaOverlay: {
       opacity: "0% !important"
     },
+    /* CARD HEADER */
     cardHeader: {
       ...trsn.build([
         ["margin-top", ...pokeDelayTrsn],
@@ -86,36 +94,44 @@ const useStyles = makeStyles(theme => {
         ["transform", 825, 425, ease.pokeSwish]
       ]),
       textAlign: "center",
-      marginBottom: "-2.25em",
       marginTop: "1.5em",
+      marginBottom: "-2.25em",
       transform: "scale(1.1,1.1)"
     },
     "cardHeader-Open": {
       ...trsn.build([
-        ["margin", ...pokeShortTrsn],
+        ["margin-top", ...pokeShortTrsn],
+        ["margin-bottom", ...pokeShortTrsn],
         ["transform", 425, 0, trsn.easing.bounceClick]
       ]),
       marginTop: "2.5em",
-      marginBottom: "5em",
+      marginBottom: "3.5em",
       transform: "scale(1,1)"
     },
-    cardSubheaderText: {
-      transition: "none",
-      fontWeight: "bold",
-      opacity: "1"
+    "cardHeader-Busy": {
+      marginTop: "1.5em",
+      marginBottom: "0em"
     },
-    cardSubheaderTextInactive: {
+    /* CARD SUBHEADER */
+    cardSubheaderText: {
       transition: "opacity 250ms linear",
+      fontWeight: "bold",
       opacity: "0"
     },
+    "cardSubheaderText-Open": {
+      transition: "none",
+      opacity: "1"
+    },
     cardSubheaderIcon: {
+      transition: "opacity 250ms linear",
+      verticalAlign: "text-top",
+      opacity: "0"
+    },
+    "cardSubheaderIcon-Open": {
       transition: "opacity 625ms linear 1.3s",
       opacity: "1"
     },
-    cardSubheaderIconInactive: {
-      transition: "opacity 250ms linear",
-      opacity: "0"
-    },
+    /* CARD CONTENT */
     cardContent: {
       ...trsn.build([["margin-bottom", ...pokeDelayTrsn]]),
       display: "flex",
@@ -128,10 +144,8 @@ const useStyles = makeStyles(theme => {
       marginBottom: "2.5em"
     },
     "cardContent-Busy": {
-      marginBottom: "1.125em"
-    },
-    inlineIcon: {
-      verticalAlign: "text-top"
+      ...trsn.build([["margin-bottom", ...pokeShortTrsn]]),
+      marginBottom: "2em"
     }
   };
 });
@@ -250,15 +264,14 @@ const SearchPanel = ({
 
   const mainAnim = anim();
 
+  const cardStates = ["Closed", "Open", "Busy"];
+  const cardState = Math.max(isFocused * 2 + searchReady * -1, 0);
+  const stateClass = prefix =>
+    clsx(classes[prefix], classes[prefix + "-" + cardStates[cardState]]);
+
   return (
     <div style={{ ...props.style, ...mainAnim }}>
-      <Card
-        elevation={3}
-        className={clsx(
-          classes.card,
-          isFocused && (searchReady ? classes.cardOpen : classes.cardBusy)
-        )}
-      >
+      <Card elevation={3} className={stateClass("card")}>
         <CardActionArea
           TouchRippleProps={{
             classes: {
@@ -278,13 +291,7 @@ const SearchPanel = ({
         >
           <CardHeader
             classes={{
-              root: clsx(
-                classes.cardHeader,
-                isFocused && classes["cardHeader-Open"]
-              ),
-              subheader: clsx()
-              //classes.cardSubheader,
-              //!panelOpen && classes.cardSubheaderInactive
+              root: clsx(classes.cardHeader, stateClass("cardHeader"))
             }}
             title={
               <img
@@ -292,19 +299,13 @@ const SearchPanel = ({
                   height: "2em",
                   margin: "10px"
                 }}
-                //src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png"
                 src={require("icons/PokeApi.png")}
                 alt="Pokemon Dex Logo"
               />
             }
             subheader={
               <Box>
-                <span
-                  className={clsx(
-                    classes.cardSubheaderText,
-                    !panelOpen && classes.cardSubheaderTextInactive
-                  )}
-                >
+                <span className={stateClass("cardSubheaderText")}>
                   <SplitText
                     charPoses={subheadingCharPoses}
                     initialPose={"exit"}
@@ -313,27 +314,13 @@ const SearchPanel = ({
                     Search Pokémon
                   </SplitText>
                 </span>{" "}
-                <span
-                  className={clsx(
-                    classes.inlineIcon,
-                    classes.cardSubheaderIcon,
-                    !panelOpen && classes.cardSubheaderIconInactive
-                  )}
-                >
+                <span className={stateClass("cardSubheaderIcon")}>
                   <SearchIcon fontSize="small" />
                 </span>
               </Box>
             }
           />
-          <CardContent
-            className={clsx(
-              classes.cardContent,
-              classes[
-                "cardContent-" +
-                  (isFocused ? (searchReady ? "Open" : "Busy") : "Closed")
-              ]
-            )}
-          >
+          <CardContent className={stateClass("cardContent")}>
             <SearchInput
               {...{
                 searchTxtRef,
