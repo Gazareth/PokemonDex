@@ -66,7 +66,6 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
   const [classes, theme] = useThemedClasses(styles);
 
   const handleThemeSwitch = () => {
-    console.log("Setting theme mode!", setThemeMode.toString(), themeMode);
     setThemeMode(themeMode === "dark" ? "light" : "dark");
   };
 
@@ -82,17 +81,21 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
           <SvgIcon
             component={PokedexSVG}
             colors={{
-              main: "#c30d22",
-              detail: Color("#c30d22")
-                .mix(Color(theme.palette.text.primary), 0.35)
-                .mix(Color(theme.palette.background.default), 0)
-                .fade(1),
-              detail2: Color("#c30d22")
-                .mix(Color(theme.palette.text.primary), 0.55)
-                .mix(Color(theme.palette.background.default), 0)
-                //.fade(1)
+              main: Color(theme.palette.secondary.main).mix(
+                Color(theme.palette.background.default),
+                0.15
+              ),
+              detail: Color("rgba(0,0,0,0)"),
+              detail2: Color(theme.palette.secondary.light)
+                .desaturate(0.15)
+                .mix(Color(theme.palette.text.primary), 0.75),
+              detail3: Color(theme.palette.primary.main)
+                .mix(Color(theme.palette.background.primary), 0.15)
+                .saturate(1),
+              detail4: Color(theme.palette.secondary.dark)
+                .desaturate(0.25)
+                .mix(Color(theme.palette.background.default), 0.85)
                 .toString()
-
               //detail2: theme.palette.background.senary
             }}
             fontSize="large"

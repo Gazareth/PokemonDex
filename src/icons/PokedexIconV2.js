@@ -1,8 +1,7 @@
 import * as React from "react";
 
 function SvgPokedexV2({ colors, ...props }) {
-  const { main, detail, detail2 } = colors;
-  console.log("Colors!", main, detail, detail2);
+  const { main, detail, detail2, detail3 } = colors;
   return (
     <svg viewBox="0 0 640 640" width="1em" height="1em" {...props}>
       <defs>
@@ -43,15 +42,23 @@ function SvgPokedexV2({ colors, ...props }) {
           id="pokedexV2_svg__m"
         />
       </defs>
-      <use xlinkHref="#pokedexV2_svg__a" fill={detail2} />
+      <use
+        xlinkHref="#pokedexV2_svg__a"
+        fill={detail2}
+        style={{
+          transition: "fill 625ms cubic-bezier(0.215, 0.61, 0.355, 1) 325ms"
+        }}
+      />
       <use xlinkHref="#pokedexV2_svg__b" fill={detail} />
       <use
         xlinkHref="#pokedexV2_svg__c"
         fill={main}
-        //fillOpacity={0}
+        style={{
+          transition: "fill 625ms cubic-bezier(0.215, 0.61, 0.355, 1) 325ms"
+        }}
         strokeOpacity={0}
       />
-      <use xlinkHref="#pokedexV2_svg__d" fill={detail} />
+      <use xlinkHref="#pokedexV2_svg__d" fill={detail3} />
       <use xlinkHref="#pokedexV2_svg__e" fillOpacity={0} stroke={main} />
       <use
         xlinkHref="#pokedexV2_svg__f"

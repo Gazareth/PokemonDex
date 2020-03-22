@@ -247,6 +247,7 @@ const SearchPanel = ({
   return (
     <div style={{ ...props.style, ...mainAnim }}>
       <Card
+        elevation={3}
         className={clsx(
           classes.card,
           isFocused && (searchReady ? classes.cardOpen : classes.cardBusy)

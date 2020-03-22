@@ -67,7 +67,6 @@ const backgrounds = darkLight =>
       nonary: "#616161",
       denary: "#424242",
       eleven: "#212121"
-      //septenary, octonary, nonary, and denary
     },
     {
       default: "#121212",
