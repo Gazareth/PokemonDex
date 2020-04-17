@@ -1,6 +1,6 @@
 import axios from "axios";
 import axiosDelayed from "util/axios";
-import { SEARCH_POKEMON, THEME } from "./types";
+import { SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
 
 /***********
  *
@@ -90,6 +90,21 @@ const setPokemonError = () => {
     type: SEARCH_POKEMON.FAILED
   };
 };
+
+/***********
+ *
+ * FAVOURITES ACTIONS
+ *
+ *************/
+export const addFavourite = pokemonData => ({
+  type: FAVOURITES.ADD,
+  payload: pokemonData
+});
+
+export const removeFavourite = pokemonData => ({
+  type: FAVOURITES.REMOVE,
+  payload: pokemonData.id
+});
 
 /***********
  *

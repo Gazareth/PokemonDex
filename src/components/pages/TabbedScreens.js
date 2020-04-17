@@ -9,8 +9,9 @@ import clsx from "clsx";
 
 import SmoothIn from "util/transitionSmoothIn";
 
-import PokemonPage from "./subpages/pokemonPage/PokemonPage";
 import SearchPage from "./subpages/searchPage/SearchPage";
+import PokemonPage from "./subpages/pokemonPage/PokemonPage";
+import FavouritesPage from "./subpages/favouritesPage/FavouritesPage";
 
 import AppBar from "@material-ui/core/AppBar";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -234,7 +235,7 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
           )}
         </StyledTabs>
       </AnimAppBar>
-      {[SearchPage, PokemonPage].map((el, i) => (
+      {[SearchPage, PokemonPage, FavouritesPage].map((el, i) => (
         <TabPanel
           value={currentTab}
           key={i}
@@ -244,13 +245,6 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
           {React.createElement(el, { displayContent })}
         </TabPanel>
       ))}
-      <TabPanel
-        value={currentTab}
-        index={2}
-        passedClasses={classes.centerContent}
-      >
-        Favourite Pokemon... coming soon!
-      </TabPanel>
     </>
   );
 };

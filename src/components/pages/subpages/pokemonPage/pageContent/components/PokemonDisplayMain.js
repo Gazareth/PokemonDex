@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -28,7 +29,9 @@ const useStyles = makeStyles(theme => ({
   },
   favouriteIcon: {
     alignSelf: "center",
-    justifySelf: "center"
+    justifySelf: "center",
+    color: theme.palette.pokemonTypes["Electric"],
+    filter: "brightness(0.85) saturate(2)"
   },
   colourDisabled: {
     color: theme.palette.text.disabled
@@ -45,10 +48,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PokemonDisplayMain = props => {
-  const mainTheme = useTheme();
-  const classes = useStyles(mainTheme);
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
-  const { pokemonInfo } = props;
+  const { pokemonInfo, isFavourite, addToFavourites } = props;
 
   return (
     <Card className={classes.card} style={{ ...props.style }}>
@@ -66,7 +69,12 @@ const PokemonDisplayMain = props => {
               <Grid item>
                 <Typography component="h2" variant="h5">
                   {pokemonInfo.name}
-                  <span style={{ color: mainTheme.palette.text.secondary }}>
+                  <span
+                    style={{
+                      color: theme.palette.text.secondary,
+                      fontWeight: "bold"
+                    }}
+                  >
                     {" #" + pokemonInfo.id}
                   </span>
                 </Typography>
@@ -84,7 +92,7 @@ const PokemonDisplayMain = props => {
                     <span key={i}>
                       <span
                         style={{
-                          color: mainTheme.palette.pokemonTypes[type]
+                          color: theme.palette.pokemonTypes[type]
                         }}
                       >
                         {type}
@@ -105,14 +113,14 @@ const PokemonDisplayMain = props => {
             </Grid>
             <Grid item xs={2} container>
               <IconButton
-                onClick={() => console.log("Icon clicked!")}
+                onClick={addToFavourites}
                 className={classes.favouriteIconButton}
               >
                 <StarIcon
                   fontSize="large"
                   className={clsx(
                     classes.favouriteIcon,
-                    true && classes.colourDisabled
+                    !isFavourite && classes.colourDisabled
                   )}
                 />
               </IconButton>

@@ -13,4 +13,7 @@ export const THEME = Object.freeze({
   SET_LIGHT_MODE: "THEME_SET_LIGHT"
 });
 
-export const ADD_FAVOURITE = "ADD_FAVOURITE";
+export const FAVOURITES = Object.freeze({
+  ADD: "ADD_FAVOURITE",
+  REMOVE: "DELETE_FAVOURITE"
+});

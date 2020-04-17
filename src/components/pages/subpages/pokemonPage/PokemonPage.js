@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+
+import { addFavourite, removeFavourite } from "store/actions";
 
 import PokemonDisplay from "./pageContent/PokemonDisplay";
 import PokemonNoDisplay from "./pageContent/PokemonNoDisplay";
@@ -12,19 +14,43 @@ const mapStateToProps = state => {
     pokemonSpeciesData: state.pokemon.species,
     pokemonMovesData: state.pokemon.moves,
     loading: state.pokemon.loading,
-    havePokemon: state.pokemon.haveData
+    havePokemon: state.pokemon.haveData,
+    favourites: state.favourites
   };
 };
+
+const mapDispatchToProps = {
+  addFavourite,
+  removeFavourite
+};
+
+const getIsFavourite = (favourites, id) =>
+  favourites.filter(fav => fav.id === id).length > 0;
 
 const PokemonPage = ({
   displayContent,
   pokemonData,
   pokemonSpeciesData,
   pokemonMovesData,
-  loading,
-  havePokemon
+  havePokemon,
+  favourites,
+  addFavourite,
+  removeFavourite
 }) => {
   const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
+  const [isFavourite, setIsFavourite] = useState(false);
+
+  useEffect(() => setIsFavourite(getIsFavourite(favourites, pokemonData.id)), [
+    favourites.size,
+    pokemonData.id,
+    favourites
+  ]);
+
+  //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
+  const addRemoveFavourite = () => {
+    console.log("ADDING/REMOVING FAVOURITE. Is favourite? ", isFavourite);
+    isFavourite ? removeFavourite(pokemonData) : addFavourite(pokemonData);
+  };
 
   return (
     <>
@@ -33,7 +59,9 @@ const PokemonPage = ({
         <PokemonDisplay
           {...{
             pokemonInfo: ParsePokemonData(...dataArr),
-            displayContent
+            displayContent,
+            isFavourite,
+            addToFavourites: addRemoveFavourite
           }}
         />
       )}
@@ -41,4 +69,4 @@ const PokemonPage = ({
   );
 };
 
-export default connect(mapStateToProps)(PokemonPage);
+export default connect(mapStateToProps, mapDispatchToProps)(PokemonPage);

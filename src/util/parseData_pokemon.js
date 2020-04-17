@@ -18,9 +18,7 @@ const parseData_Pokemon = (
   pokemonSpeciesData,
   pokemonMovesData
 ) => {
-  console.log("parseData received pokemonMoves", pokemonMovesData);
-
-  const PikachuFlavorText = pokemonSpeciesData.flavor_text_entries.filter(
+  const SpeciesFlavorText = pokemonSpeciesData.flavor_text_entries.filter(
     entry =>
       entry.language.name === "en" && entry.version.name === "alpha-sapphire"
   )[0].flavor_text;
@@ -60,7 +58,7 @@ const parseData_Pokemon = (
       .sort((a, b) => a.order - b.order),
     species: {
       name: capitalise(pokemonSpeciesData.name),
-      flavorText: PikachuFlavorText,
+      flavorText: SpeciesFlavorText,
       genus: PikachuGenus[0].genus
     },
     moves: pokemonMoves.map(moveObj => ({

@@ -22,7 +22,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PokemonDisplay = ({ displayContent, pokemonInfo }) => {
+const PokemonDisplay = ({
+  displayContent,
+  pokemonInfo,
+  isFavourite,
+  addToFavourites
+}) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
 
@@ -33,7 +38,10 @@ const PokemonDisplay = ({ displayContent, pokemonInfo }) => {
       <Grid item container spacing={5} className={classes.flexCol}>
         <Grid item container spacing={4} className={classes.inflexible}>
           <Grid item xs={12}>
-            <PokemonDisplayMain pokemonInfo={pokemonInfo} {...anim()} />
+            <PokemonDisplayMain
+              {...{ pokemonInfo, isFavourite, addToFavourites }}
+              {...anim()}
+            />
           </Grid>
           <Grid item container xs={5}>
             <PokemonDisplayStats pokemonStats={pokemonInfo.stats} {...anim()} />
