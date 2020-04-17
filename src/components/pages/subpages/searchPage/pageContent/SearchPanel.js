@@ -24,56 +24,18 @@ import SearchIcon from "@material-ui/icons/Search";
 const useStyles = makeStyles(theme => {
   const trsn = theme.transitions;
   const ease = trsn.easing;
-  const pokeShortTrsn = [
+  const pokeBounceIn = [
+    trsn.duration.long,
     trsn.duration.short,
-    trsn.duration.short,
-    ease.pokeEase
+    ease.pokeBounceIn
   ];
 
-  const pokeDelayTrsn = [
-    trsn.duration.medium,
-    trsn.duration.medium,
-    ease.pokeEase
+  const pokeBounceOut = [
+    trsn.duration.longer,
+    trsn.duration.short,
+    ease.pokeBounceOut
   ];
   return {
-    /* CARD */
-    card: {
-      ...trsn.build([
-        [
-          "background-color",
-          trsn.duration.long * 3.5,
-          trsn.duration.long * 1.25,
-          ease.pokeEase
-        ],
-        ["margin-left", ...pokeDelayTrsn],
-        ["margin-right", ...pokeDelayTrsn]
-      ]),
-      backgroundColor: Color(theme.palette.secondary.main)
-        .mix(Color(theme.palette.background.default), 0.15)
-        .toString(),
-      marginLeft: "24%",
-      marginRight: "24%"
-    },
-    "card-Open": {
-      ...trsn.build([
-        ["background-color", 650, 0, ease.pokeEase],
-        ["margin-left", ...pokeDelayTrsn],
-        ["margin-right", ...pokeDelayTrsn]
-      ]),
-      backgroundColor: theme.palette.background.default,
-      marginLeft: "10%",
-      marginRight: "10%"
-    },
-    "card-Busy": {
-      ...trsn.build([
-        ["background-color", 650, 0, ease.pokeEase],
-        ["margin-left", ...pokeShortTrsn],
-        ["margin-right", ...pokeShortTrsn]
-      ]),
-      backgroundColor: theme.palette.background.senary,
-      marginLeft: "20%",
-      marginRight: "20%"
-    },
     /* CARD META */
     cardActionArea: {
       padding: "0.8em",
@@ -86,11 +48,49 @@ const useStyles = makeStyles(theme => {
     cardActionAreaOverlay: {
       opacity: "0% !important"
     },
+    /* CARD */
+    card: {
+      marginLeft: "24%",
+      marginRight: "24%",
+      ...trsn.build([
+        [
+          "background-color",
+          trsn.duration.long * 3.5,
+          trsn.duration.long * 1.25,
+          ease.pokeEase
+        ],
+        ["margin-left", ...pokeBounceOut],
+        ["margin-right", ...pokeBounceOut]
+      ]),
+      backgroundColor: Color(theme.palette.secondary.main)
+        .mix(Color(theme.palette.background.default), 0.15)
+        .toString()
+    },
+    "card-Open": {
+      ...trsn.build([
+        ["background-color", 650, 0, ease.pokeEase],
+        ["margin-left", ...pokeBounceIn],
+        ["margin-right", ...pokeBounceIn]
+      ]),
+      backgroundColor: theme.palette.background.default,
+      marginLeft: "10%",
+      marginRight: "10%"
+    },
+    "card-Busy": {
+      ...trsn.build([
+        ["background-color", 650, 0, ease.pokeEase],
+        ["margin-left", ...pokeBounceOut],
+        ["margin-right", ...pokeBounceOut]
+      ]),
+      backgroundColor: theme.palette.background.senary,
+      marginLeft: "20%",
+      marginRight: "20%"
+    },
     /* CARD HEADER */
     cardHeader: {
       ...trsn.build([
-        ["margin-top", ...pokeShortTrsn],
-        ["margin-bottom", ...pokeShortTrsn],
+        ["margin-top", ...pokeBounceOut],
+        ["margin-bottom", ...pokeBounceOut],
         ["transform", 825, 425, ease.pokeSwish]
       ]),
       textAlign: "center",
@@ -100,8 +100,8 @@ const useStyles = makeStyles(theme => {
     },
     "cardHeader-Open": {
       ...trsn.build([
-        ["margin-top", ...pokeShortTrsn],
-        ["margin-bottom", ...pokeShortTrsn],
+        ["margin-top", ...pokeBounceIn],
+        ["margin-bottom", ...pokeBounceIn],
         ["transform", 425, 0, trsn.easing.bounceClick]
       ]),
       marginTop: "2.5em",
@@ -133,18 +133,18 @@ const useStyles = makeStyles(theme => {
     },
     /* CARD CONTENT */
     cardContent: {
-      ...trsn.build([["margin-bottom", ...pokeShortTrsn]]),
+      ...trsn.build([["margin-bottom", ...pokeBounceOut]]),
       display: "flex",
       padding: "0px",
       justifyContent: "center",
       marginBottom: "0.75em"
     },
     "cardContent-Open": {
-      ...trsn.build([["margin-bottom", ...pokeShortTrsn]]),
+      ...trsn.build([["margin-bottom", ...pokeBounceIn]]),
       marginBottom: "2.5em"
     },
     "cardContent-Busy": {
-      ...trsn.build([["margin-bottom", ...pokeShortTrsn]]),
+      ...trsn.build([["margin-bottom", ...pokeBounceOut]]),
       marginBottom: "2em"
     }
   };

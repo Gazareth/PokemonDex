@@ -125,9 +125,11 @@ export const theme = (mode = "dark") => {
       easing: {
         bounceClick: "cubic-bezier(0.570, -5.600, 0.1, 8.650)",
         pokeEase: "cubic-bezier(0.215, 0.61, 0.355, 1)",
-        pokeSwish: "cubic-bezier(0.68, -0.6, 0.32, 1)"
+        pokeSwish: "cubic-bezier(0.68, -0.6, 0.32, 1)",
+        pokeBounceIn: "cubic-bezier(.35,1.76,.53,1.01)",
+        pokeBounceOut: "cubic-bezier(.47,-0.37,.5,1.02)"
       },
-      duration: { medium: 500, long: 600 }
+      duration: { medium: 500, long: 600, longer: 650 }
     }
   });
 
