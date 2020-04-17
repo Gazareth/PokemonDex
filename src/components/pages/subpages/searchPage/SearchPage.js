@@ -27,18 +27,12 @@ const mapDispatchToProps = {
 const SearchPage = ({ displayContent, loading, searchPokemon }) => {
   const [loadingState, setLoadingState] = useState(loading);
 
-  //let timeout;
-
-  // const setLoadingStateTimeout = () => {
-  //   clearTimeout(timeout);
-  //   timeout = setTimeout(() => setLoadingState(loading), 1000);
-  // };
-
   useEffect(() => setLoadingState(loading), [loading]);
 
   const searchReady =
-    loadingState === SEARCH_POKEMON.NONE ||
-    loadingState === SEARCH_POKEMON.DONE;
+    displayContent &&
+    (loadingState === SEARCH_POKEMON.NONE ||
+      loadingState === SEARCH_POKEMON.DONE);
 
   const anim = useAnimEngine(3, displayContent, 450);
 
