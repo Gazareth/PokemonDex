@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosDelayed from "util/axios";
 import { SEARCH_POKEMON, THEME } from "./types";
 
 /***********
@@ -8,6 +9,7 @@ import { SEARCH_POKEMON, THEME } from "./types";
  *************/
 const apiUrl = "https://pokeapi.co/api/v2/";
 
+const preSearchDelay = process.env.REACT_APP_SEARCHINITDELAY;
 const sleepTime = process.env.REACT_APP_APIINTERVAL;
 const sleepErrorTime = process.env.REACT_APP_APIERRORCOOLDOWN;
 
@@ -22,8 +24,8 @@ export const searchPokemon = pokemonName => {
 
   return dispatch => {
     dispatch(setPokemonData(SEARCH_POKEMON.INIT));
-    return axios
-      .get(apiUrl + "pokemon/" + pokemonName)
+    return axiosDelayed
+      .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
       .then(sleep())
       .then(response => {
         speciesUrl = response.data.species.url;
