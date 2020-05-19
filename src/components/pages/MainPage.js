@@ -1,4 +1,11 @@
 import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import clsx from "clsx";
 
@@ -42,12 +49,12 @@ const Copyright = ({ theme }) => {
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   flexCol: {
     display: "flex",
     flexFlow: "column nowrap",
     flex: "auto",
-    overflow: "hidden"
+    overflow: "hidden",
   },
 
   layout: {
@@ -57,8 +64,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     background: theme.palette.background.secondary,
@@ -68,25 +75,44 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
-      padding: theme.spacing(3)
-    }
-  }
+      padding: theme.spacing(3),
+    },
+  },
 }));
+
+const PokemonDexURLs = ["search", "pokemon", "favourites"];
+
+const PokemonRouter = () => {
+  const location = useLocation();
+  const pathPage = location.pathname.split("/")[1];
+  const actualPage =
+    PokemonDexURLs.filter((str) => str.startsWith(pathPage))[0] ||
+    PokemonDexURLs[0]; //TODO: change this to a "find"
+  const tab = PokemonDexURLs.indexOf(actualPage);
+  console.log("Pokemon router location: ", location, "Page: ", pathPage);
+
+  //TODO: push "search/" to history if nothing (i.e. redirect)
+
+  return <TabbedScreens pathSetTab={tab} />;
+};
 
 const MainPage = () => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
 
   return (
-    <>
-      <main className={clsx(classes.flexCol, classes.layout)}>
-        <Paper className={clsx(classes.flexCol, classes.paper)}>
-          <TabbedScreens />
-          {/* <PokemonPage /> */}
-        </Paper>
-        <Copyright theme={mainTheme} className={classes.footer} />
-      </main>
-    </>
+    <Router>
+      <Switch>
+        <Route path="/">
+          <main className={clsx(classes.flexCol, classes.layout)}>
+            <Paper className={clsx(classes.flexCol, classes.paper)}>
+              <PokemonRouter />
+            </Paper>
+            <Copyright theme={mainTheme} className={classes.footer} />
+          </main>
+        </Route>
+      </Switch>
+    </Router>
   );
 };
 

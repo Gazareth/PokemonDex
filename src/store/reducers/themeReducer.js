@@ -1,7 +1,7 @@
 import { THEME } from "../actions/types";
 
 const defaultTheme = Object.freeze({
-  mode: "light"
+  mode: "dark",
 });
 
 const themeReducer = (state = defaultTheme, action) => {

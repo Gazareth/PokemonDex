@@ -26,25 +26,25 @@ import SearchIcon from "@material-ui/icons/Search";
 import StarIcon from "@material-ui/icons/Star";
 import { PokeballIcon } from "../../icons/PokeballIcon";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBarClass: {
     backgroundColor: "rgba(0,0,0,0)",
-    borderRadius: "25px"
+    borderRadius: "25px",
   },
   flexCol: {
     display: "flex",
     flexFlow: "column nowrap",
     flex: "auto",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   centerContent: {
     width: "100%",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   tabsRoot: {
     backgroundColor: theme.palette.secondary.dark,
-    borderRadius: "25px"
+    borderRadius: "25px",
   },
   tabIndicator: {
     display: "flex",
@@ -52,36 +52,36 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "transparent",
     "& > div": {
       width: "100%",
-      backgroundColor: "#fff"
-    }
+      backgroundColor: "#fff",
+    },
   },
   //...tabIndicatorStyles,
   tabIndicatorLoading: {
     "& > div": {
-      backgroundColor: "#dadada"
-    }
+      backgroundColor: "#dadada",
+    },
   },
   svgRoot: {
     height: "1.95rem",
     transform: "scale(1)",
     margin: "0.5rem",
-    fill: theme.palette.text.disabled
+    fill: theme.palette.text.disabled,
   },
   tabSelected: {
     fill: "#fff",
     filter: "drop-shadow(0 0 0.6rem white)",
     fontSize: "1.95em",
-    transition: "font-size 0.325s cubic-bezier(.34,5.22,.52,1)"
+    transition: "font-size 0.325s cubic-bezier(.34,5.22,.52,1)",
   },
   tabSelectedLoading: {
     fill: "#dadada",
-    filter: "none"
-  }
+    filter: "none",
+  },
 }));
 
 const AnimAppBar = SmoothIn(AppBar);
 
-const StyledTabs = props => (
+const StyledTabs = (props) => (
   <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />
 );
 
@@ -96,17 +96,17 @@ const TabComponents = (elements, tabIndex, displayContent, classes) =>
             classes.svgRoot,
             tabIndex === i && [
               classes.tabSelected,
-              !displayContent && classes.tabSelectedLoading
+              !displayContent && classes.tabSelectedLoading,
             ]
-          )
+          ),
         },
-        pokealt: tabIndex === i ? "true" : ""
+        pokealt: tabIndex === i ? "true" : "",
       })}
       aria-label={el[1]}
     />
   ));
 
-const TabPanel = props => {
+const TabPanel = (props) => {
   const { children, value, index, passedClasses, ...other } = props;
   const isSelected = value === index;
   const flexClasses = clsx(isSelected && passedClasses);
@@ -132,9 +132,10 @@ const TabPanel = props => {
 
 let switchTabsTimer = null;
 
-const TabbedScreens = ({ loadingState, havePokemon }) => {
+const TabbedScreens = ({ loadingState, havePokemon, pathSetTab }) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
+
   const mounted = useRef();
   const loadingTab = useRef(0);
   const [currentTab, setCurrentTab] = useState(0);
@@ -142,12 +143,12 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
 
   //Handle change tab
   const changeTab = useCallback(
-    newCurrentTab => setCurrentTab(newCurrentTab),
+    (newCurrentTab) => setCurrentTab(newCurrentTab),
     []
   );
 
   const queueChangeTab = useCallback(
-    newCurrentTab => {
+    (newCurrentTab) => {
       if (
         switchTabsTimer ||
         newCurrentTab === currentTab ||
@@ -167,7 +168,7 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
 
   //Handle key down
   const handleLeftRight = useCallback(
-    event => {
+    (event) => {
       switch (event.keyCode) {
         case 37:
           if (loadingTab.current > 0) queueChangeTab(loadingTab.current - 1);
@@ -188,7 +189,7 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
   //Detect KeyDown
   useKeyDown(handleLeftRight);
 
-  //Detect loading state changed
+  //Detect loading state changed (to SEARCH_COMPLETE)
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
@@ -196,6 +197,10 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
       if (loadingState === SEARCH_POKEMON.DONE) queueChangeTab(1);
     }
   }, [queueChangeTab, loadingState]);
+
+  useEffect(() => {
+    queueChangeTab(pathSetTab);
+  }, [pathSetTab]);
 
   const anim = useAnimEngine(3, havePokemon, 450);
 
@@ -218,8 +223,8 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
                 classes.tabIndicator,
                 classes["tabIndicator-" + currentTab],
                 !displayContent && classes.tabIndicatorLoading
-              )
-            }
+              ),
+            },
           }}
           aria-label="select tab"
         >
@@ -227,7 +232,7 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
             [
               [SearchIcon, "SEARCH"],
               [PokeballIcon, "POKEMON"],
-              [StarIcon, "FAVOURITES"]
+              [StarIcon, "FAVOURITES"],
             ],
             currentTab,
             displayContent,
@@ -249,9 +254,9 @@ const TabbedScreens = ({ loadingState, havePokemon }) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loadingState: state.pokemon.loading,
-  havePokemon: state.pokemon.haveData
+  havePokemon: state.pokemon.haveData,
 });
 
 export default connect(mapStateToProps)(TabbedScreens);
