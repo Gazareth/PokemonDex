@@ -21,32 +21,32 @@ import CardContent from "@material-ui/core/CardContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SearchIcon from "@material-ui/icons/Search";
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   const trsn = theme.transitions;
   const ease = trsn.easing;
   const pokeBounceIn = [
     trsn.duration.long,
     trsn.duration.short,
-    ease.pokeBounceIn
+    ease.pokeBounceIn,
   ];
 
   const pokeBounceOut = [
     trsn.duration.longer,
     trsn.duration.short,
-    ease.pokeBounceOut
+    ease.pokeBounceOut,
   ];
   return {
     /* CARD META */
     cardActionArea: {
       padding: "0.8em",
-      paddingBottom: "2.25em"
+      paddingBottom: "2.25em",
     },
     touchRippleColor: {
       color: theme.palette.background.default,
-      opacity: 1
+      opacity: 1,
     },
     cardActionAreaOverlay: {
-      opacity: "0% !important"
+      opacity: "0% !important",
     },
     /* CARD */
     card: {
@@ -57,79 +57,79 @@ const useStyles = makeStyles(theme => {
           "background-color",
           trsn.duration.long * 3.5,
           trsn.duration.long * 1.25,
-          ease.pokeEase
+          ease.pokeEase,
         ],
         ["margin-left", ...pokeBounceOut],
-        ["margin-right", ...pokeBounceOut]
+        ["margin-right", ...pokeBounceOut],
       ]),
       backgroundColor: Color(theme.palette.secondary.main)
         .mix(Color(theme.palette.background.default), 0.15)
-        .toString()
+        .toString(),
     },
     "card-Open": {
       ...trsn.build([
         ["background-color", 650, 0, ease.pokeEase],
         ["margin-left", ...pokeBounceIn],
-        ["margin-right", ...pokeBounceIn]
+        ["margin-right", ...pokeBounceIn],
       ]),
       backgroundColor: theme.palette.background.default,
       marginLeft: "10%",
-      marginRight: "10%"
+      marginRight: "10%",
     },
     "card-Busy": {
       ...trsn.build([
         ["background-color", 650, 0, ease.pokeEase],
         ["margin-left", ...pokeBounceOut],
-        ["margin-right", ...pokeBounceOut]
+        ["margin-right", ...pokeBounceOut],
       ]),
       backgroundColor: theme.palette.background.senary,
       marginLeft: "20%",
-      marginRight: "20%"
+      marginRight: "20%",
     },
     /* CARD HEADER */
     cardHeader: {
       ...trsn.build([
         ["margin-top", ...pokeBounceOut],
         ["margin-bottom", ...pokeBounceOut],
-        ["transform", 825, 425, ease.pokeSwish]
+        ["transform", 825, 425, ease.pokeSwish],
       ]),
       textAlign: "center",
       marginTop: "1.5em",
       marginBottom: "-2.25em",
-      transform: "scale(1.1,1.1)"
+      transform: "scale(1.1,1.1)",
     },
     "cardHeader-Open": {
       ...trsn.build([
         ["margin-top", ...pokeBounceIn],
         ["margin-bottom", ...pokeBounceIn],
-        ["transform", 425, 0, trsn.easing.bounceClick]
+        ["transform", 425, 0, trsn.easing.bounceClick],
       ]),
       marginTop: "2.5em",
       marginBottom: "5em",
-      transform: "scale(1,1)"
+      transform: "scale(1,1)",
     },
     "cardHeader-Busy": {
       marginTop: "1.5em",
-      marginBottom: "-1.65em"
+      marginBottom: "-0.35em",
     },
     /* CARD SUBHEADER */
     cardSubheaderText: {
       transition: "opacity 250ms linear",
       fontWeight: "bold",
-      opacity: "0"
+      opacity: "0",
     },
     "cardSubheaderText-Open": {
       transition: "none",
-      opacity: "1"
+      opacity: "1",
     },
     cardSubheaderIcon: {
       transition: "opacity 250ms linear",
       verticalAlign: "text-top",
-      opacity: "0"
+      opacity: "0",
     },
     "cardSubheaderIcon-Open": {
       transition: "opacity 625ms linear 1.3s",
-      opacity: "1"
+      opacity: "1",
     },
     /* CARD CONTENT */
     cardContent: {
@@ -137,16 +137,16 @@ const useStyles = makeStyles(theme => {
       display: "flex",
       padding: "0px",
       justifyContent: "center",
-      marginBottom: "0.75em"
+      marginBottom: "0.75em",
     },
     "cardContent-Open": {
       ...trsn.build([["margin-bottom", ...pokeBounceIn]]),
-      marginBottom: "2.5em"
+      marginBottom: "2.5em",
     },
     "cardContent-Busy": {
       ...trsn.build([["margin-bottom", ...pokeBounceOut]]),
-      marginBottom: "2em"
-    }
+      marginBottom: "1em",
+    },
   };
 });
 
@@ -159,9 +159,9 @@ const subheadingCharPoses = {
       type: "spring",
       delay: 800 + (charIndex / numChars) * 625,
       stiffness: 5000 - 250 * Math.pow(charIndex / numChars, 0.5),
-      damping: 1000
-    })
-  }
+      damping: 1000,
+    }),
+  },
 };
 
 const loadingStrings = {
@@ -171,10 +171,10 @@ const loadingStrings = {
   [SEARCH_POKEMON.SPECIES_FOUND]: "Pokemon species found...",
   [SEARCH_POKEMON.MOVES_FOUND]: "Pokemon moves found...",
   [SEARCH_POKEMON.DONE]: "Search complete!",
-  [SEARCH_POKEMON.FAILED]: "Error. Pokemon not found."
+  [SEARCH_POKEMON.FAILED]: "Error. Pokemon not found.",
 };
 
-const ErrorProgress = props => {
+const ErrorProgress = (props) => {
   const [errorCooldown, setErrorCooldown] = React.useState(100);
   const interval = 85;
   const delta =
@@ -182,7 +182,7 @@ const ErrorProgress = props => {
 
   React.useEffect(() => {
     function progress() {
-      setErrorCooldown(prevCooldown =>
+      setErrorCooldown((prevCooldown) =>
         prevCooldown <= 0 ? 0 : prevCooldown - delta
       );
     }
@@ -203,7 +203,7 @@ const ErrorProgress = props => {
         verticalAlign: "text-top",
         marginRight: "0.375rem",
         marginTop: "0.01rem",
-        color: props.color
+        color: props.color,
       }}
     />
   );
@@ -218,7 +218,7 @@ const HelperText = ({ searching, loadingState, mainTheme: theme }) => (
           verticalAlign: "text-top",
           marginRight: "0.375rem",
           marginTop: "0.01rem",
-          color: theme.palette.text.disabled
+          color: theme.palette.text.disabled,
         }}
       />
     )}
@@ -266,7 +266,7 @@ const SearchPanel = ({
 
   const cardStates = ["Closed", "Open", "Busy"];
   const cardState = Math.max(isFocused * 2 + searchReady * -1, 0);
-  const stateClass = prefix =>
+  const stateClass = (prefix) =>
     clsx(classes[prefix], classes[prefix + "-" + cardStates[cardState]]);
 
   return (
@@ -275,29 +275,29 @@ const SearchPanel = ({
         <CardActionArea
           TouchRippleProps={{
             classes: {
-              rippleVisible: clsx(!panelOpen && classes.touchRippleColor)
-            }
+              rippleVisible: clsx(!panelOpen && classes.touchRippleColor),
+            },
           }}
           component="div"
-          onMouseDown={e => {
+          onMouseDown={(e) => {
             e.stopPropagation();
             e.preventDefault();
             handleClick();
           }}
           classes={{
             root: classes.cardActionArea,
-            focusHighlight: classes.cardActionAreaOverlay
+            focusHighlight: classes.cardActionAreaOverlay,
           }}
         >
           <CardHeader
             classes={{
-              root: clsx(classes.cardHeader, stateClass("cardHeader"))
+              root: clsx(classes.cardHeader, stateClass("cardHeader")),
             }}
             title={
               <img
                 style={{
                   height: "2em",
-                  margin: "10px"
+                  margin: "10px",
                 }}
                 src={require("icons/PokeApi.png")}
                 alt="Pokemon Dex Logo"
@@ -329,7 +329,7 @@ const SearchPanel = ({
                 handleFocus,
                 handleUnfocus,
                 searchPokemon,
-                error: loadingState === SEARCH_POKEMON.FAILED
+                error: loadingState === SEARCH_POKEMON.FAILED,
               }}
               helperText={
                 <HelperText {...{ searching, loadingState, mainTheme }} />
