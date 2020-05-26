@@ -13,45 +13,49 @@ const preSearchDelay = process.env.REACT_APP_SEARCHINITDELAY;
 const sleepTime = process.env.REACT_APP_APIINTERVAL;
 const sleepErrorTime = process.env.REACT_APP_APIERRORCOOLDOWN;
 
-const sleep = (sleepms = sleepTime) => response =>
+const sleep = (sleepms = sleepTime) => (response) =>
   new Promise((resolve, reject) =>
     setTimeout(() => resolve(response), sleepms)
   );
 
-export const searchPokemon = pokemonName => {
+export const searchPokemon = (pokemonName) => {
+  let pokemonId = 0;
   let speciesUrl = "",
     moves = [];
 
-  return dispatch => {
+  return (dispatch) => {
     dispatch(setPokemonData(SEARCH_POKEMON.INIT));
     return axiosDelayed
       .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
       .then(sleep())
-      .then(response => {
+      .then((response) => {
+        pokemonId = response.data.id;
         speciesUrl = response.data.species.url;
         moves = response.data.moves;
         dispatch(setPokemonData(SEARCH_POKEMON.FOUND, response.data));
         return axios.get(speciesUrl);
       })
       .then(sleep())
-      .then(response => {
+      .then((response) => {
         dispatch(setPokemonData(SEARCH_POKEMON.SPECIES_FOUND, response.data));
         return axios.all(getAllMoves(moves));
       })
       .then(sleep())
-      .then(response => {
+      .then((response) => {
         dispatch(
           setPokemonData(
             SEARCH_POKEMON.MOVES_FOUND,
-            response.map(resp => resp.data)
+            response.map((resp) => resp.data)
           )
         );
       })
       .then(sleep())
-      .then(response => dispatch(setPokemonData(SEARCH_POKEMON.DONE)))
+      .then((response) =>
+        dispatch(setPokemonData(SEARCH_POKEMON.DONE, pokemonId))
+      )
       .then(sleep(process.env.REACT_APP_TABSWITCHTIME))
-      .then(response => dispatch(setPokemonData(SEARCH_POKEMON.NONE)))
-      .catch(error => {
+      .then((response) => dispatch(setPokemonData(SEARCH_POKEMON.NONE)))
+      .catch((error) => {
         dispatch(setPokemonError());
         setTimeout(
           () => dispatch(setPokemonData(SEARCH_POKEMON.NONE)),
@@ -76,18 +80,18 @@ const getAllMoves = moves =>
         moveA.version_group_details[0].level_learned_at >
         moveB.version_group_details[0].level_learned_at
     )
-    .map(moveObj => axios.get(moveObj.move.url));
+    .map((moveObj) => axios.get(moveObj.move.url));
 
 const setPokemonData = (type, data) => {
   return {
     type,
-    payload: data
+    payload: data,
   };
 };
 
 const setPokemonError = () => {
   return {
-    type: SEARCH_POKEMON.FAILED
+    type: SEARCH_POKEMON.FAILED,
   };
 };
 

@@ -132,7 +132,12 @@ const TabPanel = (props) => {
 
 let switchTabsTimer = null;
 
-const TabbedScreens = ({ loadingState, havePokemon, pathSetTab }) => {
+const TabbedScreens = ({
+  loadingState,
+  havePokemon,
+  pagePathIndex,
+  setPagePathIndex,
+}) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
 
@@ -169,12 +174,13 @@ const TabbedScreens = ({ loadingState, havePokemon, pathSetTab }) => {
   //Handle key down
   const handleLeftRight = useCallback(
     (event) => {
+      if (!havePokemon) return false;
       switch (event.keyCode) {
         case 37:
-          if (loadingTab.current > 0) queueChangeTab(loadingTab.current - 1);
+          if (loadingTab.current > 0) setPagePathIndex(loadingTab.current - 1);
           break;
         case 39:
-          if (loadingTab.current < 2) queueChangeTab(loadingTab.current + 1);
+          if (loadingTab.current < 2) setPagePathIndex(loadingTab.current + 1);
           break;
         default:
           break;
@@ -183,7 +189,7 @@ const TabbedScreens = ({ loadingState, havePokemon, pathSetTab }) => {
         //Do whatever when esc is pressed
       }
     },
-    [queueChangeTab]
+    [setPagePathIndex]
   );
 
   //Detect KeyDown
@@ -194,13 +200,13 @@ const TabbedScreens = ({ loadingState, havePokemon, pathSetTab }) => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
-      if (loadingState === SEARCH_POKEMON.DONE) queueChangeTab(1);
+      if (loadingState === SEARCH_POKEMON.DONE) setPagePathIndex(1);
     }
-  }, [queueChangeTab, loadingState]);
+  }, [setPagePathIndex, loadingState]);
 
   useEffect(() => {
-    queueChangeTab(pathSetTab);
-  }, [pathSetTab]);
+    queueChangeTab(pagePathIndex);
+  }, [pagePathIndex]);
 
   const anim = useAnimEngine(3, havePokemon, 450);
 
@@ -214,7 +220,7 @@ const TabbedScreens = ({ loadingState, havePokemon, pathSetTab }) => {
       >
         <StyledTabs
           value={currentTab}
-          onChange={(e, v) => queueChangeTab(v)}
+          onChange={(e, v) => setPagePathIndex(v)}
           variant="fullWidth"
           {...{
             classes: {
