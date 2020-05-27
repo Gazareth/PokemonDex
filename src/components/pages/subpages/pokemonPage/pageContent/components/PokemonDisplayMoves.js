@@ -210,14 +210,19 @@ const PokemonMoves = ({ classes, pokemonMoves, theme }) => (
   </List>
 );
 
-export default function PokemonDisplayMoves({ pokemonMoves, show, delay }) {
+export default function PokemonDisplayMoves({
+  pokemonMoves,
+  show,
+  delay,
+  doHeight,
+}) {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
 
   return (
     <OutlinedDiv
       label={"Moves (" + pokemonMoves.length + ")"}
-      {...{ show, delay }}
+      {...{ show, delay, doHeight }}
       classes={{ root: classes.fullHeight }}
       inputClassName={clsx(classes.fullHeight, classes.overflowAuto)}
       inputRootClasses={clsx(

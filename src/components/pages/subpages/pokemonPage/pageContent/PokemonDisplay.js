@@ -54,7 +54,11 @@ const PokemonDisplay = ({
           </Grid>
         </Grid>
         <Grid item container xs={12} className={classes.flexCol}>
-          <PokemonDisplayMoves pokemonMoves={pokemonInfo.moves} {...anim()} />
+          <PokemonDisplayMoves
+            pokemonMoves={pokemonInfo.moves}
+            {...anim()}
+            doHeight
+          />
         </Grid>
       </Grid>
     </>

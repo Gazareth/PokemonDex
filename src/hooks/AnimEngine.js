@@ -5,7 +5,7 @@ const useAnimEngine = (
   staggerAmount = 150,
   startId = 0
 ) => {
-  var staggerId = startId;
+  let staggerId = startId;
   return () => {
     const newDelay =
       baseDelay + staggerAmount * Math.round(Math.random() * 0.5 + staggerId++);
@@ -18,9 +18,8 @@ const useAnimEngine = (
         in: newDelay,
         out: invDelay,
         maxDelay,
-        dyn: inOut ? newDelay : invDelay
       },
-      show: inOut
+      show: inOut,
     };
   };
 };

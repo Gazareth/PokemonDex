@@ -4,37 +4,45 @@ import { Transition } from "react-transition-group";
 
 const baseStyle = ({ duration, magnitude, doHeight }) => ({
   transition:
-    `opacity ${duration}ms linear, transform ${duration}ms cubic-bezier(0.075, 0.82, 0.165, 1)` +
+    `opacity ${duration.in}ms linear, transform ${duration.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)` +
     (doHeight
-      ? `, max-height ${duration * 2}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
+      ? `, max-height ${duration.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
       : ``),
-  transitionDelay: duration + "ms",
+  transitionDelay: duration.in + "ms",
   opacity: 0,
   transform: "translate(0,-" + 2 * magnitude + "em)",
+  //maxHeight: doHeight ? "100%" : undefined,
+  maxHeight: "100%",
 });
 
 const stateStyles = (duration, doHeight) => ({
   entering: {
     opacity: 1,
     transform: "translate(0,0)",
-    maxHeight: doHeight ? "100%" : undefined,
+    maxHeight: "100%",
   },
   entered: {
     opacity: 1,
     transform: "translate(0,0)",
-    maxHeight: doHeight ? "100%" : undefined,
+    maxHeight: "100%",
   },
   exiting: {
+    transition:
+      `opacity ${duration.out}ms linear ${duration.out}ms, transform ${duration.out}ms cubic-bezier(0.075, 0.82, 0.165, 1) ${duration.out}ms` +
+      (doHeight
+        ? `, max-height ${duration.out *
+            2}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
+        : ``),
+    transitionDelay: `${duration.out}ms`,
     opacity: 0,
     transform: "translate(0,-1em)",
     maxHeight: doHeight ? "0%" : undefined,
-    transition:
-      `opacity ${duration}ms cubic-bezier(0.23, 1, 0.32, 1), transform ${duration}ms cubic-bezier(0.075, 0.82, 0.165, 1)` +
-      (doHeight
-        ? `, max-height ${duration * 2}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
-        : ""),
   },
-  exited: { opacity: 0, transform: "translate(0,-1em)", maxHeight: "0%" },
+  exited: {
+    opacity: 0,
+    transform: "translate(0,-1em)",
+    maxHeight: doHeight ? "0%" : undefined,
+  },
 });
 
 const transitionStyles = (state, duration, magnitude, doHeight) => ({
@@ -55,7 +63,7 @@ const SmoothIn = (ComponentToTransition) => ({
         {...otherProps}
         style={{
           ...otherProps.style,
-          ...transitionStyles(state, delay.dyn, animMagnitude, doHeight),
+          ...transitionStyles(state, delay, animMagnitude, doHeight),
         }}
       />
     )}
