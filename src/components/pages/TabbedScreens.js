@@ -7,6 +7,7 @@ import useAnimEngine from "hooks/AnimEngine";
 
 import clsx from "clsx";
 
+import Grow from "@material-ui/core/Grow";
 import SmoothIn from "util/transitionSmoothIn";
 
 import SearchPage from "./subpages/searchPage/SearchPage";
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
   appBarClass: {
     backgroundColor: "rgba(0,0,0,0)",
     borderRadius: "25px",
+    overflow: "hidden",
   },
   flexCol: {
     display: "flex",
@@ -79,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AnimAppBar = SmoothIn(AppBar);
+const AnimAppBar = AppBar;
 
 const StyledTabs = (props) => (
   <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />
@@ -212,40 +214,44 @@ const TabbedScreens = ({
 
   return (
     <>
-      <AnimAppBar
-        {...anim()}
-        doHeight
-        className={classes.appBarClass}
-        position="static"
+      <Grow
+        in={havePokemon}
+        timeout={225}
+        style={{
+          minHeight: "unset",
+          transitionTimingFunction: mainTheme.transitions.easing.pokeBounceIn,
+        }}
       >
-        <StyledTabs
-          value={currentTab}
-          onChange={(e, v) => setPagePathIndex(v)}
-          variant="fullWidth"
-          {...{
-            classes: {
-              root: classes.tabsRoot,
-              indicator: clsx(
-                classes.tabIndicator,
-                classes["tabIndicator-" + currentTab],
-                !displayContent && classes.tabIndicatorLoading
-              ),
-            },
-          }}
-          aria-label="select tab"
-        >
-          {TabComponents(
-            [
-              [SearchIcon, "SEARCH"],
-              [PokeballIcon, "POKEMON"],
-              [StarIcon, "FAVOURITES"],
-            ],
-            currentTab,
-            displayContent,
-            classes
-          )}
-        </StyledTabs>
-      </AnimAppBar>
+        <AnimAppBar className={classes.appBarClass} position="static">
+          <StyledTabs
+            value={currentTab}
+            onChange={(e, v) => setPagePathIndex(v)}
+            variant="fullWidth"
+            {...{
+              classes: {
+                root: classes.tabsRoot,
+                indicator: clsx(
+                  classes.tabIndicator,
+                  classes["tabIndicator-" + currentTab],
+                  !displayContent && classes.tabIndicatorLoading
+                ),
+              },
+            }}
+            aria-label="select tab"
+          >
+            {TabComponents(
+              [
+                [SearchIcon, "SEARCH"],
+                [PokeballIcon, "POKEMON"],
+                [StarIcon, "FAVOURITES"],
+              ],
+              currentTab,
+              displayContent,
+              classes
+            )}
+          </StyledTabs>
+        </AnimAppBar>
+      </Grow>
       {[SearchPage, PokemonPage, FavouritesPage].map((el, i) => (
         <TabPanel
           value={currentTab}

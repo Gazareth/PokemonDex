@@ -99,6 +99,7 @@ const PokemonRouter = () => {
   const location = useLocation();
   const history = useHistory();
   let tabIndex = getIndexFromPath(location.pathname);
+  console.log("Pokemon router got tab index: ", tabIndex);
 
   //redirect to search page if nothing found
   if (tabIndex === -1) {

@@ -12,11 +12,12 @@ const useAnimEngine = (
     const maxDelay =
       baseDelay +
       staggerAmount * Math.round(Math.random() * 0.5 + participants);
-    const invDelay = baseDelay + maxDelay - newDelay;
+    const invDelay = maxDelay - newDelay;
     return {
       delay: {
         in: newDelay,
         out: invDelay,
+        outDuration: invDelay + baseDelay,
         maxDelay,
       },
       show: inOut,
