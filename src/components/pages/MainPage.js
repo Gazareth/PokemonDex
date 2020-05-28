@@ -85,10 +85,10 @@ const PokemonDexURLs = ["search", "view", "favourites"];
 
 const getIndexFromPath = (path) => {
   const pathPage = path.split("/")[1];
-  const actualPage = PokemonDexURLs.filter((str) =>
-    str.startsWith(pathPage)
-  )[0]; //@todo: change this to a "find"
-  return PokemonDexURLs.indexOf(actualPage);
+  const pageIndex = PokemonDexURLs.findIndex((endpt) =>
+    pathPage.startsWith(endpt)
+  );
+  return pageIndex;
 };
 
 const getPathFromIndex = (index) => {
