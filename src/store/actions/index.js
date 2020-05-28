@@ -66,9 +66,9 @@ export const searchPokemon = (pokemonName) => {
   };
 };
 
-const getAllMoves = moves =>
+const getAllMoves = (moves) =>
   moves
-    .filter(moveObj =>
+    .filter((moveObj) =>
       moveObj.version_group_details.reduce(
         (canLearn, versionObj) =>
           canLearn || versionObj.move_learn_method.name === "level-up",
@@ -100,14 +100,14 @@ const setPokemonError = () => {
  * FAVOURITES ACTIONS
  *
  *************/
-export const addFavourite = pokemonData => ({
+export const addFavourite = (pokemonData) => ({
   type: FAVOURITES.ADD,
-  payload: pokemonData
+  payload: pokemonData,
 });
 
-export const removeFavourite = pokemonData => ({
+export const removeFavourite = (pokemonData) => ({
   type: FAVOURITES.REMOVE,
-  payload: pokemonData.id
+  payload: pokemonData.id,
 });
 
 /***********
@@ -117,8 +117,8 @@ export const removeFavourite = pokemonData => ({
  *************/
 const ThemeMap = {
   dark: THEME.SET_DARK_MODE,
-  light: THEME.SET_LIGHT_MODE
+  light: THEME.SET_LIGHT_MODE,
 };
 
 //THEME
-export const setThemeMode = mode => ({ type: ThemeMap[mode] });
+export const setThemeMode = (mode) => ({ type: ThemeMap[mode] });

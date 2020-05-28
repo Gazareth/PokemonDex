@@ -10,23 +10,23 @@ import PokemonDisplayStats from "./components/PokemonDisplayStats";
 import PokemonDisplaySpecies from "./components/PokemonDisplaySpecies";
 import PokemonDisplayMoves from "./components/PokemonDisplayMoves";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   flexCol: {
     display: "flex",
     flexFlow: "column nowrap",
     flex: "auto",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   inflexible: {
-    flex: "none"
-  }
+    flex: "none",
+  },
 }));
 
 const PokemonDisplay = ({
   displayContent,
   pokemonInfo,
   isFavourite,
-  addToFavourites
+  addToFavourites,
 }) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);

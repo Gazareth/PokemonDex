@@ -10,7 +10,7 @@ import {
   deepPurple,
   purple,
   pink,
-  red
+  red,
 } from "@material-ui/core/colors";
 
 import Color from "color";
@@ -38,8 +38,8 @@ const levelColours = (darkLight = false) =>
     deepPurple,
     purple,
     pink,
-    red
-  ].map(colorObj => colorObj["A700"]);
+    red,
+  ].map((colorObj) => colorObj["A700"]);
 
 const MixColours = (col1, col2, ratio) =>
   Color(col1)
@@ -61,13 +61,13 @@ const typeColoursClasses = (
           theme.palette.pokemonTypes[typesColorKey],
           colorBlend,
           muted || 0
-        ) //todo get half way between this color and default grey if "muted" argument provided
-      }
+        ), //todo get half way between this color and default grey if "muted" argument provided
+      },
     }),
     {}
   );
 
-const makeTextShadow = colour => "0.07em 0.07em 0 " + colour;
+const makeTextShadow = (colour) => "0.07em 0.07em 0 " + colour;
 //"0.05em 0.04em 0 " + colour + ", 0.1em 0.08em 0em " + colour;
 
 const resolveLevelColor = (theme, level, mix = 0.5) =>
@@ -79,27 +79,27 @@ const resolveLevelColor = (theme, level, mix = 0.5) =>
     mix
   );
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   noCursor: {
-    cursor: "default !important"
+    cursor: "default !important",
   },
   softBg: {
-    backgroundColor: theme.palette.background.tertiary
+    backgroundColor: theme.palette.background.tertiary,
   },
   fullHeight: {
-    height: "100%"
+    height: "100%",
   },
   overflowAuto: {
     flex: "auto",
-    overflow: "auto"
+    overflow: "auto",
   },
   listMargin: {
     margin: "2.8em",
-    marginTop: "2.2em"
+    marginTop: "2.2em",
   },
   levelNumber: {
     fontWeight: "800",
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   levelText: {
     fontSize: "0.65rem",
@@ -107,10 +107,10 @@ const useStyles = makeStyles(theme => ({
     fontVariant: "small-caps",
     textShadow: "none",
     //"-1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444, 1px 1px 0 #444",
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   backgroundTestColour: {
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   ...typeColoursClasses(
     theme,
@@ -131,7 +131,7 @@ const useStyles = makeStyles(theme => ({
     "typeLevelBackgroundColor",
     "backgroundColor",
     0.95
-  )
+  ),
 }));
 
 const PokemonMoves = ({ classes, pokemonMoves, theme }) => (
@@ -146,28 +146,28 @@ const PokemonMoves = ({ classes, pokemonMoves, theme }) => (
               ? {
                   //borderTop: "",
                   borderTopLeftRadius: "0.3em",
-                  borderTopRightRadius: "0.3em"
+                  borderTopRightRadius: "0.3em",
                 }
               : i === pokemonMoves.length - 1
               ? {
                   borderTop: "",
                   borderBottomLeftRadius: "0.3em",
-                  borderBottomRightRadius: "0.3em"
+                  borderBottomRightRadius: "0.3em",
                 }
-              : { borderTop: "" }) //"0px solid #000"
+              : { borderTop: "" }), //"0px solid #000"
           }}
           classes={{
-            root: classes["typeBackgroundColor-" + move.type]
+            root: classes["typeBackgroundColor-" + move.type],
           }}
           button
         >
           <ListItemAvatar>
             <Avatar
               style={{
-                border: "1px solid" + resolveLevelColor(theme, move.level)
+                border: "1px solid" + resolveLevelColor(theme, move.level),
               }}
               classes={{
-                root: classes.backgroundTestColour //classes["typeLevelBackgroundColor-" + move.type]
+                root: classes.backgroundTestColour, //classes["typeLevelBackgroundColor-" + move.type]
               }}
             >
               <Typography
@@ -189,7 +189,7 @@ const PokemonMoves = ({ classes, pokemonMoves, theme }) => (
                       0.75 +
                       ")"
                   ),
-                  color: resolveLevelColor(theme, move.level, 0.5)
+                  color: resolveLevelColor(theme, move.level, 0.5),
                 }}
               >
                 <Typography component="span" className={classes.levelText}>
