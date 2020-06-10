@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useLocation,
-  useHistory,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -14,7 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-import TabbedScreens from "./TabbedScreens";
+import PokemonRouter from "./PokemonRouter";
 
 const Copyright = ({ theme }) => {
   return (
@@ -80,40 +74,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-const PokemonDexURLs = ["search", "view", "favourites"];
-
-const getIndexFromPath = (path) => {
-  const pathPage = path.split("/")[1];
-  const pageIndex = PokemonDexURLs.findIndex((endpt) =>
-    pathPage.startsWith(endpt)
-  );
-  return pageIndex;
-};
-
-const getPathFromIndex = (index) => {
-  return `/${PokemonDexURLs[index]}/`;
-};
-
-const PokemonRouter = () => {
-  const location = useLocation();
-  const history = useHistory();
-  let tabIndex = getIndexFromPath(location.pathname);
-  console.log("Pokemon router got tab index: ", tabIndex);
-
-  //redirect to search page if nothing found
-  if (tabIndex === -1) {
-    tabIndex = 0;
-    history.push(getPathFromIndex(tabIndex));
-  }
-
-  return (
-    <TabbedScreens
-      pagePathIndex={tabIndex}
-      setPagePathIndex={(index) => history.push(getPathFromIndex(index))}
-    />
-  );
-};
 
 const MainPage = () => {
   const mainTheme = useTheme();
