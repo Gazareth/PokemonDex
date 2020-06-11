@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -33,7 +33,6 @@ const PokemonRouter = ({ loading, havePokemon, searchPokemon }) => {
   const location = useLocation();
   const history = useHistory();
   let tabIndex = getIndexFromPath(location.pathname);
-  console.log("Pokemon router got tab index: ", tabIndex);
 
   if (tabIndex === -1) {
     //redirect to search page if nothing found
@@ -64,14 +63,14 @@ const PokemonRouter = ({ loading, havePokemon, searchPokemon }) => {
     }
   }
 
-  return (
-    <TabbedScreens
-      pagePathIndex={tabIndex}
-      setPagePathIndex={(index) => {
-        if (index !== tabIndex) history.push(getPathFromIndex(index));
-      }}
-    />
+  const setPagePathIndex = useCallback(
+    (index) => {
+      if (index !== tabIndex) history.push(getPathFromIndex(index));
+    },
+    [tabIndex]
   );
+
+  return <TabbedScreens pagePathIndex={tabIndex} {...{ setPagePathIndex }} />;
 };
 
 const mapStateToProps = (state) => {
