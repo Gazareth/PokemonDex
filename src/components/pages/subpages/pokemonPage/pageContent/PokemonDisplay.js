@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
@@ -30,8 +30,13 @@ const PokemonDisplay = ({
 }) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
+  const [animateIn, setAnimateIn] = useState(false);
 
-  const anim = useAnimEngine(4, displayContent);
+  useEffect(() => {
+    setTimeout(() => setAnimateIn(true), 250);
+  }, []);
+
+  const anim = useAnimEngine(4, displayContent && animateIn);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { SEARCH_POKEMON } from "store/actions/types";
 
 import clsx from "clsx";
@@ -174,7 +174,7 @@ const loadingStrings = {
   [SEARCH_POKEMON.FAILED]: "Error. Pokemon not found.",
 };
 
-const ErrorProgress = (props) => {
+const ErrorProgress = ({ color }) => {
   const [errorCooldown, setErrorCooldown] = React.useState(100);
   const interval = 85;
   const delta =
@@ -203,7 +203,7 @@ const ErrorProgress = (props) => {
         verticalAlign: "text-top",
         marginRight: "0.375rem",
         marginTop: "0.01rem",
-        color: props.color,
+        color,
       }}
     />
   );
@@ -269,13 +269,18 @@ const SearchPanel = ({
   const stateClass = (prefix) =>
     clsx(classes[prefix], classes[prefix + "-" + cardStates[cardState]]);
 
+  const touchRippleClasses = useMemo(
+    () => clsx(!panelOpen && classes.touchRippleColor),
+    [panelOpen, classes]
+  );
+
   return (
     <div style={{ ...props.style, ...mainAnim }}>
       <Card elevation={3} className={stateClass("card")}>
         <CardActionArea
           TouchRippleProps={{
             classes: {
-              rippleVisible: clsx(!panelOpen && classes.touchRippleColor),
+              rippleVisible: touchRippleClasses,
             },
           }}
           component="div"

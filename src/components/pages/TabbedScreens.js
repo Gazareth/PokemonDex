@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import { connect } from "react-redux";
 import { SEARCH_POKEMON } from "../../store/actions/types";
 
@@ -8,7 +14,6 @@ import useAnimEngine from "hooks/AnimEngine";
 import clsx from "clsx";
 
 import Grow from "@material-ui/core/Grow";
-import SmoothIn from "util/transitionSmoothIn";
 
 import SearchPage from "./subpages/searchPage/SearchPage";
 import PokemonPage from "./subpages/pokemonPage/PokemonPage";
@@ -32,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgba(0,0,0,0)",
     borderRadius: "25px",
     overflow: "hidden",
+    marginBottom: "1.25rem",
   },
   flexCol: {
     display: "flex",
@@ -52,28 +58,29 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     backgroundColor: "transparent",
-    "& > div": {
+    "& > span": {
       width: "100%",
       backgroundColor: "#fff",
     },
   },
   //...tabIndicatorStyles,
   tabIndicatorLoading: {
-    "& > div": {
+    "& > span": {
       backgroundColor: "#dadada",
     },
   },
   svgRoot: {
     height: "1.95rem",
-    transform: "scale(1)",
+    //transform: "scale(0.85)",
     margin: "0.5rem",
     fill: theme.palette.text.disabled,
+    transition: "font-size 0.325s cubic-bezier(.34,5.22,.52,1)",
   },
   tabSelected: {
     fill: "#fff",
     filter: "drop-shadow(0 0 0.6rem white)",
     fontSize: "1.95em",
-    transition: "font-size 0.325s cubic-bezier(.34,5.22,.52,1)",
+    //transform: "scale(1)",
   },
   tabSelectedLoading: {
     fill: "#dadada",
@@ -84,29 +91,53 @@ const useStyles = makeStyles((theme) => ({
 const AnimAppBar = AppBar;
 
 const StyledTabs = (props) => (
-  <Tabs {...props} TabIndicatorProps={{ children: <div /> }} />
+  <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />
 );
 
-const TabComponents = (elements, tabIndex, displayContent, classes) =>
-  elements.map((el, i) => (
+const TabButton = ({
+  currentIndex,
+  tabIndex,
+  iconComponent,
+  displayContent,
+  passedClasses,
+  ariaLabel,
+  ...props
+}) => {
+  const tabIconClasses = useMemo(
+    () =>
+      clsx(
+        passedClasses.svgRoot,
+        tabIndex === currentIndex && [
+          passedClasses.tabSelected,
+          !displayContent && passedClasses.tabSelectedLoading,
+        ]
+      ),
+    [currentIndex, tabIndex, displayContent, passedClasses]
+  );
+
+  const TabIcon = () =>
+    React.createElement(iconComponent, {
+      classes: {
+        root: tabIconClasses,
+      },
+      pokealt: tabIndex === currentIndex ? "true" : "",
+    });
+
+  const MemoizedTabIcon = React.memo(TabIcon);
+
+  return (
     <Tab
-      key={i}
+      key={currentIndex}
       fontSize="small"
-      icon={React.createElement(el[0], {
-        classes: {
-          root: clsx(
-            classes.svgRoot,
-            tabIndex === i && [
-              classes.tabSelected,
-              !displayContent && classes.tabSelectedLoading,
-            ]
-          ),
-        },
-        pokealt: tabIndex === i ? "true" : "",
-      })}
-      aria-label={el[1]}
+      textColor="primary"
+      icon={<MemoizedTabIcon />}
+      aria-label={ariaLabel}
+      {...props}
     />
-  ));
+  );
+};
+
+const MemoizedTabButton = React.memo(TabButton);
 
 const TabPanel = (props) => {
   const { children, value, index, passedClasses, ...other } = props;
@@ -144,15 +175,16 @@ const TabbedScreens = ({
   const classes = useStyles(mainTheme);
 
   const mounted = useRef();
-  const loadingTab = useRef(0);
-  const [currentTab, setCurrentTab] = useState(0);
+  const loadingTab = useRef(pagePathIndex);
+  const [currentTab, setCurrentTab] = useState(pagePathIndex);
   const [displayContent, setDisplayContent] = useState(true);
 
+  const tabsActions = useRef();
+
   //Handle change tab
-  const changeTab = useCallback(
-    (newCurrentTab) => setCurrentTab(newCurrentTab),
-    []
-  );
+  const changeTab = useCallback((newCurrentTab) => {
+    setCurrentTab(newCurrentTab);
+  }, []);
 
   const queueChangeTab = useCallback(
     (newCurrentTab) => {
@@ -191,7 +223,7 @@ const TabbedScreens = ({
         //Do whatever when esc is pressed
       }
     },
-    [setPagePathIndex]
+    [havePokemon, setPagePathIndex]
   );
 
   //Detect KeyDown
@@ -208,25 +240,33 @@ const TabbedScreens = ({
 
   useEffect(() => {
     queueChangeTab(pagePathIndex);
-  }, [pagePathIndex]);
+  }, [queueChangeTab, pagePathIndex]);
 
   const anim = useAnimEngine(3, havePokemon, 450);
 
   return (
     <>
       <Grow
-        in={havePokemon}
-        timeout={225}
+        in={
+          havePokemon > 0 ||
+          [
+            SEARCH_POKEMON.FOUND,
+            SEARCH_POKEMON.SPECIES_FOUND,
+            SEARCH_POKEMON.MOVES_FOUND,
+          ].includes(loadingState)
+        }
+        timeout={375}
         style={{
           minHeight: "unset",
           transitionTimingFunction: mainTheme.transitions.easing.pokeBounceIn,
         }}
+        onEntered={() => tabsActions.current.updateIndicator()}
       >
         <AnimAppBar className={classes.appBarClass} position="static">
           <StyledTabs
+            action={tabsActions}
             value={currentTab}
             onChange={(e, v) => setPagePathIndex(v)}
-            variant="fullWidth"
             {...{
               classes: {
                 root: classes.tabsRoot,
@@ -238,17 +278,22 @@ const TabbedScreens = ({
               },
             }}
             aria-label="select tab"
+            variant="fullWidth"
           >
-            {TabComponents(
-              [
-                [SearchIcon, "SEARCH"],
-                [PokeballIcon, "POKEMON"],
-                [StarIcon, "FAVOURITES"],
-              ],
-              currentTab,
-              displayContent,
-              classes
-            )}
+            {[
+              [SearchIcon, "SEARCH"],
+              [PokeballIcon, "POKEMON"],
+              [StarIcon, "FAVOURITES"],
+            ].map(([iconComponent, tabLabel], i) => (
+              <MemoizedTabButton
+                key={i}
+                tabIndex={i}
+                currentIndex={currentTab}
+                ariaLabel={tabLabel}
+                passedClasses={classes}
+                {...{ iconComponent, displayContent }}
+              />
+            ))}
           </StyledTabs>
         </AnimAppBar>
       </Grow>
@@ -271,4 +316,4 @@ const mapStateToProps = (state) => ({
   havePokemon: state.pokemon.haveData,
 });
 
-export default connect(mapStateToProps)(TabbedScreens);
+export default React.memo(connect(mapStateToProps)(TabbedScreens));

@@ -17,27 +17,27 @@ import FiberManualRecordOutlinedIcon from "@material-ui/icons/FiberManualRecordO
 import FiberManualRecordTwoToneIcon from "@material-ui/icons/FiberManualRecordTwoTone";
 import CancelIcon from "@material-ui/icons/Cancel";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   searchWidth: {
     maxWidth: "70%",
     transition:
       "filter 275ms cubic-bezier(0.215, 0.61, 0.355, 1), max-width 275ms cubic-bezier(0.215, 0.61, 0.355, 1)",
     //overflow: "hidden"
-    filter: "none"
+    filter: "none",
   },
   searchWidthInactive: {
     maxWidth: "65%",
-    filter: "opacity(100%)"
+    filter: "opacity(100%)",
   },
   searchInputLabelBold: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   inputAdornIcon: {
-    transition: "color 375ms linear"
+    transition: "color 375ms linear",
   },
   inputAdornIconDelay: {
-    transitionDelay: "375ms"
-  }
+    transitionDelay: "375ms",
+  },
 }));
 
 const InputAdornState = (searching, isFocused, searchString) =>
@@ -55,13 +55,13 @@ const inputAdornIcon = [
   FiberManualRecordOutlinedIcon,
   FiberManualRecordTwoToneIcon,
   FiberManualRecordIcon,
-  CancelIcon
+  CancelIcon,
 ];
 
-const InputIcon = ({ inputAdornState: state }) => {
+const InputIcon = React.memo(({ inputAdornState: state }) => {
   const Icon = inputAdornIcon[state];
   return <Icon style={{ fontSize: "1.25rem" }} />;
-};
+});
 
 const handleChange = (e, f) => {
   f(e.target.value);
@@ -82,7 +82,6 @@ const SearchInput = ({
   searchPokemon,
   error,
   helperText,
-  ...props
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -90,7 +89,7 @@ const SearchInput = ({
 
   const inputAdornState = InputAdornState(searching, isFocused, searchString);
 
-  const parseSearchString = str => setSearchString(str.toLowerCase());
+  const parseSearchString = (str) => setSearchString(str.toLowerCase());
   const clearSearchString = () => {
     searchTxtRef.current.value = "";
     setSearchString("");
@@ -106,7 +105,7 @@ const SearchInput = ({
         root: clsx(
           classes.searchWidth,
           !isFocused && classes.searchWidthInactive
-        )
+        ),
       }}
       //variant="filled"
       disabled={searching}
@@ -127,8 +126,8 @@ const SearchInput = ({
         error={error}
         onFocus={() => handleFocus()}
         onBlur={() => handleUnfocus()}
-        onChange={e => handleChange(e, parseSearchString)}
-        onKeyDown={e => handleKeyDown(e, sendSearch)}
+        onChange={(e) => handleChange(e, parseSearchString)}
+        onKeyDown={(e) => handleKeyDown(e, sendSearch)}
         inputProps={{ ref: searchTxtRef }}
         endAdornment={
           <InputAdornment position="end">
@@ -143,13 +142,13 @@ const SearchInput = ({
               style={{
                 color: Color(theme.palette.text.primary)
                   .fade(1 - inputAdornOpacity[inputAdornState])
-                  .toString()
+                  .toString(),
               }}
               edge="end"
             >
               <InputIcon
                 {...{
-                  inputAdornState
+                  inputAdornState,
                 }}
               />
             </IconButton>

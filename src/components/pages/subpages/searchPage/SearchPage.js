@@ -9,17 +9,17 @@ import Grid from "@material-ui/core/Grid";
 
 import SearchPanel from "./pageContent/SearchPanel";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     pokemonData: state.pokemon.data,
     pokemonSpeciesData: state.pokemon.species,
     pokemonMovesData: state.pokemon.moves,
-    loading: state.pokemon.loading
+    loading: state.pokemon.loading,
   };
 };
 
 const mapDispatchToProps = {
-  searchPokemon
+  searchPokemon,
 };
 
 //store.dispatch(searchPokemon("bulbasaur"));
@@ -57,4 +57,6 @@ const SearchPage = ({ displayContent, loading, searchPokemon }) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchPage);
+export default React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(SearchPage)
+);

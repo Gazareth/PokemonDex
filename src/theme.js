@@ -14,7 +14,7 @@ import {
   lime,
   orange,
   indigo,
-  deepPurple
+  deepPurple,
 } from "@material-ui/core/colors";
 
 const pokemonTypeShade = () => (darkLight === "dark" ? 300 : 600);
@@ -37,23 +37,23 @@ const pokemonTypeMap = {
   Dark: grey,
   Dragon: deepPurple,
   Steel: grey,
-  Fairy: pink
+  Fairy: pink,
 };
 
 // Normal: grey[pokemonTypeShade(darkLight)],
 
-const pokemonTypeColours = darkLight =>
+const pokemonTypeColours = (darkLight) =>
   Object.keys(pokemonTypeMap).reduce(
     (colsObj, colKey) => ({
       ...colsObj,
-      [colKey]: pokemonTypeMap[colKey][pokemonTypeShade(darkLight)]
+      [colKey]: pokemonTypeMap[colKey][pokemonTypeShade(darkLight)],
     }),
     {}
   );
 
 const darkLight = 0 ? "dark" : "light";
 
-const backgrounds = darkLight =>
+const backgrounds = (darkLight) =>
   [
     {
       default: "#fff",
@@ -66,7 +66,7 @@ const backgrounds = darkLight =>
       octonary: "#757575",
       nonary: "#616161",
       denary: "#424242",
-      eleven: "#212121"
+      eleven: "#212121",
     },
     {
       default: "#121212",
@@ -79,8 +79,8 @@ const backgrounds = darkLight =>
       octonary: "#757575",
       nonary: "#9e9e9e",
       denary: "#bdbdbd",
-      eleven: "#000"
-    }
+      eleven: "#000",
+    },
   ][darkLight === "light" ? 0 : 1];
 
 const buildTransition = (
@@ -95,31 +95,32 @@ const buildTransition = (
   const trsn = theme.transitions;
   return {
     transition: propsArr
-      .map(p => {
+      .map((p) => {
         const [
           prop,
           duration = trsn.duration.standard,
           delay = 0,
-          easing = trsn.easing.easeOut
+          easing = trsn.easing.easeOut,
         ] = p;
         return `${prop} ${duration}ms ${easing} ${delay}ms`;
       })
-      .join(", ")
+      .join(", "),
   };
 };
 
 export const theme = (mode = "dark") => {
   let theTheme = createMuiTheme({
+    //overrides: { MuiTab: { fullWidth: { maxWidth: "initial" } } },
     palette: {
       type: mode,
       primary: {
         light: "#a6d4fa",
         main: "#90caf9",
         dark: "#648dae",
-        contrastText: "#fff"
+        contrastText: "#fff",
       },
       background: { ...backgrounds(mode) },
-      pokemonTypes: pokemonTypeColours(mode)
+      pokemonTypes: pokemonTypeColours(mode),
     },
     transitions: {
       easing: {
@@ -127,12 +128,12 @@ export const theme = (mode = "dark") => {
         pokeEase: "cubic-bezier(0.215, 0.61, 0.355, 1)",
         pokeSwish: "cubic-bezier(0.68, -0.6, 0.32, 1)",
         pokeBounceIn: "cubic-bezier(.35,1.76,.53,1.01)",
-        pokeBounceOut: "cubic-bezier(.47,-0.37,.5,1.02)"
+        pokeBounceOut: "cubic-bezier(.47,-0.37,.5,1.02)",
       },
-      duration: { medium: 500, long: 600, longer: 650 }
-    }
+      duration: { medium: 500, long: 600, longer: 650 },
+    },
   });
 
-  theTheme.transitions.build = props => buildTransition(theTheme, props);
+  theTheme.transitions.build = (props) => buildTransition(theTheme, props);
   return theTheme;
 };

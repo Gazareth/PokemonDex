@@ -48,7 +48,9 @@ const PokemonRouter = ({ loading, havePokemon, searchPokemon }) => {
       " HAVE ID IS: ",
       havePokemon,
       " LOADING IS: ",
-      loading
+      loading,
+      " TAB INDEX IS",
+      tabIndex
     );
     if (
       searchId > 0 &&
@@ -59,7 +61,7 @@ const PokemonRouter = ({ loading, havePokemon, searchPokemon }) => {
       console.log("SEARCHING!!!!");
       console.log("SEARCHING!!!!");
       searchPokemon(searchId);
-      tabIndex = 1;
+      //tabIndex = 1;
     }
   }
 
@@ -67,7 +69,7 @@ const PokemonRouter = ({ loading, havePokemon, searchPokemon }) => {
     (index) => {
       if (index !== tabIndex) history.push(getPathFromIndex(index));
     },
-    [tabIndex]
+    [history, tabIndex]
   );
 
   return <TabbedScreens pagePathIndex={tabIndex} {...{ setPagePathIndex }} />;

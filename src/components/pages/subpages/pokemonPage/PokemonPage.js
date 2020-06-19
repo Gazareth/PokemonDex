@@ -8,24 +8,24 @@ import PokemonNoDisplay from "./pageContent/PokemonNoDisplay";
 
 import ParsePokemonData from "util/parseData_pokemon";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     pokemonData: state.pokemon.data,
     pokemonSpeciesData: state.pokemon.species,
     pokemonMovesData: state.pokemon.moves,
     loading: state.pokemon.loading,
     havePokemon: state.pokemon.haveData,
-    favourites: state.favourites
+    favourites: state.favourites,
   };
 };
 
 const mapDispatchToProps = {
   addFavourite,
-  removeFavourite
+  removeFavourite,
 };
 
 const getIsFavourite = (favourites, id) =>
-  favourites.filter(fav => fav.id === id).length > 0;
+  favourites.filter((fav) => fav.id === id).length > 0;
 
 const PokemonPage = ({
   displayContent,
@@ -35,7 +35,7 @@ const PokemonPage = ({
   havePokemon,
   favourites,
   addFavourite,
-  removeFavourite
+  removeFavourite,
 }) => {
   const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
   const [isFavourite, setIsFavourite] = useState(false);
@@ -43,7 +43,7 @@ const PokemonPage = ({
   useEffect(() => setIsFavourite(getIsFavourite(favourites, pokemonData.id)), [
     favourites.size,
     pokemonData.id,
-    favourites
+    favourites,
   ]);
 
   //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
@@ -61,7 +61,7 @@ const PokemonPage = ({
             pokemonInfo: ParsePokemonData(...dataArr),
             displayContent,
             isFavourite,
-            addToFavourites: addRemoveFavourite
+            addToFavourites: addRemoveFavourite,
           }}
         />
       )}
@@ -69,4 +69,6 @@ const PokemonPage = ({
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PokemonPage);
+export default React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(PokemonPage)
+);
