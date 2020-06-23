@@ -29,56 +29,68 @@ const validateQuery = (query) => {
   return !isNaN(query);
 };
 
-const PokemonRouter = ({ loading, havePokemon, searchPokemon }) => {
+const PokemonRouter = ({
+  loading,
+  havePokemon,
+  searchingPokemon,
+  searchPokemon,
+  ...props
+}) => {
   const location = useLocation();
   const history = useHistory();
   let tabIndex = getIndexFromPath(location.pathname);
+
+  console.log("PokemonRouter, OTHER PROPS: ", props);
 
   if (tabIndex === -1) {
     //redirect to search page if nothing found
     tabIndex = 0;
     history.push(getPathFromIndex(tabIndex));
+  } else if (tabIndex === 0) {
+    console.log(
+      "tabIndex is 0! havePokemon: ",
+      havePokemon,
+      " searchPokemon: ",
+      searchingPokemon
+    );
+    if (havePokemon > 0 && havePokemon === searchingPokemon) {
+      history.push(`${getPathFromIndex(1)}?id=${havePokemon}`);
+      //tabIndex = 1;
+    }
   } else if (tabIndex === 1) {
     //start pokemon search if view/?id=<number>
     const query = location.search && queryString.parse(location.search).id;
-    const searchId = validateQuery(query) ? parseInt(query, 10) : 0;
-    console.log(
-      " SEARCH ID IS: ",
-      searchId,
-      " HAVE ID IS: ",
-      havePokemon,
-      " LOADING IS: ",
-      loading,
-      " TAB INDEX IS",
-      tabIndex
-    );
+    const querySearchId = validateQuery(query) ? parseInt(query, 10) : 0;
     if (
-      searchId > 0 &&
-      searchId !== havePokemon &&
+      querySearchId > 0 &&
+      querySearchId !== havePokemon &&
       loading === SEARCH_POKEMON.NONE
     ) {
-      console.log("SEARCHING!!!!");
-      console.log("SEARCHING!!!!");
-      console.log("SEARCHING!!!!");
-      searchPokemon(searchId);
-      //tabIndex = 1;
+      searchPokemon(querySearchId);
     }
   }
 
-  const setPagePathIndex = useCallback(
-    (index) => {
-      if (index !== tabIndex) history.push(getPathFromIndex(index));
-    },
-    [history, tabIndex]
-  );
+  // const setPagePathIndex = useCallback(
+  //   (index) => {
+  //     if (index !== tabIndex) history.push(getPathFromIndex(index));
+  //   },
+  //   [history, tabIndex]
+  // );
 
-  return <TabbedScreens pagePathIndex={tabIndex} {...{ setPagePathIndex }} />;
+  return (
+    <TabbedScreens
+      pagePathIndex={tabIndex}
+      pushHistory={history.push}
+      setPagePathIndex={() => 0}
+    />
+  );
 };
 
 const mapStateToProps = (state) => {
   return {
     loading: state.pokemon.loading,
     havePokemon: state.pokemon.haveData,
+    searchingPokemon: state.pokemon.searching,
   };
 };
 

@@ -167,8 +167,8 @@ const subheadingCharPoses = {
 const loadingStrings = {
   [SEARCH_POKEMON.NONE]: "947 Available", //TODO: make dynamic
   [SEARCH_POKEMON.INIT]: "Initialised...",
-  [SEARCH_POKEMON.FOUND]: "Pokemon found...",
-  [SEARCH_POKEMON.SPECIES_FOUND]: "Pokemon species found...",
+  [SEARCH_POKEMON.FOUND]: "Searching for species...",
+  [SEARCH_POKEMON.SPECIES_FOUND]: "Searching for moves...",
   [SEARCH_POKEMON.MOVES_FOUND]: "Pokemon moves found...",
   [SEARCH_POKEMON.DONE]: "Search complete!",
   [SEARCH_POKEMON.FAILED]: "Error. Pokemon not found.",

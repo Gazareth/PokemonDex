@@ -1,6 +1,6 @@
 import React from "react";
 
-import wdyr from "./wdyr";
+//import wdyr from "./wdyr";
 
 import ReactDOM from "react-dom";
 import "./index.css";

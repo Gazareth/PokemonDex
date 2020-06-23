@@ -71,16 +71,17 @@ const useStyles = makeStyles((theme) => ({
   },
   svgRoot: {
     height: "1.95rem",
-    //transform: "scale(0.85)",
+    transform: "scale(0.85)",
     margin: "0.5rem",
+    fontSize: "1.95em",
     fill: theme.palette.text.disabled,
-    transition: "font-size 0.325s cubic-bezier(.34,5.22,.52,1)",
+    transition:
+      "font-size 0.325s cubic-bezier(.34,5.22,.52,1), transform 0.325s cubic-bezier(.34,5.22,.52,1)",
   },
   tabSelected: {
     fill: "#fff",
     filter: "drop-shadow(0 0 0.6rem white)",
-    fontSize: "1.95em",
-    //transform: "scale(1)",
+    transform: "scale(1)",
   },
   tabSelectedLoading: {
     fill: "#dadada",
@@ -94,48 +95,34 @@ const StyledTabs = (props) => (
   <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />
 );
 
+const TabButtonIcon = ({
+  iconComponent: IconComponent,
+  animateIn,
+  rootClasses,
+}) => {
+  return (
+    console.log("Rendering icon component with rootClasses: ", rootClasses) || (
+      <IconComponent classes={{ root: rootClasses }} />
+    )
+  );
+};
+
 const TabButton = ({
   currentIndex,
-  tabIndex,
   iconComponent,
   displayContent,
   passedClasses,
   ariaLabel,
   ...props
-}) => {
-  const tabIconClasses = useMemo(
-    () =>
-      clsx(
-        passedClasses.svgRoot,
-        tabIndex === currentIndex && [
-          passedClasses.tabSelected,
-          !displayContent && passedClasses.tabSelectedLoading,
-        ]
-      ),
-    [currentIndex, tabIndex, displayContent, passedClasses]
-  );
-
-  const TabIcon = () =>
-    React.createElement(iconComponent, {
-      classes: {
-        root: tabIconClasses,
-      },
-      pokealt: tabIndex === currentIndex ? "true" : "",
-    });
-
-  const MemoizedTabIcon = React.memo(TabIcon);
-
-  return (
-    <Tab
-      key={currentIndex}
-      fontSize="small"
-      textColor="primary"
-      icon={<MemoizedTabIcon />}
-      aria-label={ariaLabel}
-      {...props}
-    />
-  );
-};
+}) => (
+  <Tab
+    fontSize="small"
+    textColor="primary"
+    icon={iconComponent}
+    aria-label={ariaLabel}
+    {...props}
+  />
+);
 
 const MemoizedTabButton = React.memo(TabButton);
 
@@ -205,42 +192,64 @@ const TabbedScreens = ({
     [changeTab, currentTab]
   );
 
-  //Handle key down
-  const handleLeftRight = useCallback(
-    (event) => {
-      if (!havePokemon) return false;
-      switch (event.keyCode) {
-        case 37:
-          if (loadingTab.current > 0) setPagePathIndex(loadingTab.current - 1);
-          break;
-        case 39:
-          if (loadingTab.current < 2) setPagePathIndex(loadingTab.current + 1);
-          break;
-        default:
-          break;
-      }
-      if (event.keyCode === 27) {
-        //Do whatever when esc is pressed
-      }
-    },
-    [havePokemon, setPagePathIndex]
-  );
+  // //Handle key down
+  // const handleLeftRight = useCallback(
+  //   (event) => {
+  //     if (!havePokemon) return false;
+  //     switch (event.keyCode) {
+  //       case 37:
+  //         if (loadingTab.current > 0) setPagePathIndex(loadingTab.current - 1);
+  //         break;
+  //       case 39:
+  //         if (loadingTab.current < 2) setPagePathIndex(loadingTab.current + 1);
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //     if (event.keyCode === 27) {
+  //       //Do whatever when esc is pressed
+  //     }
+  //   },
+  //   [havePokemon, setPagePathIndex]
+  // );
 
-  //Detect KeyDown
-  useKeyDown(handleLeftRight);
+  // //Detect KeyDown
+  // useKeyDown(handleLeftRight);
 
   //Detect loading state changed (to SEARCH_COMPLETE)
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-    } else {
-      if (loadingState === SEARCH_POKEMON.DONE) setPagePathIndex(1);
-    }
-  }, [setPagePathIndex, loadingState]);
+  // useEffect(() => {
+  //   if (!mounted.current) {
+  //     mounted.current = true;
+  //   } else {
+  //     if (loadingState === SEARCH_POKEMON.DONE) setPagePathIndex(1);
+  //   }
+  // }, [setPagePathIndex, loadingState]);
 
-  useEffect(() => {
-    queueChangeTab(pagePathIndex);
-  }, [queueChangeTab, pagePathIndex]);
+  // useEffect(() => {
+  //   queueChangeTab(pagePathIndex);
+  // }, [queueChangeTab, pagePathIndex]);
+
+  const tabIconRootClasses = useMemo(
+    () =>
+      [0, 1, 2].map((i) =>
+        clsx(
+          classes.svgRoot,
+          i === currentTab && [
+            classes.tabSelected,
+            !displayContent && classes.tabSelectedLoading,
+          ]
+        )
+      ),
+    [
+      classes.svgRoot,
+      classes.tabSelected,
+      classes.tabSelectedLoading,
+      currentTab,
+      displayContent,
+    ]
+  );
+
+  console.log("TabIconRootClasses: ", tabIconRootClasses);
 
   const anim = useAnimEngine(3, havePokemon, 450);
 
@@ -284,16 +293,31 @@ const TabbedScreens = ({
               [SearchIcon, "SEARCH"],
               [PokeballIcon, "POKEMON"],
               [StarIcon, "FAVOURITES"],
-            ].map(([iconComponent, tabLabel], i) => (
-              <MemoizedTabButton
-                key={i}
-                tabIndex={i}
-                currentIndex={currentTab}
-                ariaLabel={tabLabel}
-                passedClasses={classes}
-                {...{ iconComponent, displayContent }}
-              />
-            ))}
+            ].map(([iconComponent, tabLabel], i) => {
+              const isCurrentTab = currentTab === i;
+              console.log(
+                "Mapping tabButtons... i: ",
+                i,
+                " iconRootClasses: ",
+                tabIconRootClasses[i]
+              );
+              return (
+                <MemoizedTabButton
+                  key={tabLabel + "_TAB_BUTTON"}
+                  tabIndex={i}
+                  currentIndex={currentTab}
+                  ariaLabel={tabLabel}
+                  passedClasses={classes}
+                  iconComponent={
+                    <TabButtonIcon
+                      {...{ iconComponent }}
+                      rootClasses={tabIconRootClasses[i]}
+                      animateIn={isCurrentTab}
+                    />
+                  }
+                />
+              );
+            })}
           </StyledTabs>
         </AnimAppBar>
       </Grow>
