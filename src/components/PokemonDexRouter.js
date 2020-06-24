@@ -4,9 +4,9 @@ import { useLocation, useHistory } from "react-router";
 
 import queryString from "query-string";
 
-import PokemonDexScreens from "./TabbedScreens";
+import PokemonDexScreens from "./Screens";
 
-const PokemonDexURLs = ["search", "view", "favourites"];
+import PokemonDexURLs from "Constants";
 
 const getIndexFromPath = (path) => {
   const pathPage = path.split("/")[1];
@@ -43,9 +43,12 @@ const PokemonRouter = () => {
 
   // Pass pokemon ID if view/?id=<number>
   const query = location.search && queryString.parse(location.search).id;
+  console.log("Got query: ", query);
   const viewingPokemon = validateQuery(query) ? parseInt(query, 10) : 0;
 
-  return <PokemonDexScreens {...{ screenIndex, viewingPokemon }} />;
+  return (
+    <PokemonDexScreens {...{ screenIndex }} searchingPokemon={viewingPokemon} />
+  );
 };
 
 export default PokemonRouter;

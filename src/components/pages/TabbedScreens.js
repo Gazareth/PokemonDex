@@ -15,9 +15,9 @@ import clsx from "clsx";
 
 import Grow from "@material-ui/core/Grow";
 
-import SearchPage from "./subpages/searchPage/SearchPage";
+import SearchPage from "../Screens/Search";
 import PokemonPage from "./subpages/pokemonPage/PokemonPage";
-import FavouritesPage from "./subpages/favouritesPage/FavouritesPage";
+import FavouritesPage from "../Screens/Favourites";
 
 import AppBar from "@material-ui/core/AppBar";
 import { makeStyles, useTheme } from "@material-ui/core/styles";

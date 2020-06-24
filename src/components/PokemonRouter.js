@@ -9,7 +9,7 @@ import queryString from "query-string";
 import { searchPokemon } from "store/actions";
 import { SEARCH_POKEMON } from "store/actions/types";
 
-import TabbedScreens from "./TabbedScreens";
+import TabbedScreens from "./pages/TabbedScreens";
 
 const PokemonDexURLs = ["search", "view", "favourites"];
 

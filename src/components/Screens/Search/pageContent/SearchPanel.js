@@ -191,7 +191,7 @@ const ErrorProgress = ({ color }) => {
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [delta]);
 
   return (
     <CircularProgress

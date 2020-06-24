@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Transition } from "react-transition-group";
+import { CSSTransition } from "react-transition-group";
 
 const baseStyle = ({ delay, magnitude, doHeight }) => ({
   transition:
@@ -28,13 +28,13 @@ const stateStyles = (delay, doHeight) => ({
   },
   exiting: {
     transition:
-      `opacity ${delay.out}ms linear ${
-        delay.out
-      }ms, transform ${delay.outDuration *
-        2}ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms` +
+      `opacity ${delay.out}ms linear ${delay.out}ms, transform ${
+        delay.outDuration * 2
+      }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms` +
       (doHeight
-        ? `, max-height ${delay.outDuration *
-            2}ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms`
+        ? `, max-height ${
+            delay.outDuration * 2
+          }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms`
         : ``),
     transitionDelay: `${delay.out * 0.75}ms`,
     opacity: 0,
@@ -60,7 +60,11 @@ const SmoothIn = (ComponentToTransition) => ({
   doHeight,
   ...otherProps
 }) => (
-  <Transition in={show} appear timeout={show ? delay.in : delay.outDuration}>
+  <CSSTransition
+    in={show}
+    appear={true}
+    timeout={show ? delay.in : delay.outDuration}
+  >
     {(state) => (
       <ComponentToTransition
         {...otherProps}
@@ -70,7 +74,7 @@ const SmoothIn = (ComponentToTransition) => ({
         }}
       />
     )}
-  </Transition>
+  </CSSTransition>
 );
 
 export default SmoothIn;

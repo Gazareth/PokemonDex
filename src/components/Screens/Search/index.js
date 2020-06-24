@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { connect } from "react-redux";
 import { searchPokemon } from "store/actions";
 import { SEARCH_POKEMON } from "store/actions/types";
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
     pokemonData: state.pokemon.data,
     pokemonSpeciesData: state.pokemon.species,
     pokemonMovesData: state.pokemon.moves,
-    loading: state.pokemon.loading,
+    loadingPokemon: state.pokemon.loading,
   };
 };
 
@@ -22,19 +22,23 @@ const mapDispatchToProps = {
   searchPokemon,
 };
 
-//store.dispatch(searchPokemon("bulbasaur"));
+const SearchPage = ({ displayContent, loadingPokemon, searchPokemon }) => {
+  const [showContent, setShowContent] = useState(false);
 
-const SearchPage = ({ displayContent, loading, searchPokemon }) => {
-  const [loadingState, setLoadingState] = useState(loading);
+  const searchReady = useMemo(
+    () =>
+      displayContent &&
+      (loadingPokemon === SEARCH_POKEMON.NONE ||
+        loadingPokemon === SEARCH_POKEMON.DONE),
+    [displayContent, loadingPokemon]
+  );
 
-  useEffect(() => setLoadingState(loading), [loading]);
+  useEffect(() => {
+    setShowContent(displayContent);
+    return () => setShowContent(false);
+  }, [displayContent, setShowContent]);
 
-  const searchReady =
-    displayContent &&
-    (loadingState === SEARCH_POKEMON.NONE ||
-      loadingState === SEARCH_POKEMON.DONE);
-
-  const anim = useAnimEngine(3, displayContent, 450);
+  const anim = useAnimEngine(3, showContent, 450);
 
   return (
     <Grid
@@ -48,7 +52,8 @@ const SearchPage = ({ displayContent, loading, searchPokemon }) => {
           <SearchPanel
             {...anim()}
             animMagnitude={100}
-            {...{ anim, searchReady, loadingState, searchPokemon }}
+            loadingState={loadingPokemon}
+            {...{ anim, searchReady, searchPokemon }}
           />
         </Grid>
       </Grid>
@@ -57,6 +62,4 @@ const SearchPage = ({ displayContent, loading, searchPokemon }) => {
   );
 };
 
-export default React.memo(
-  connect(mapStateToProps, mapDispatchToProps)(SearchPage)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchPage);

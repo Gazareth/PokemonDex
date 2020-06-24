@@ -13,7 +13,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 
 import ConnectedTheme from "contexts/ConnectedTheme";
 
-import MainPage from "./components/pages/MainPage";
+import MainPage from "./components/MainPage";
 import Box from "@material-ui/core/Box";
 import PokeAppBar from "components/PokeAppBar";
 
