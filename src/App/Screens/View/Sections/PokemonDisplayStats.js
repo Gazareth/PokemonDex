@@ -6,24 +6,24 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import OutlinedDiv from "components/generic/OutlinedDiv";
+import OutlinedDiv from "Components/OutlinedDiv";
 import Box from "@material-ui/core/Box";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   defaultCursor: {
-    cursor: "default !important"
+    cursor: "default !important",
   },
   alignTextRight: {
-    justifyContent: "right"
+    justifyContent: "right",
   },
   statName: {
     fontVariant: "small-caps",
     display: "flex",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
   },
   softBg: {
-    backgroundColor: theme.palette.background.tertiary
-  }
+    backgroundColor: theme.palette.background.tertiary,
+  },
 }));
 
 const StatsGroup = ({ classes, pokemonStats }) => {
@@ -71,5 +71,5 @@ export default function PokemonDisplayStats({ pokemonStats, show, delay }) {
 }
 
 PokemonDisplayStats.propTypes = {
-  post: PropTypes.object
+  post: PropTypes.object,
 };

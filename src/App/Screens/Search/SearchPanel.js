@@ -1,15 +1,15 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
-import { SEARCH_POKEMON } from "store/actions/types";
+import { SEARCH_POKEMON } from "Store/actions/types";
 
 import clsx from "clsx";
 import Color from "color";
 
-import SearchInput from "./components/SearchInput";
+import SearchInput from "./Sections/SearchInput";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import SplitText from "react-pose-text";
-import SmoothIn from "util/transitionSmoothIn";
+import SmoothIn from "Utils/transitionSmoothIn";
 
 import Box from "@material-ui/core/Box";
 
@@ -304,7 +304,7 @@ const SearchPanel = ({
                   height: "2em",
                   margin: "10px",
                 }}
-                src={require("icons/PokeApi.png")}
+                src={require("Icons/PokeApi.png")}
                 alt="Pokemon Dex Logo"
               />
             }

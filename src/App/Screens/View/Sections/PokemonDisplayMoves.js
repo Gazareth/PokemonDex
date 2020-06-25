@@ -18,7 +18,7 @@ import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import OutlinedDiv from "components/generic/OutlinedDiv";
+import OutlinedDiv from "Components/OutlinedDiv";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -42,9 +42,7 @@ const levelColours = (darkLight = false) =>
   ].map((colorObj) => colorObj["A700"]);
 
 const MixColours = (col1, col2, ratio) =>
-  Color(col1)
-    .mix(Color(col2), ratio)
-    .hex();
+  Color(col1).mix(Color(col2), ratio).hex();
 
 const typeColoursClasses = (
   theme,

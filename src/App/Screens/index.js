@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
-import { searchPokemon } from "store/actions";
-import { SEARCH_POKEMON } from "store/actions/types";
+import { searchPokemon } from "Store/actions";
+import { SEARCH_POKEMON } from "Store/actions/types";
 
-import useKeyDown from "hooks/KeyDown";
+import useKeyDown from "Hooks/KeyDown";
 
 import PokemonDexURLs from "Constants";
 
@@ -18,7 +18,9 @@ import Favourites from "./Favourites";
 const Screen = ({ screenIndex, ...props }) => {
   const screenToShow = [Search, View, Favourites];
 
-  return React.createElement(screenToShow[screenIndex], props);
+  return screenIndex === -1
+    ? null
+    : React.createElement(screenToShow[screenIndex], props);
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -30,8 +32,13 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
   const loadingPokemon = useSelector((state) => state.pokemon.loading);
   const havePokemon = useSelector((state) => state.pokemon.haveData);
 
-  const [apparentScreen, setApparentScreen] = useState(screenIndex);
+  const [apparentScreen, setApparentScreen] = useState(-1);
   const [pendingScreen, setPendingScreen] = useState(screenIndex);
+
+  const isScreenPending = useMemo(() => pendingScreen !== apparentScreen, [
+    pendingScreen,
+    apparentScreen,
+  ]);
 
   //Handle screen switch
   const switchScreen = useCallback((newScreen) => {
@@ -41,17 +48,25 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
   const queueScreen = useCallback(
     (newScreen) => {
       setPendingScreen(newScreen);
-      switchScreenTimer = setTimeout(() => {
-        switchScreen(newScreen);
-        switchScreenTimer = null;
-      }, process.env.REACT_APP_TABSWITCHTIME);
+      switchScreenTimer = setTimeout(
+        () => {
+          switchScreen(newScreen);
+          switchScreenTimer = null;
+        },
+        apparentScreen === -1
+          ? process.env.REACT_APP_INITIALSCREENDELAY
+          : process.env.REACT_APP_SWITCHSCREENDELAY
+      );
     },
-    [switchScreen]
+    [apparentScreen, switchScreen]
   );
 
   // If we're not on the right screen, update
   useEffect(() => {
-    if (apparentScreen !== screenIndex && pendingScreen !== screenIndex)
+    if (
+      pendingScreen !== screenIndex ||
+      (apparentScreen !== pendingScreen && !switchScreenTimer)
+    )
       queueScreen(screenIndex);
   }, [apparentScreen, pendingScreen, queueScreen, screenIndex]);
 
@@ -109,11 +124,6 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
 
   // //Detect KeyDown
   useKeyDown(handleLeftRight);
-
-  const isScreenPending = useMemo(() => pendingScreen !== apparentScreen, [
-    pendingScreen,
-    apparentScreen,
-  ]);
 
   return (
     <Screen displayContent={!isScreenPending} screenIndex={apparentScreen} />

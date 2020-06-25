@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import useAnimEngine from "hooks/AnimEngine";
+import useAnimEngine from "Hooks/AnimEngine";
 
 import Grid from "@material-ui/core/Grid";
-import PokemonDisplayMain from "./components/PokemonDisplayMain";
-import PokemonDisplayStats from "./components/PokemonDisplayStats";
-import PokemonDisplaySpecies from "./components/PokemonDisplaySpecies";
-import PokemonDisplayMoves from "./components/PokemonDisplayMoves";
+import PokemonDisplayMain from "Components/PokemonCard";
+import PokemonDisplayStats from "./Sections/PokemonDisplayStats";
+import PokemonDisplaySpecies from "./Sections/PokemonDisplaySpecies";
+import PokemonDisplayMoves from "./Sections/PokemonDisplayMoves";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {

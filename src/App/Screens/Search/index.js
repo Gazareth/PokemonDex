@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { connect } from "react-redux";
-import { searchPokemon } from "store/actions";
-import { SEARCH_POKEMON } from "store/actions/types";
+import { searchPokemon } from "Store/actions";
+import { SEARCH_POKEMON } from "Store/actions/types";
 
-import useAnimEngine from "hooks/AnimEngine";
+import useAnimEngine from "Hooks/AnimEngine";
 
 import Grid from "@material-ui/core/Grid";
 
-import SearchPanel from "./pageContent/SearchPanel";
+import SearchPanel from "./SearchPanel";
 
 const mapStateToProps = (state) => {
   return {

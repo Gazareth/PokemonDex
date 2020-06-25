@@ -1,5 +1,5 @@
 import axios from "axios";
-import axiosDelayed from "util/axios";
+import axiosDelayed from "Utils/axios";
 import { SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
 
 /***********

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { addFavourite, removeFavourite } from "store/actions";
+import { addFavourite, removeFavourite } from "Store/actions";
 
-import PokemonDisplay from "./pageContent/PokemonDisplay";
-import PokemonNoDisplay from "./pageContent/PokemonNoDisplay";
+import PokemonDisplay from "./PokemonDisplay";
+import PokemonNoDisplay from "./PokemonNoDisplay";
 
-import ParsePokemonData from "util/parseData_pokemon";
+import ParsePokemonData from "Utils/parseData_pokemon";
 
 const mapStateToProps = (state) => {
   return {

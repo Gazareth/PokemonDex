@@ -6,16 +6,16 @@ import "typeface-roboto";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { Provider as StoreProvider } from "react-redux";
-import rootReducer from "./store/reducers";
+import rootReducer from "./Store/reducers";
 
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import ConnectedTheme from "contexts/ConnectedTheme";
+import ConnectedTheme from "Contexts/ConnectedTheme";
 
-import MainPage from "./components/MainPage";
+import MainPage from "./App/MainPage";
 import Box from "@material-ui/core/Box";
-import PokeAppBar from "components/PokeAppBar";
+import PokeAppBar from "App/PokeAppBar";
 
 const useStyles = makeStyles((theme) => ({
   rootBox: {
@@ -36,8 +36,6 @@ const store = createStore(
 
 const App = () => {
   const classes = useStyles();
-
-  console.log("Initial store... ", store);
 
   return (
     <StoreProvider store={store}>

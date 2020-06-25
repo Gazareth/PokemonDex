@@ -1,8 +1,8 @@
 //Courtesy of https://github.com/mui-org/material-ui/issues/14789
 import React from "react";
 
-import SmoothIn from "util/transitionSmoothIn";
-import { filterObject } from "util/filterObject";
+import SmoothIn from "Utils/transitionSmoothIn";
+import { filterObject } from "Utils/filterObject";
 
 import TextField from "@material-ui/core/TextField";
 
@@ -22,11 +22,11 @@ const OutlinedDiv = ({
     InputLabelProps={{ shrink: true }}
     InputProps={{
       classes: { root: inputRootClasses },
-      inputComponent: InputComponent
+      inputComponent: InputComponent,
     }}
     inputProps={{
       className: inputClassName,
-      children: children
+      children: children,
     }}
   />
 );

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import SmoothIn from "util/transitionSmoothIn";
+import SmoothIn from "Utils/transitionSmoothIn";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -15,39 +15,39 @@ import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import StarIcon from "@material-ui/icons/Star";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     background: theme.palette.background.quaternary,
-    display: "flex"
+    display: "flex",
   },
   cardDetails: {
     background: theme.palette.background.tertiary,
-    flex: 1
+    flex: 1,
   },
   favouriteIconButton: {
-    margin: "auto"
+    margin: "auto",
   },
   favouriteIcon: {
     alignSelf: "center",
     justifySelf: "center",
     color: theme.palette.pokemonTypes["Electric"],
-    filter: "brightness(0.85) saturate(2)"
+    filter: "brightness(0.85) saturate(2)",
   },
   colourDisabled: {
-    color: theme.palette.text.disabled
+    color: theme.palette.text.disabled,
   },
   types: {
-    marginBottom: "8px"
+    marginBottom: "8px",
   },
   physique: {
     fontVariant: "small-caps",
     marginBottom: "-0.8vh",
     display: "flex",
-    color: theme.palette.text.disabled
-  }
+    color: theme.palette.text.disabled,
+  },
 }));
 
-const PokemonDisplayMain = props => {
+const PokemonDisplayMain = (props) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -72,7 +72,7 @@ const PokemonDisplayMain = props => {
                   <span
                     style={{
                       color: theme.palette.text.secondary,
-                      fontWeight: "bold"
+                      fontWeight: "bold",
                     }}
                   >
                     {" #" + pokemonInfo.id}
@@ -92,7 +92,7 @@ const PokemonDisplayMain = props => {
                     <span key={i}>
                       <span
                         style={{
-                          color: theme.palette.pokemonTypes[type]
+                          color: theme.palette.pokemonTypes[type],
                         }}
                       >
                         {type}

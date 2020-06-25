@@ -7,21 +7,23 @@ import Typography from "@material-ui/core/Typography";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   text: {
-    color: theme.palette.text.disabled
-  }
+    color: theme.palette.text.disabled,
+  },
 }));
 
 const PokemonNoDisplay = ({ displayContent }) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
 
+  console.log("SWITCH SCREEN DELAY: ", process.env.REACT_APP_SWITCHSCREENDELAY);
+
   return (
     <Fade
       in={displayContent}
       appear
-      timeout={Math.round(process.env.REACT_APP_TABSWITCHTIME)}
+      timeout={Math.round(process.env.REACT_APP_SWITCHSCREENDELAY)}
     >
       <Typography variant="h6" className={classes.text}>
         No Pokémon Loaded

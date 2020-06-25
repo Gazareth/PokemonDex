@@ -3,26 +3,26 @@ import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
-import OutlinedDiv from "components/generic/OutlinedDiv";
+import OutlinedDiv from "Components/OutlinedDiv";
 import Box from "@material-ui/core/Box";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   defaultCursor: {
-    cursor: "default !important"
+    cursor: "default !important",
   },
   softBg: {
-    backgroundColor: theme.palette.background.tertiary
+    backgroundColor: theme.palette.background.tertiary,
   },
   genus: {
     fontStyle: "italic !important",
     fontSize: 11,
-    color: theme.palette.text.disabled
+    color: theme.palette.text.disabled,
   },
   flavorText: {
     fontSize: 12,
     fontStyle: "italic",
-    color: theme.palette.text.secondary
-  }
+    color: theme.palette.text.secondary,
+  },
 }));
 
 const SpeciesInfo = ({ mainTheme, classes, pokemonSpecies }) => {
@@ -57,5 +57,5 @@ export default function PokemonDisplaySpecies({ pokemonSpecies, show, delay }) {
 }
 
 PokemonDisplaySpecies.propTypes = {
-  post: PropTypes.object
+  post: PropTypes.object,
 };

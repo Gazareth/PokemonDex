@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 
 import Color from "color";
 
-import { setThemeMode } from "store/actions";
+import { setThemeMode } from "Store/actions";
 
-import useThemedClasses from "contexts/ThemedClasses";
+import useThemedClasses from "Contexts/ThemedClasses";
 
-import { filterObject as filterObj } from "util/filterObject";
+import { filterObject as filterObj } from "Utils/filterObject";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,7 +15,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import Typography from "@material-ui/core/Typography";
 
-import PokedexSVG from "icons/PokedexIconV2";
+import PokedexSVG from "Icons/PokedexIconV2";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -23,40 +23,41 @@ import Switch from "@material-ui/core/Switch";
 import Brightness5Icon from "@material-ui/icons/Brightness5";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   appBar: {
-    position: "relative"
+    position: "relative",
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   alignRight: {
-    marginLeft: "auto"
+    marginLeft: "auto",
   },
   switchBase: {
     color: theme.palette.primary.dark,
     "&$checked": {
-      color: theme.palette.warning.light
+      color: theme.palette.warning.light,
     },
     "&$checked + $track": {
-      backgroundColor: theme.palette.warning.light
-    }
+      backgroundColor: theme.palette.warning.light,
+    },
   },
   checked: {},
-  track: {}
+  track: {},
 });
 
 const DarkLightIcon = ({ theme, themeMode }) => {
   const mode = themeMode === "light" ? 1 : 0;
-  const findColor = colors => [colors.primary.dark, colors.warning.light][mode];
+  const findColor = (colors) =>
+    [colors.primary.dark, colors.warning.light][mode];
   const styles = {
-    style: { color: findColor(theme.palette) }
+    style: { color: findColor(theme.palette) },
   };
   const Component = [Brightness4Icon, Brightness5Icon][mode];
   return <Component {...styles} />;
@@ -95,7 +96,7 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
               detail4: Color(theme.palette.secondary.dark)
                 .desaturate(0.25)
                 .mix(Color(theme.palette.background.default), 0.85)
-                .toString()
+                .toString(),
               //detail2: theme.palette.background.senary
             }}
             fontSize="large"
@@ -118,7 +119,7 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
               checked={themeMode === "light"}
               onChange={handleThemeSwitch}
               classes={{
-                ...filterObj(classes, ["switchBase", "checked", "track"])
+                ...filterObj(classes, ["switchBase", "checked", "track"]),
               }}
             />
           }
@@ -130,12 +131,12 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  themeMode: state.theme.mode
+const mapStateToProps = (state) => ({
+  themeMode: state.theme.mode,
 });
 
 const mapDispatchToProps = {
-  setThemeMode
+  setThemeMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PokeAppBar);
