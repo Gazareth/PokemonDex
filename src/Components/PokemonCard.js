@@ -47,11 +47,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PokemonDisplayMain = (props) => {
+const PokemonDisplayMain = ({
+  variant,
+  pokemonInfo,
+  isFavourite,
+  addToFavourites,
+  ...props
+}) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-
-  const { pokemonInfo, isFavourite, addToFavourites } = props;
 
   return (
     <Card className={classes.card} style={{ ...props.style }}>
@@ -102,29 +106,33 @@ const PokemonDisplayMain = (props) => {
                   ))}
                 </Typography>
               </Grid>
-              <Grid item>
-                <Typography className={classes.physique} variant="caption">
-                  <>
-                    {pokemonInfo.physique.height + " decimetres "}&nbsp;&nbsp;
-                    {pokemonInfo.physique.weight + " hectograms"}
-                  </>
-                </Typography>
+              {variant === "main" && (
+                <Grid item>
+                  <Typography className={classes.physique} variant="caption">
+                    <>
+                      {pokemonInfo.physique.height + " decimetres "}&nbsp;&nbsp;
+                      {pokemonInfo.physique.weight + " hectograms"}
+                    </>
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+            {variant === "main" && (
+              <Grid item xs={2} container>
+                <IconButton
+                  onClick={addToFavourites}
+                  className={classes.favouriteIconButton}
+                >
+                  <StarIcon
+                    fontSize="large"
+                    className={clsx(
+                      classes.favouriteIcon,
+                      !isFavourite && classes.colourDisabled
+                    )}
+                  />
+                </IconButton>
               </Grid>
-            </Grid>
-            <Grid item xs={2} container>
-              <IconButton
-                onClick={addToFavourites}
-                className={classes.favouriteIconButton}
-              >
-                <StarIcon
-                  fontSize="large"
-                  className={clsx(
-                    classes.favouriteIcon,
-                    !isFavourite && classes.colourDisabled
-                  )}
-                />
-              </IconButton>
-            </Grid>
+            )}
           </Grid>
         </CardContent>
       </div>
@@ -132,6 +140,12 @@ const PokemonDisplayMain = (props) => {
   );
 };
 
-PokemonDisplayMain.propTypes = {};
+PokemonDisplayMain.propTypes = {
+  variant: PropTypes.oneOf(["main", "favourites"]),
+};
+
+PokemonDisplayMain.defaultProps = {
+  variant: "main",
+};
 
 export default SmoothIn(PokemonDisplayMain);

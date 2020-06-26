@@ -1,4 +1,4 @@
-import { filterObject as filterObj } from "./filterObject";
+import pick from "./pick";
 
 const capitalise = (string) => {
   return string[0].toUpperCase() + string.substr(1);
@@ -29,10 +29,8 @@ const parseData_Pokemon = (
 
   const pokemonMoves = pokemonData.moves
     .filter((moveObj) =>
-      moveObj.version_group_details.reduce(
-        (canLearn, versionObj) =>
-          canLearn || versionObj.move_learn_method.name === "level-up",
-        false
+      moveObj.version_group_details.some(
+        (versionObj) => versionObj.move_learn_method.name === "level-up"
       )
     )
     .sort(
@@ -45,10 +43,8 @@ const parseData_Pokemon = (
     name: capitalise(pokemonData.name),
     id: pokemonData.id,
     image: pokemonData.sprites.front_default,
-    types: pokemonData.types
-      .map((typeObj) => typeObj.type.name)
-      .map((typeName) => capitalise(typeName)),
-    physique: filterObj(pokemonData, ["height", "weight"]),
+    types: pokemonData.types.map((typeObj) => capitalise(typeObj.type.name)),
+    physique: pick(pokemonData, ["height", "weight"]),
     stats: pokemonData.stats
       .map((statObj) => ({
         order: statNameMap[statObj.stat.name][0],

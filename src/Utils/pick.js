@@ -1,5 +1,7 @@
-export const filterObject = (obj, keys) =>
+const pick = (obj, keys) =>
   keys.reduce(
     (filteredObj, currKey) => ({ ...filteredObj, [currKey]: obj[currKey] }),
     {}
   );
+
+export default pick;

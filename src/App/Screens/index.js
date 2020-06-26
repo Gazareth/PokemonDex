@@ -9,7 +9,7 @@ import { SEARCH_POKEMON } from "Store/actions/types";
 
 import useKeyDown from "Hooks/KeyDown";
 
-import PokemonDexURLs from "Constants";
+import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
 import Search from "./Search";
 import View from "./View";

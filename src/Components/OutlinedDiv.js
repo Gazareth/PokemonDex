@@ -2,7 +2,7 @@
 import React from "react";
 
 import SmoothIn from "Utils/transitionSmoothIn";
-import { filterObject } from "Utils/filterObject";
+import pick from "Utils/pick";
 
 import TextField from "@material-ui/core/TextField";
 
@@ -15,7 +15,7 @@ const OutlinedDiv = ({
   ...props
 }) => (
   <TextField
-    {...filterObject(props, ["label", "style", "className", "classes"])}
+    {...pick(props, ["label", "style", "className", "classes"])}
     variant="outlined"
     fullWidth
     multiline

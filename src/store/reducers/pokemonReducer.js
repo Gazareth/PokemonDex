@@ -3,48 +3,41 @@
 import { SEARCH_POKEMON } from "../actions/types";
 
 //Default store
-const pokemonData = Object.freeze({
+const pokemonDefaultState = Object.freeze({
   data: {},
-  species: {},
-  moves: {},
   searching: 0,
   haveData: 0,
 });
 
 const pokemonReducer = (
-  state = { loading: SEARCH_POKEMON.NONE, ...pokemonData },
+  state = { loading: SEARCH_POKEMON.NONE, ...pokemonDefaultState },
   action
 ) => {
-  const stateUpdater = (dataKey) => ({
+  const loadingUpdate = () => ({
     ...state,
     loading: action.type,
-    [dataKey]: action.payload,
   });
 
   switch (action.type) {
     case SEARCH_POKEMON.NONE:
-      return { ...state, loading: SEARCH_POKEMON.NONE };
     case SEARCH_POKEMON.INIT:
-      return { ...state, loading: SEARCH_POKEMON.INIT };
+    case SEARCH_POKEMON.SPECIES_FOUND:
+    case SEARCH_POKEMON.MOVES_FOUND:
+    case SEARCH_POKEMON.FAILED:
+      return loadingUpdate();
     case SEARCH_POKEMON.FOUND:
       return {
-        ...pokemonData,
+        ...pokemonDefaultState, // wipes data & ids
         loading: action.type,
-        data: action.payload,
-        searching: action.payload.id,
+        searching: action.payload,
       };
-    case SEARCH_POKEMON.SPECIES_FOUND:
-      return stateUpdater("species");
-    case SEARCH_POKEMON.MOVES_FOUND:
-      return stateUpdater("moves");
     case SEARCH_POKEMON.DONE:
       return {
         ...state,
         loading: SEARCH_POKEMON.DONE,
-        haveData: action.payload,
+        data: action.payload,
+        haveData: action.payload.id,
       };
-    case SEARCH_POKEMON.FAILED:
-      return { ...state, loading: action.type };
     default:
       return state;
   }

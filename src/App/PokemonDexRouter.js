@@ -6,7 +6,7 @@ import queryString from "query-string";
 
 import PokemonDexScreens from "./Screens";
 
-import PokemonDexURLs from "Constants";
+import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
 const getIndexFromPath = (path) => {
   const pathPage = path.split("/")[1];

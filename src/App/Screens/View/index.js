@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { connect } from "react-redux";
 
 import { addFavourite, removeFavourite } from "Store/actions";
@@ -11,8 +11,6 @@ import ParsePokemonData from "Utils/parseData_pokemon";
 const mapStateToProps = (state) => {
   return {
     pokemonData: state.pokemon.data,
-    pokemonSpeciesData: state.pokemon.species,
-    pokemonMovesData: state.pokemon.moves,
     loading: state.pokemon.loading,
     havePokemon: state.pokemon.haveData,
     favourites: state.favourites,
@@ -30,14 +28,12 @@ const getIsFavourite = (favourites, id) =>
 const PokemonPage = ({
   displayContent,
   pokemonData,
-  pokemonSpeciesData,
-  pokemonMovesData,
   havePokemon,
   favourites,
   addFavourite,
   removeFavourite,
 }) => {
-  const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
+  //const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
   const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => setIsFavourite(getIsFavourite(favourites, pokemonData.id)), [
@@ -47,10 +43,15 @@ const PokemonPage = ({
   ]);
 
   //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
-  const addRemoveFavourite = () => {
+  const addRemoveFavourite = useCallback(() => {
     console.log("ADDING/REMOVING FAVOURITE. Is favourite? ", isFavourite);
     isFavourite ? removeFavourite(pokemonData) : addFavourite(pokemonData);
-  };
+  }, [addFavourite, isFavourite, pokemonData, removeFavourite]);
+
+  // const pokemonInfo = useMemo(
+  //   () => (havePokemon > 0 ? ParsePokemonData(...dataArr) : {}),
+  //   [havePokemon, dataArr]
+  // );
 
   return (
     <>
@@ -58,7 +59,7 @@ const PokemonPage = ({
       {havePokemon && (
         <PokemonDisplay
           {...{
-            pokemonInfo: ParsePokemonData(...dataArr),
+            pokemonInfo: pokemonData,
             displayContent,
             isFavourite,
             addToFavourites: addRemoveFavourite,

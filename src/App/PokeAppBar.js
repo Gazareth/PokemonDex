@@ -7,7 +7,7 @@ import { setThemeMode } from "Store/actions";
 
 import useThemedClasses from "Contexts/ThemedClasses";
 
-import { filterObject as filterObj } from "Utils/filterObject";
+import pick from "Utils/pick";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -119,7 +119,7 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
               checked={themeMode === "light"}
               onChange={handleThemeSwitch}
               classes={{
-                ...filterObj(classes, ["switchBase", "checked", "track"]),
+                ...pick(classes, ["switchBase", "checked", "track"]),
               }}
             />
           }

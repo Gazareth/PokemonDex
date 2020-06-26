@@ -26,10 +26,7 @@ const SearchPage = ({ displayContent, loadingPokemon, searchPokemon }) => {
   const [showContent, setShowContent] = useState(false);
 
   const searchReady = useMemo(
-    () =>
-      displayContent &&
-      (loadingPokemon === SEARCH_POKEMON.NONE ||
-        loadingPokemon === SEARCH_POKEMON.DONE),
+    () => displayContent && loadingPokemon === SEARCH_POKEMON.NONE,
     [displayContent, loadingPokemon]
   );
 

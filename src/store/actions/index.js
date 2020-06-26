@@ -2,6 +2,12 @@ import axios from "axios";
 import axiosDelayed from "Utils/axios";
 import { SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
 
+import ParsePokemonData from "Utils/parseData_pokemon";
+
+import { POKEMON_FAVOURITE_FIELDS } from "Constants";
+
+import pick from "Utils/pick";
+
 /***********
  *
  * POKEMON ACTIONS
@@ -20,8 +26,12 @@ const sleep = (sleepms = sleepTime) => (response) =>
 
 export const searchPokemon = (pokemonName) => {
   let pokemonId = 0;
+  let pokemonData = {};
   let speciesUrl = "",
     moves = [];
+
+  let movesData = [],
+    speciesData = {};
 
   return (dispatch) => {
     dispatch(setPokemonData(SEARCH_POKEMON.INIT));
@@ -29,32 +39,38 @@ export const searchPokemon = (pokemonName) => {
       .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
       .then(sleep())
       .then((response) => {
-        pokemonId = response.data.id;
-        speciesUrl = response.data.species.url;
-        moves = response.data.moves;
-        dispatch(setPokemonData(SEARCH_POKEMON.FOUND, response.data));
+        pokemonData = response.data;
+        pokemonId = pokemonData.id;
+        speciesUrl = pokemonData.species.url;
+        moves = pokemonData.moves;
+        dispatch(setPokemonData(SEARCH_POKEMON.FOUND, pokemonId));
         return axios.get(speciesUrl);
       })
       .then(sleep())
       .then((response) => {
-        dispatch(setPokemonData(SEARCH_POKEMON.SPECIES_FOUND, response.data));
+        speciesData = response.data;
+
+        dispatch(action(SEARCH_POKEMON.SPECIES_FOUND));
         return axios.all(getAllMoves(moves));
       })
       .then(sleep())
       .then((response) => {
-        dispatch(
-          setPokemonData(
-            SEARCH_POKEMON.MOVES_FOUND,
-            response.map((resp) => resp.data)
-          )
-        );
+        movesData = response.map((moveResponse) => moveResponse.data);
+        dispatch(action(SEARCH_POKEMON.MOVES_FOUND));
       })
       .then(sleep())
-      .then((response) =>
-        dispatch(setPokemonData(SEARCH_POKEMON.DONE, pokemonId))
+      .then(
+        () =>
+          console.log("DONE!!") ||
+          dispatch(
+            setPokemonData(
+              SEARCH_POKEMON.DONE,
+              ParsePokemonData(pokemonData, speciesData, movesData)
+            )
+          )
       )
       .then(sleep(process.env.REACT_APP_TABSWITCHTIME))
-      .then((response) => dispatch(setPokemonData(SEARCH_POKEMON.NONE)))
+      .then(() => dispatch(action(SEARCH_POKEMON.NONE)))
       .catch((error) => {
         dispatch(setPokemonError());
         setTimeout(
@@ -69,10 +85,8 @@ export const searchPokemon = (pokemonName) => {
 const getAllMoves = (moves) =>
   moves
     .filter((moveObj) =>
-      moveObj.version_group_details.reduce(
-        (canLearn, versionObj) =>
-          canLearn || versionObj.move_learn_method.name === "level-up",
-        false
+      moveObj.version_group_details.some(
+        (versionObj) => versionObj.move_learn_method.name === "level-up"
       )
     )
     .sort(
@@ -81,6 +95,10 @@ const getAllMoves = (moves) =>
         moveB.version_group_details[0].level_learned_at
     )
     .map((moveObj) => axios.get(moveObj.move.url));
+
+const action = (type) => ({
+  type,
+});
 
 const setPokemonData = (type, data) => {
   return {
@@ -102,7 +120,7 @@ const setPokemonError = () => {
  *************/
 export const addFavourite = (pokemonData) => ({
   type: FAVOURITES.ADD,
-  payload: pokemonData,
+  payload: pick(pokemonData, POKEMON_FAVOURITE_FIELDS),
 });
 
 export const removeFavourite = (pokemonData) => ({
