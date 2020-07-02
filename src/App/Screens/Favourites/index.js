@@ -3,6 +3,9 @@ import { connect } from "react-redux";
 
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 
+import Zoom from "@material-ui/core/Zoom";
+import Paper from "@material-ui/core/Paper";
+
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
@@ -10,8 +13,9 @@ import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
 import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
-import DeleteIcon from "@material-ui/icons/Delete";
-import SaveIcon from "@material-ui/icons/Save";
+import PokeballIcon from "Icons/PokeballIcon";
+import PlayArrow from "@material-ui/icons/PlayArrow";
+import GradeTwoTone from "@material-ui/icons/GradeTwoTone";
 
 import PokemonCard from "Components/PokemonCard";
 
@@ -28,13 +32,31 @@ const useStyles = makeStyles((theme) => ({
     flex: "none",
   },
   buttonsRoot: {
+    // border: "3px solid #666",
+    // backgroundColor: "#333",
+    // borderRadius: "5px",
+    // borderTop: "0",
+    borderTopLeftRadius: "0",
+    borderTopRightRadius: "0",
+    marginLeft: "0%",
+    padding: `${theme.spacing(2.25)}px 3%`,
+    paddingBottom: `${theme.spacing(2.75)}px`,
+    //padding: `${theme.spacing(2.25)}px ${theme.spacing(1.5)}px`,
+    //paddingLeft: `${theme.spacing(1.5)}px`,
     "& > *": {
-      margin: `0 ${theme.spacing(2.5)}px`,
-      padding: `12px ${theme.spacing(8)}px`,
+      margin: `0 ${theme.spacing(2)}px`,
+      padding: `${theme.spacing(1.5)}px ${theme.spacing(4.5)}px`,
+      "&:first-child": {
+        paddingLeft: `${theme.spacing(2.75)}px`,
+        paddingRight: `${theme.spacing(3.25)}px`,
+      },
     },
   },
   viewButton: {
     backgroundColor: theme.palette.success.light,
+  },
+  viewBackIcon: {
+    transform: "scaleX(-1)",
   },
   removeButton: {
     backgroundColor: theme.palette.error.main,
@@ -43,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ExpansionPanel = withStyles((theme) => ({
   root: {
+    margin: "6px 0",
     backgroundColor: "transparent",
     boxShadow: "none",
     "&:not(:last-child)": {
@@ -71,9 +94,9 @@ const ExpansionPanelSummary = withStyles((theme) => ({
     },
   },
   content: {
-    margin: "6px 0",
+    margin: "0px 0",
     "&$expanded": {
-      margin: " 6px 0",
+      margin: " 0px 0",
     },
   },
   expanded: {},
@@ -84,7 +107,8 @@ const ExpansionPanelDetails = withStyles((theme) => ({
     backgroundColor: "transparent",
     display: "flex",
     justifyContent: "center",
-    //margin: "0 20%",
+    padding: "0",
+    marginBottom: "18px",
     //border: `1px solid ${theme.palette.background.senary}`,
     //borderRadius: "0 0 2rem 2rem",
   },
@@ -120,56 +144,65 @@ const FavouritesPage = ({ displayContent, favourites }) => {
     125
   );
 
-  console.log("FAVOURITES: ", favourites);
-
   return (
     <>
       <h2>Favourite Pokemon </h2>
       {/* <Grid item container spacing={5} className={classes.flexCol}>
         <Grid item container spacing={4} className={classes.inflexible}> */}
       <div>
-        {favourites.map(
-          (fav) =>
-            console.log("FAVOURITE INFO: ", fav) || (
-              <ExpansionPanel
-                key={fav.id}
-                square
-                expanded={expanded === `panel-${fav.id}`}
-                onChange={handleChange(`panel-${fav.id}`)}
-              >
-                <ExpansionPanelSummary>
-                  <Grid item xs={12}>
-                    <PokemonCard
-                      key={fav.id}
-                      {...anim()}
-                      variant="favourites"
-                      pokemonInfo={fav}
-                    />
-                  </Grid>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <div className={classes.buttonsRoot}>
+        {favourites.map((fav) => {
+          const expandThis = expanded === `panel-${fav.id}`;
+          return (
+            <ExpansionPanel
+              key={fav.id}
+              square
+              expanded={expandThis}
+              onChange={handleChange(`panel-${fav.id}`)}
+            >
+              <ExpansionPanelSummary>
+                <Grid item xs={12}>
+                  <PokemonCard
+                    key={fav.id}
+                    {...anim()}
+                    variant="favourites"
+                    pokemonInfo={fav}
+                  />
+                </Grid>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <Paper className={classes.buttonsRoot} elevation={3}>
+                  <Zoom
+                    in={expandThis}
+                    style={{ transitionDelay: expandThis ? "250ms" : "0ms" }}
+                  >
                     <Button
                       variant="contained"
                       classes={{ root: classes.viewButton }}
                       size="large"
                       className={classes.button}
                     >
-                      <SaveIcon />
+                      <PlayArrow className={classes.viewBackIcon} />
+                      <PokeballIcon />
                     </Button>
+                  </Zoom>
+                  <Zoom
+                    in={expandThis}
+                    style={{ transitionDelay: expandThis ? "325ms" : "0ms" }}
+                  >
                     <Button
                       variant="contained"
                       classes={{ root: classes.removeButton }}
                       size="large"
                       className={classes.button}
                     >
-                      <DeleteIcon />
+                      <GradeTwoTone fontSize="large" />
                     </Button>
-                  </div>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            )
-        )}
+                  </Zoom>
+                </Paper>
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          );
+        })}
       </div>
       {/* </Grid>
       </Grid> */}

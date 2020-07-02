@@ -46,7 +46,6 @@
     ]
   },
   "devDependencies": {
-    "@svgr/cli": "^5.4.0",
     "@welldone-software/why-did-you-render": "^4.2.5"
   }
 }

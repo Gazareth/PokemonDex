@@ -43,12 +43,12 @@ const POKEBALL_SVG = (
   />
 );
 
-export const PokeballIcon = props => {
-  //const mainTheme = useTheme();
-  //const classes = useStyles(mainTheme);
+const PokeballIcon = (props) => {
   return (
     <SvgIcon {...props} viewBox="0 0 1024 1024">
-      {POKEBALL_SVG}>
+      {POKEBALL_SVG}
     </SvgIcon>
   );
 };
+
+export default PokeballIcon;
