@@ -15,9 +15,9 @@ import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
 import PokeballIcon from "Icons/PokeballIcon";
 import PlayArrow from "@material-ui/icons/PlayArrow";
-import GradeTwoTone from "@material-ui/icons/GradeTwoTone";
+import StarTwoTone from "@material-ui/icons/StarTwoTone";
 
-import PokemonCard from "Components/PokemonCard";
+import PokemonFavourite from "./PokemonFavourite";
 
 import useAnimEngine from "Hooks/AnimEngine";
 
@@ -32,23 +32,23 @@ const useStyles = makeStyles((theme) => ({
     flex: "none",
   },
   buttonsRoot: {
-    // border: "3px solid #666",
-    // backgroundColor: "#333",
-    // borderRadius: "5px",
-    // borderTop: "0",
     borderTopLeftRadius: "0",
     borderTopRightRadius: "0",
-    marginLeft: "0%",
+    // marginLeft: "0%",
     padding: `${theme.spacing(2.25)}px 3%`,
-    paddingBottom: `${theme.spacing(2.75)}px`,
-    //padding: `${theme.spacing(2.25)}px ${theme.spacing(1.5)}px`,
-    //paddingLeft: `${theme.spacing(1.5)}px`,
-    "& > *": {
-      margin: `0 ${theme.spacing(2)}px`,
-      padding: `${theme.spacing(1.5)}px ${theme.spacing(4.5)}px`,
+    // paddingBottom: `${theme.spacing(2.75)}px`,
+    "& > div > div > button": {
+      //margin: `0 ${theme.spacing(2)}px`,
+      // padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
       "&:first-child": {
-        paddingLeft: `${theme.spacing(2.75)}px`,
-        paddingRight: `${theme.spacing(3.25)}px`,
+        // paddingLeft: `${theme.spacing(2.75)}px`,
+        // paddingRight: `${theme.spacing(3.25)}px`,
+      },
+      "&:last-child": {
+        // padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
+        "& > span > svg": {
+          //fontSize: "2rem",
+        },
       },
     },
   },
@@ -161,7 +161,7 @@ const FavouritesPage = ({ displayContent, favourites }) => {
             >
               <ExpansionPanelSummary>
                 <Grid item xs={12}>
-                  <PokemonCard
+                  <PokemonFavourite
                     key={fav.id}
                     {...anim()}
                     variant="favourites"
@@ -170,35 +170,45 @@ const FavouritesPage = ({ displayContent, favourites }) => {
                 </Grid>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
-                <Paper className={classes.buttonsRoot} elevation={3}>
-                  <Zoom
-                    in={expandThis}
-                    style={{ transitionDelay: expandThis ? "250ms" : "0ms" }}
-                  >
-                    <Button
-                      variant="contained"
-                      classes={{ root: classes.viewButton }}
-                      size="large"
-                      className={classes.button}
-                    >
-                      <PlayArrow className={classes.viewBackIcon} />
-                      <PokeballIcon />
-                    </Button>
-                  </Zoom>
-                  <Zoom
-                    in={expandThis}
-                    style={{ transitionDelay: expandThis ? "325ms" : "0ms" }}
-                  >
-                    <Button
-                      variant="contained"
-                      classes={{ root: classes.removeButton }}
-                      size="large"
-                      className={classes.button}
-                    >
-                      <GradeTwoTone fontSize="large" />
-                    </Button>
-                  </Zoom>
-                </Paper>
+                <div className={classes.buttonsRoot} elevation={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Zoom
+                        in={expandThis}
+                        style={{
+                          transitionDelay: expandThis ? "125ms" : "0ms",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          classes={{ root: classes.viewButton }}
+                          size="large"
+                          className={classes.button}
+                        >
+                          <PlayArrow className={classes.viewBackIcon} />
+                          <PokeballIcon />
+                        </Button>
+                      </Zoom>
+                    </Grid>
+                    <Grid container item xs={6} justify="flex-end">
+                      <Zoom
+                        in={expandThis}
+                        style={{
+                          transitionDelay: expandThis ? "250ms" : "0ms",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          classes={{ root: classes.removeButton }}
+                          size="large"
+                          className={classes.button}
+                        >
+                          <StarTwoTone />
+                        </Button>
+                      </Zoom>
+                    </Grid>
+                  </Grid>
+                </div>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           );
