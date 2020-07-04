@@ -6,6 +6,8 @@ import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
 import Zoom from "@material-ui/core/Zoom";
 import Paper from "@material-ui/core/Paper";
 
+import SwipeableViews from "react-swipeable-views";
+
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   },
   inflexible: {
     flex: "none",
+  },
+  favouriteEntry: {
+    margin: `${theme.spacing(0.75)}px`,
   },
   buttonsRoot: {
     borderTopLeftRadius: "0",
@@ -62,57 +67,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.error.main,
   },
 }));
-
-const ExpansionPanel = withStyles((theme) => ({
-  root: {
-    margin: "6px 0",
-    backgroundColor: "transparent",
-    boxShadow: "none",
-    "&:not(:last-child)": {
-      borderBottom: 0,
-    },
-    "&:before": {
-      display: "none",
-    },
-    "&$expanded": {
-      margin: "auto",
-    },
-  },
-  expanded: {},
-}))(MuiExpansionPanel);
-
-const ExpansionPanelSummary = withStyles((theme) => ({
-  root: {
-    //backgroundColor: theme.palette.background.quaternary,
-    backgroundColor: "transparent",
-    //border: `1px solid ${theme.palette.background.senary}`,
-    //borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    marginBottom: -1,
-    minHeight: 56,
-    "&$expanded": {
-      minHeight: 56,
-    },
-  },
-  content: {
-    margin: "0px 0",
-    "&$expanded": {
-      margin: " 0px 0",
-    },
-  },
-  expanded: {},
-}))(MuiExpansionPanelSummary);
-
-const ExpansionPanelDetails = withStyles((theme) => ({
-  root: {
-    backgroundColor: "transparent",
-    display: "flex",
-    justifyContent: "center",
-    padding: "0",
-    marginBottom: "18px",
-    //border: `1px solid ${theme.palette.background.senary}`,
-    //borderRadius: "0 0 2rem 2rem",
-  },
-}))(MuiExpansionPanelDetails);
 
 const mapStateToProps = (state) => {
   return {
@@ -153,69 +107,17 @@ const FavouritesPage = ({ displayContent, favourites }) => {
         {favourites.map((fav) => {
           const expandThis = expanded === `panel-${fav.id}`;
           return (
-            <ExpansionPanel
-              key={fav.id}
-              square
-              expanded={expandThis}
-              onChange={handleChange(`panel-${fav.id}`)}
-            >
-              <ExpansionPanelSummary>
-                <Grid item xs={12}>
-                  <PokemonFavourite
-                    key={fav.id}
-                    {...anim()}
-                    variant="favourites"
-                    pokemonInfo={fav}
-                  />
-                </Grid>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <div className={classes.buttonsRoot} elevation={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Zoom
-                        in={expandThis}
-                        style={{
-                          transitionDelay: expandThis ? "125ms" : "0ms",
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          classes={{ root: classes.viewButton }}
-                          size="large"
-                          className={classes.button}
-                        >
-                          <PlayArrow className={classes.viewBackIcon} />
-                          <PokeballIcon />
-                        </Button>
-                      </Zoom>
-                    </Grid>
-                    <Grid container item xs={6} justify="flex-end">
-                      <Zoom
-                        in={expandThis}
-                        style={{
-                          transitionDelay: expandThis ? "250ms" : "0ms",
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          classes={{ root: classes.removeButton }}
-                          size="large"
-                          className={classes.button}
-                        >
-                          <StarTwoTone />
-                        </Button>
-                      </Zoom>
-                    </Grid>
-                  </Grid>
-                </div>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+            <div className={classes.favouriteEntry}>
+              <PokemonFavourite
+                key={fav.id}
+                {...anim()}
+                variant="favourites"
+                pokemonInfo={fav}
+              />
+            </div>
           );
         })}
       </div>
-      {/* </Grid>
-      </Grid> */}
     </>
   );
 };

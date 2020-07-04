@@ -106,46 +106,34 @@ const PokemonDisplayMain = ({
                   ))}
                 </Typography>
               </Grid>
-              {variant === "main" && (
-                <Grid item>
-                  <Typography className={classes.physique} variant="caption">
-                    <>
-                      {pokemonInfo.physique.height + " decimetres "}&nbsp;&nbsp;
-                      {pokemonInfo.physique.weight + " hectograms"}
-                    </>
-                  </Typography>
-                </Grid>
-              )}
-            </Grid>
-            {variant === "main" && (
-              <Grid item xs={2} container>
-                <IconButton
-                  onClick={addToFavourites}
-                  className={classes.favouriteIconButton}
-                >
-                  <StarIcon
-                    fontSize="large"
-                    className={clsx(
-                      classes.favouriteIcon,
-                      !isFavourite && classes.colourDisabled
-                    )}
-                  />
-                </IconButton>
+              <Grid item>
+                <Typography className={classes.physique} variant="caption">
+                  <>
+                    {pokemonInfo.physique.height + " decimetres "}&nbsp;&nbsp;
+                    {pokemonInfo.physique.weight + " hectograms"}
+                  </>
+                </Typography>
               </Grid>
-            )}
+            </Grid>
+            <Grid item xs={2} container>
+              <IconButton
+                onClick={addToFavourites}
+                className={classes.favouriteIconButton}
+              >
+                <StarIcon
+                  fontSize="large"
+                  className={clsx(
+                    classes.favouriteIcon,
+                    !isFavourite && classes.colourDisabled
+                  )}
+                />
+              </IconButton>
+            </Grid>
           </Grid>
         </CardContent>
       </div>
     </Card>
   );
-};
-
-PokemonDisplayMain.propTypes = {
-  variant: PropTypes.oneOf(["main", "favourites"]),
-};
-
-PokemonDisplayMain.defaultProps = {
-  variant: "main",
 };
 
 export default SmoothIn(PokemonDisplayMain);
