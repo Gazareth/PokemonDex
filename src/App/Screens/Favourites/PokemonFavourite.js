@@ -9,6 +9,8 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
+import SwipeableViews from "react-swipeable-views";
+
 import SmoothIn from "Utils/transitionSmoothIn";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PokemonFavourite = ({ pokemonInfo, ...props }) => {
+const PokemonFavourite = ({ pokemonInfo, showOptions, ...props }) => {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -47,30 +49,35 @@ const PokemonFavourite = ({ pokemonInfo, ...props }) => {
         <Grid container>
           <Grid item className={classes.cardDetails}>
             <CardContent className={classes.cardContent}>
-              <Typography component="h2" variant="h5">
-                <span
-                  style={{
-                    color: theme.palette.text.secondary,
-                  }}
-                >
-                  {"#" + pokemonInfo.id + " "}
-                </span>
-                {pokemonInfo.name}
-              </Typography>
-              <Typography variant="subtitle2" className={classes.types}>
-                {pokemonInfo.types.map((type, i) => (
-                  <span key={i}>
+              <SwipeableViews index={showOptions ? 0 : 1}>
+                <div>SLIDE #2 CONTENT</div>
+                <div>
+                  <Typography component="h2" variant="h5">
                     <span
                       style={{
-                        color: theme.palette.pokemonTypes[type],
+                        color: theme.palette.text.secondary,
                       }}
                     >
-                      {type}
+                      {"#" + pokemonInfo.id + " "}
                     </span>
-                    <>{i + 1 === pokemonInfo.types.length ? "" : ", "}</>
-                  </span>
-                ))}
-              </Typography>
+                    {pokemonInfo.name}
+                  </Typography>
+                  <Typography variant="subtitle2" className={classes.types}>
+                    {pokemonInfo.types.map((type, i) => (
+                      <span key={i}>
+                        <span
+                          style={{
+                            color: theme.palette.pokemonTypes[type],
+                          }}
+                        >
+                          {type}
+                        </span>
+                        <>{i + 1 === pokemonInfo.types.length ? "" : ", "}</>
+                      </span>
+                    ))}
+                  </Typography>
+                </div>
+              </SwipeableViews>
             </CardContent>
           </Grid>
           <Box display="flex" alignItems="center">

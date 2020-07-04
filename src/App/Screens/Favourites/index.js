@@ -82,8 +82,8 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, newExpanded) => {
-    const newValue = expanded ? false : panel;
-    setExpanded(newExpanded ? newValue : false);
+    console.log("HANDLING CHANGE!!!", panel);
+    setExpanded(panel ?? false);
   };
 
   const [animateIn, setAnimateIn] = useState(false);
@@ -105,14 +105,19 @@ const FavouritesPage = ({ displayContent, favourites }) => {
         <Grid item container spacing={4} className={classes.inflexible}> */}
       <div>
         {favourites.map((fav) => {
-          const expandThis = expanded === `panel-${fav.id}`;
+          const showOptions = expanded === `panel-${fav.id}`;
+          console.log("RE MAPPING ", fav.id, " show options? ", showOptions);
           return (
-            <div className={classes.favouriteEntry}>
+            <div
+              key={fav.id}
+              className={classes.favouriteEntry}
+              onClick={handleChange(`panel-${fav.id}`)}
+            >
               <PokemonFavourite
-                key={fav.id}
                 {...anim()}
                 variant="favourites"
                 pokemonInfo={fav}
+                showOptions={showOptions}
               />
             </div>
           );
