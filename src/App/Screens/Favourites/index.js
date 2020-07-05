@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { connect } from "react-redux";
 
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
@@ -15,9 +15,11 @@ import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
 import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
-import PokeballIcon from "Icons/PokeballIcon";
 import PlayArrow from "@material-ui/icons/PlayArrow";
+import PokeballIcon from "Icons/PokeballIcon";
 import StarTwoTone from "@material-ui/icons/StarTwoTone";
+
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 import PokemonFavourite from "./PokemonFavourite";
 
@@ -79,12 +81,18 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(0);
 
-  const handleChange = (panel) => (event, newExpanded) => {
-    console.log("HANDLING CHANGE!!!", panel);
-    setExpanded(panel ?? false);
+  const isPanelExpanded = useCallback((panel) => expanded === panel, [
+    expanded,
+  ]);
+
+  const handleClickOn = (panel) => (event, newExpanded) => {
+    console.log("HANDLING ClickOn!!!", panel);
+    setExpanded(isPanelExpanded(panel) ? 0 : panel);
   };
+
+  const handleClickAway = () => setExpanded(0);
 
   const [animateIn, setAnimateIn] = useState(false);
 
@@ -103,26 +111,36 @@ const FavouritesPage = ({ displayContent, favourites }) => {
       <h2>Favourite Pokemon </h2>
       {/* <Grid item container spacing={5} className={classes.flexCol}>
         <Grid item container spacing={4} className={classes.inflexible}> */}
-      <div>
-        {favourites.map((fav) => {
-          const showOptions = expanded === `panel-${fav.id}`;
-          console.log("RE MAPPING ", fav.id, " show options? ", showOptions);
-          return (
-            <div
-              key={fav.id}
-              className={classes.favouriteEntry}
-              onClick={handleChange(`panel-${fav.id}`)}
-            >
-              <PokemonFavourite
-                {...anim()}
-                variant="favourites"
-                pokemonInfo={fav}
-                showOptions={showOptions}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <div>
+          {favourites.map((fav) => {
+            const showOptions = isPanelExpanded(fav.id);
+            console.log(
+              "MAPPING ",
+              fav.id,
+              " show options? ",
+              showOptions,
+              " because panel is: ",
+              expanded
+            );
+            return (
+              <div
+                key={fav.id}
+                className={classes.favouriteEntry}
+                onClick={!showOptions ? handleClickOn(fav.id) : null}
+              >
+                <PokemonFavourite
+                  {...anim()}
+                  variant="favourites"
+                  pokemonInfo={fav}
+                  showOptions={showOptions}
+                  hideOptions={handleClickAway}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </ClickAwayListener>
     </>
   );
 };

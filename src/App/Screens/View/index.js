@@ -6,8 +6,6 @@ import { addFavourite, removeFavourite } from "Store/actions";
 import PokemonDisplay from "./PokemonDisplay";
 import PokemonNoDisplay from "./PokemonNoDisplay";
 
-import ParsePokemonData from "Utils/parseData_pokemon";
-
 const mapStateToProps = (state) => {
   return {
     pokemonData: state.pokemon.data,
