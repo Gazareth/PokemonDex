@@ -11,11 +11,13 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
+import IconButton from "@material-ui/core/IconButton";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 
 import SwipeableViews from "react-swipeable-views";
 
+import Zoom from "@material-ui/core/Zoom";
 import SmoothIn from "Utils/transitionSmoothIn";
 
 import PlayArrow from "@material-ui/icons/PlayArrow";
@@ -25,6 +27,7 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 
 import Done from "@material-ui/icons/Done";
+import Close from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -71,10 +74,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  viewButton: {
-    color: theme.palette.background.default,
-    borderTopLeftRadius: `${theme.spacing(2.5)}px`,
-    borderBottomLeftRadius: `${theme.spacing(2.5)}px`,
+  doneButton: {
+    // color: theme.palette.background.default,
+    // borderTopLeftRadius: `${theme.spacing(2.5)}px`,
+    // borderBottomLeftRadius: `${theme.spacing(2.5)}px`,
+    // borderRadius: `0px`,
     //margin: "0px",
     "&:hover": {
       borderWidth: "2px",
@@ -85,17 +89,18 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
 
-  doneButton: {
-    //color: theme.palette.success.main,
-    color: theme.palette.background.default,
-    backgroundColor: theme.palette.success.dark,
-    //borderColor: Color(theme.palette.success.main).fade(0.5).toString(),
+  viewButton: {
+    // color: theme.palette.success.main,
+    // color: theme.palette.background.default,
+    // backgroundColor: theme.palette.success.dark,
+    // borderColor: Color(theme.palette.success.main).fade(0.5).toString(),
+    borderRadius: `${theme.spacing(2.5)}px`,
     marginLeft: "auto",
     "&:hover": {
-      //color: theme.palette.success.main,
-      //borderColor: theme.palette.success.main,
-      //backgroundColor: Color(theme.palette.success.main).fade(0.92).toString(),
-      backgroundColor: theme.palette.success.light,
+      // color: theme.palette.success.main,
+      // borderColor: theme.palette.success.main,
+      // backgroundColor: Color(theme.palette.success.main).fade(0.92).toString(),
+      // backgroundColor: theme.palette.success.light,
     },
   },
   viewBackIcon: {
@@ -128,40 +133,48 @@ const PokemonFavourite = ({
               index={showOptions ? 0 : 1}
             >
               <Grid container className={classes.buttonGrid}>
-                <Grid item container xs={3} justify="middle">
-                  <Button
-                    className={classes.viewButton}
-                    size="large"
-                    variant="contained"
-                    color="secondary"
-                  >
-                    <PlayArrow className={classes.viewBackIcon} />
-                    <PokeballIcon />
-                  </Button>
+                <Grid item container xs={2} justify="flex-start">
+                  <Zoom in={showOptions} style={{ transitionDelay: "550ms" }}>
+                    <IconButton
+                      //className={classes.doneButton}
+                      //variant="contained"
+                      onClick={(...args) =>
+                        console.log("CLICKED DONE!!! ARGS: ", args) ||
+                        hideOptions()
+                      }
+                    >
+                      {/* <PlayArrow className={classes.viewBackIcon} /> */}
+                      <Close />
+                    </IconButton>
+                  </Zoom>
                 </Grid>
-                <Grid item container xs={6} justify="flex-end">
-                  <ButtonGroup variant="contained">
-                    <Button>
-                      <ArrowUpward />
-                    </Button>
-                    <Button>
-                      <ArrowDownward />
-                    </Button>
-                  </ButtonGroup>
+                <Grid item container xs={7} justify="flex-end">
+                  <Zoom in={showOptions} style={{ transitionDelay: "350ms" }}>
+                    <ButtonGroup
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                    >
+                      <Button>
+                        <ArrowUpward />
+                      </Button>
+                      <Button>
+                        <ArrowDownward />
+                      </Button>
+                    </ButtonGroup>
+                  </Zoom>
                 </Grid>
-                <Grid item container xs={3} justify="middle">
-                  <Button
-                    className={classes.doneButton}
-                    size="large"
-                    variant="contained"
-                    //color="primary"
-                    onClick={(...args) =>
-                      console.log("CLICKED DONE!!! ARGS: ", args) ||
-                      hideOptions()
-                    }
-                  >
-                    <Done />
-                  </Button>
+                <Grid item container xs={3}>
+                  <Zoom in={showOptions} style={{ transitionDelay: "245ms" }}>
+                    <Button
+                      className={classes.viewButton}
+                      size="large"
+                      variant="contained"
+                      color="secondary"
+                    >
+                      <PokeballIcon />
+                    </Button>
+                  </Zoom>
                 </Grid>
               </Grid>
               <div>
