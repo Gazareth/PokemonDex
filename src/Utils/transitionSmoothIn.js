@@ -48,7 +48,7 @@ const stateStyles = (delay, doHeight) => ({
   },
 });
 
-const transitionStyles = (state, delay, magnitude, doHeight) => ({
+const transitionStyles = (state, delay, magnitude = 1, doHeight = false) => ({
   ...baseStyle({ delay, magnitude, doHeight }),
   ...stateStyles(delay, doHeight)[state],
 });

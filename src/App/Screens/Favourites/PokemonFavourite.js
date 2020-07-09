@@ -2,6 +2,8 @@ import React from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import useAnimEngine from "Hooks/AnimEngine";
+
 import Color from "color";
 
 import Box from "@material-ui/core/Box";
@@ -17,7 +19,7 @@ import Button from "@material-ui/core/Button";
 
 import SwipeableViews from "react-swipeable-views";
 
-import Zoom from "@material-ui/core/Zoom";
+import { CSSTransition } from "react-transition-group";
 import SmoothIn from "Utils/transitionSmoothIn";
 
 import PlayArrow from "@material-ui/icons/PlayArrow";
@@ -49,23 +51,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
   },
 
-  optionsButtonsDiv: {
-    display: "flex",
-    justifyContent: "right",
-    height: "100%",
-    "& > button": {
-      margin: `auto ${theme.spacing(2.5)}px`,
-    },
-    "& > button:first-child": {
-      marginRight: "auto",
-    },
-  },
-
   buttonGrid: {
     height: "100%",
-    // "& div.MuiGrid-container > button": {
-    //   margin: `auto ${theme.spacing(2)}px`,
-    // },
     "& div > button": {
       margin: `auto`,
     },
@@ -75,33 +62,19 @@ const useStyles = makeStyles((theme) => ({
   },
 
   doneButton: {
-    // color: theme.palette.background.default,
-    // borderTopLeftRadius: `${theme.spacing(2.5)}px`,
-    // borderBottomLeftRadius: `${theme.spacing(2.5)}px`,
-    // borderRadius: `0px`,
-    //margin: "0px",
     "&:hover": {
       borderWidth: "2px",
     },
-    //   color: theme.palette.text.secondary,
-    //   borderColor: theme.palette.text.secondary,
-    //   backgroundColor: theme.palette.secondary.main,
-    // },
+  },
+
+  upDownButtonGroup: {
+    transitionTimingFunction: theme.transitions.easing.pokeBounceIn,
   },
 
   viewButton: {
-    // color: theme.palette.success.main,
-    // color: theme.palette.background.default,
-    // backgroundColor: theme.palette.success.dark,
-    // borderColor: Color(theme.palette.success.main).fade(0.5).toString(),
     borderRadius: `${theme.spacing(2.5)}px`,
     marginLeft: "auto",
-    "&:hover": {
-      // color: theme.palette.success.main,
-      // borderColor: theme.palette.success.main,
-      // backgroundColor: Color(theme.palette.success.main).fade(0.92).toString(),
-      // backgroundColor: theme.palette.success.light,
-    },
+    "&:hover": {},
   },
   viewBackIcon: {
     transform: "scaleX(-1)",
@@ -113,68 +86,82 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const moveButtonsDefaultStyles = (theme) => ({
+  transition: `transform 200ms ${theme.transitions.easing.pokeBounceIn} 275ms`,
+  transform: "scale(0)",
+});
+
+const moveButtonsTransitionStyles = (theme) => ({
+  entering: { transform: "scale(1)" },
+  entered: { transform: "scale(1)" },
+  exiting: {
+    transform: "scale(0)",
+    transitionEasingFunction: theme.transitions.easing.easeIn,
+  },
+  exited: {
+    transform: "scale(0)",
+    transitionEasingFunction: theme.transitions.easing.easeIn,
+  },
+});
+
 const PokemonFavourite = ({
   pokemonInfo,
-  showOptions,
+  showingOptions,
   hideOptions,
+  viewPokemon,
   ...props
 }) => {
   const theme = useTheme();
-  const classes = useStyles();
+  const classes = useStyles(theme);
 
   return (
     <Card style={{ ...props.style }} className={classes.card}>
-      <CardActionArea disableTouchRipple={showOptions} focused={showOptions}>
+      <CardActionArea disableTouchRipple={showingOptions} component="div">
         <Grid container>
           <Grid item className={classes.cardDetails}>
             <SwipeableViews
               style={{ height: "100%" }}
               containerStyle={{ height: "100%" }}
-              index={showOptions ? 0 : 1}
+              index={showingOptions ? 0 : 1}
             >
               <Grid container className={classes.buttonGrid}>
                 <Grid item container xs={2} justify="flex-start">
-                  <Zoom in={showOptions} style={{ transitionDelay: "550ms" }}>
-                    <IconButton
-                      //className={classes.doneButton}
-                      //variant="contained"
-                      onClick={(...args) =>
-                        console.log("CLICKED DONE!!! ARGS: ", args) ||
-                        hideOptions()
-                      }
-                    >
-                      {/* <PlayArrow className={classes.viewBackIcon} /> */}
-                      <Close />
-                    </IconButton>
-                  </Zoom>
+                  <IconButton onClick={(...args) => hideOptions()}>
+                    <Close />
+                  </IconButton>
                 </Grid>
                 <Grid item container xs={7} justify="flex-end">
-                  <Zoom in={showOptions} style={{ transitionDelay: "350ms" }}>
-                    <ButtonGroup
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                    >
-                      <Button>
-                        <ArrowUpward />
-                      </Button>
-                      <Button>
-                        <ArrowDownward />
-                      </Button>
-                    </ButtonGroup>
-                  </Zoom>
+                  <CSSTransition in={showingOptions} timeout={200}>
+                    {(state) => (
+                      <ButtonGroup
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        style={{
+                          ...moveButtonsDefaultStyles(theme),
+                          ...moveButtonsTransitionStyles(theme)[state],
+                        }}
+                      >
+                        <Button>
+                          <ArrowUpward />
+                        </Button>
+                        <Button>
+                          <ArrowDownward />
+                        </Button>
+                      </ButtonGroup>
+                    )}
+                  </CSSTransition>
                 </Grid>
                 <Grid item container xs={3}>
-                  <Zoom in={showOptions} style={{ transitionDelay: "245ms" }}>
-                    <Button
-                      className={classes.viewButton}
-                      size="large"
-                      variant="contained"
-                      color="secondary"
-                    >
-                      <PokeballIcon />
-                    </Button>
-                  </Zoom>
+                  <Button
+                    className={classes.viewButton}
+                    size="large"
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => viewPokemon()}
+                  >
+                    <PokeballIcon />
+                  </Button>
                 </Grid>
               </Grid>
               <div>

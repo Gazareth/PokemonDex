@@ -113,12 +113,8 @@ export const theme = (mode = "dark") => {
     //overrides: { MuiTab: { fullWidth: { maxWidth: "initial" } } },
     palette: {
       type: mode,
-      primary: {
-        light: "#a6d4fa",
-        main: "#90caf9",
-        dark: "#648dae",
-        contrastText: "#fff",
-      },
+      primary: { main: "#3761ab" },
+      //secondary: pink,
       background: { ...backgrounds(mode) },
       pokemonTypes: pokemonTypeColours(mode),
     },

@@ -1,23 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { connect } from "react-redux";
 
+import { useHistory } from "react-router-dom";
+
 import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
-
-import Zoom from "@material-ui/core/Zoom";
-import Paper from "@material-ui/core/Paper";
-
-import SwipeableViews from "react-swipeable-views";
-
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-
-import MuiExpansionPanel from "@material-ui/core/ExpansionPanel";
-import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import MuiExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-
-import PlayArrow from "@material-ui/icons/PlayArrow";
-import PokeballIcon from "Icons/PokeballIcon";
-import StarTwoTone from "@material-ui/icons/StarTwoTone";
 
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
@@ -81,6 +67,8 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const history = useHistory();
+
   const [expanded, setExpanded] = React.useState(0);
 
   const isPanelExpanded = useCallback((panel) => expanded === panel, [
@@ -88,11 +76,13 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   ]);
 
   const handleClickOn = (panel) => (event, newExpanded) => {
-    console.log("HANDLING ClickOn!!!", panel);
     setExpanded(isPanelExpanded(panel) ? 0 : panel);
   };
 
   const handleClickAway = () => setExpanded(0);
+
+  const handleClickView = () =>
+    handleClickAway() || history.push(`/view/?id=${expanded}`);
 
   const [animateIn, setAnimateIn] = useState(false);
 
@@ -133,8 +123,9 @@ const FavouritesPage = ({ displayContent, favourites }) => {
                   {...anim()}
                   variant="favourites"
                   pokemonInfo={fav}
-                  showOptions={showOptions}
+                  showingOptions={showOptions}
                   hideOptions={handleClickAway}
+                  viewPokemon={handleClickView}
                 />
               </div>
             );
