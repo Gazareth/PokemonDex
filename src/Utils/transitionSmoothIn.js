@@ -2,7 +2,10 @@ import React from "react";
 
 import { CSSTransition } from "react-transition-group";
 
-const baseStyle = ({ delay, magnitude, doHeight }) => ({
+/************************
+ * SMOOTH
+ ***********************/
+const smoothBaseStyle = ({ delay, magnitude, doHeight }) => ({
   transition:
     `opacity ${delay.in}ms linear, transform ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)` +
     (doHeight
@@ -11,11 +14,9 @@ const baseStyle = ({ delay, magnitude, doHeight }) => ({
   transitionDelay: delay.in + "ms",
   opacity: 0,
   transform: "translate(0,-" + 2 * magnitude + "em)",
-  //maxHeight: doHeight ? "100%" : undefined,
-  //maxHeight: doHeight ? "100%" : undefined,
 });
 
-const stateStyles = (delay, doHeight) => ({
+const smoothStateStyles = ({ delay, doHeight }) => ({
   entering: {
     opacity: 1,
     transform: "translate(0,0)",
@@ -48,9 +49,63 @@ const stateStyles = (delay, doHeight) => ({
   },
 });
 
-const transitionStyles = (state, delay, magnitude = 1, doHeight = false) => ({
-  ...baseStyle({ delay, magnitude, doHeight }),
-  ...stateStyles(delay, doHeight)[state],
+/************************
+ * BOUNCE
+ ***********************/
+const bounceBaseStyle = ({ delay, theme }) => ({
+  transitionProperty: "transform",
+  transitionDuration: delay.in,
+  transitionTimingFunction: theme.transitions.easing.pokeBounceIn,
+  transitionDelay: delay.in,
+  transform: "scale(0)",
+});
+
+const bounceStateStyles = ({ delay, theme }) => ({
+  entering: { transform: "scale(1)" },
+  entered: { transform: "scale(1)" },
+  exiting: {
+    transform: "scale(0)",
+    transitionTimingFunction: theme.transitions.easing.pokeBounceOut,
+    transitionDelay: delay.out,
+  },
+  exited: {
+    transform: "scale(0)",
+    transitionTimingFunction: theme.transitions.easing.pokeBounceOut,
+  },
+});
+
+/************************
+ * SELECTORS
+ ***********************/
+const baseStyles = {
+  Smooth: smoothBaseStyle,
+  Bounce: bounceBaseStyle,
+};
+
+const stateStyles = {
+  Smooth: smoothStateStyles,
+  Bounce: bounceStateStyles,
+};
+
+/************************
+ * COMPONENT (HOC)
+ ***********************/
+const transitionStyles = (
+  state,
+  delay,
+  transitionType = "Smooth",
+  magnitude = 1,
+  doHeight = false,
+  theme = {}
+) => ({
+  test: console.log(
+    "COMPUTING TRANSITIONSTYLES FOR TYPE: ",
+    transitionType,
+    baseStyles[transitionType]({ delay, magnitude, doHeight, theme }),
+    stateStyles[transitionType]({ delay, doHeight, theme })[state]
+  ),
+  ...baseStyles[transitionType]({ delay, magnitude, doHeight, theme }),
+  ...stateStyles[transitionType]({ delay, doHeight, theme })[state],
 });
 
 const SmoothIn = (ComponentToTransition) => ({
@@ -58,6 +113,8 @@ const SmoothIn = (ComponentToTransition) => ({
   delay,
   animMagnitude,
   doHeight,
+  transitionType,
+  theme,
   ...otherProps
 }) => (
   <CSSTransition
@@ -70,7 +127,14 @@ const SmoothIn = (ComponentToTransition) => ({
         {...otherProps}
         style={{
           ...otherProps.style,
-          ...transitionStyles(state, delay, animMagnitude, doHeight),
+          ...transitionStyles(
+            state,
+            delay,
+            transitionType,
+            animMagnitude,
+            doHeight,
+            theme
+          ),
         }}
       />
     )}

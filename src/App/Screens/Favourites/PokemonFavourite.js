@@ -86,26 +86,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const moveButtonsDefaultStyles = (theme) => ({
-  transition: `transform 200ms ${theme.transitions.easing.pokeBounceIn} 275ms`,
-  transform: "scale(0)",
-});
+const ViewButton = SmoothIn(({ classes, viewPokemon }) => (
+  <Button
+    className={classes.viewButton}
+    size="large"
+    variant="contained"
+    color="secondary"
+    onClick={() => viewPokemon()}
+  >
+    <PokeballIcon />
+  </Button>
+));
 
-const moveButtonsTransitionStyles = (theme) => ({
-  entering: { transform: "scale(1)" },
-  entered: { transform: "scale(1)" },
-  exiting: {
-    transform: "scale(0)",
-    transitionEasingFunction: theme.transitions.easing.easeIn,
-  },
-  exited: {
-    transform: "scale(0)",
-    transitionEasingFunction: theme.transitions.easing.easeIn,
-  },
-});
+const MoveButtons = SmoothIn(({ classes, viewPokemon }) => (
+  <ButtonGroup variant="contained" color="primary" size="small">
+    <Button>
+      <ArrowUpward />
+    </Button>
+    <Button>
+      <ArrowDownward />
+    </Button>
+  </ButtonGroup>
+));
 
 const PokemonFavourite = ({
   pokemonInfo,
+  displayContent,
   showingOptions,
   hideOptions,
   viewPokemon,
@@ -113,6 +119,8 @@ const PokemonFavourite = ({
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
+
+  const anim = useAnimEngine(2, displayContent && showingOptions, 450);
 
   return (
     <Card style={{ ...props.style }} className={classes.card}>
@@ -131,37 +139,22 @@ const PokemonFavourite = ({
                   </IconButton>
                 </Grid>
                 <Grid item container xs={7} justify="flex-end">
-                  <CSSTransition in={showingOptions} timeout={200}>
-                    {(state) => (
-                      <ButtonGroup
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        style={{
-                          ...moveButtonsDefaultStyles(theme),
-                          ...moveButtonsTransitionStyles(theme)[state],
-                        }}
-                      >
-                        <Button>
-                          <ArrowUpward />
-                        </Button>
-                        <Button>
-                          <ArrowDownward />
-                        </Button>
-                      </ButtonGroup>
-                    )}
-                  </CSSTransition>
+                  <MoveButtons
+                    {...anim()}
+                    classes={classes}
+                    viewPokemon={viewPokemon}
+                    transitionType="Bounce"
+                    theme={theme}
+                  />
                 </Grid>
                 <Grid item container xs={3}>
-                  <Button
-                    className={classes.viewButton}
-                    size="large"
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => viewPokemon()}
-                  >
-                    <PokeballIcon />
-                  </Button>
+                  <ViewButton
+                    {...anim()}
+                    classes={classes}
+                    viewPokemon={viewPokemon}
+                    transitionType="Bounce"
+                    theme={theme}
+                  />
                 </Grid>
               </Grid>
               <div>

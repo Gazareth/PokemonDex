@@ -82,7 +82,7 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   const handleClickAway = () => setExpanded(0);
 
   const handleClickView = () =>
-    handleClickAway() || history.push(`/view/?id=${expanded}`);
+    displayContent && history.push(`/view/?id=${expanded}`);
 
   const [animateIn, setAnimateIn] = useState(false);
 
@@ -123,6 +123,7 @@ const FavouritesPage = ({ displayContent, favourites }) => {
                   {...anim()}
                   variant="favourites"
                   pokemonInfo={fav}
+                  displayContent={displayContent}
                   showingOptions={showOptions}
                   hideOptions={handleClickAway}
                   viewPokemon={handleClickView}
