@@ -3,9 +3,10 @@ const useAnimEngine = (
   inOut,
   baseDelay = 225,
   staggerAmount = 150,
-  startId = 0
+  overflow = true,
+  staggerOffset = 0
 ) => {
-  let staggerId = startId;
+  let staggerId = staggerOffset;
   return () => {
     const newDelay =
       baseDelay + staggerAmount * Math.round(Math.random() * 0.5 + staggerId++);
@@ -17,6 +18,7 @@ const useAnimEngine = (
       delay: {
         in: newDelay,
         out: invDelay,
+        inDuration: overflow ? newDelay : baseDelay,
         outDuration: invDelay + baseDelay,
         maxDelay,
       },

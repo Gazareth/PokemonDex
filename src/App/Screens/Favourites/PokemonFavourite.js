@@ -4,8 +4,6 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import useAnimEngine from "Hooks/AnimEngine";
 
-import Color from "color";
-
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -19,16 +17,14 @@ import Button from "@material-ui/core/Button";
 
 import SwipeableViews from "react-swipeable-views";
 
-import { CSSTransition } from "react-transition-group";
 import SmoothIn from "Utils/transitionSmoothIn";
 
-import PlayArrow from "@material-ui/icons/PlayArrow";
 import PokeballIcon from "Icons/PokeballIcon";
 
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 
-import Done from "@material-ui/icons/Done";
+import NavigateBeforeOutlinedIcon from "@material-ui/icons/NavigateBeforeOutlined";
 import Close from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
 
   buttonGrid: {
     height: "100%",
+    overflow: "hidden",
+    // "& > div": {
+    //   padding: `0 ${theme.spacing(2)}px`,
+    // },
     "& div > button": {
       margin: `auto`,
     },
@@ -86,20 +86,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ViewButton = SmoothIn(({ classes, viewPokemon }) => (
+const swipeableStyle = { height: "100%", overflow: "hidden" };
+
+const ViewButton = SmoothIn(({ classes, viewPokemon, ...props }) => (
   <Button
     className={classes.viewButton}
     size="large"
     variant="contained"
     color="secondary"
+    style={props.style}
     onClick={() => viewPokemon()}
   >
     <PokeballIcon />
   </Button>
 ));
 
-const MoveButtons = SmoothIn(({ classes, viewPokemon }) => (
-  <ButtonGroup variant="contained" color="primary" size="small">
+const MoveButtons = SmoothIn(({ classes, viewPokemon, ...props }) => (
+  <ButtonGroup
+    style={props.style}
+    variant="contained"
+    color="primary"
+    size="small"
+  >
     <Button>
       <ArrowUpward />
     </Button>
@@ -109,10 +117,17 @@ const MoveButtons = SmoothIn(({ classes, viewPokemon }) => (
   </ButtonGroup>
 ));
 
+const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
+  <IconButton style={props.style} onClick={(...args) => hideOptions()}>
+    <NavigateBeforeOutlinedIcon />
+  </IconButton>
+));
+
 const PokemonFavourite = ({
   pokemonInfo,
+  favouriteIndex,
   displayContent,
-  showingOptions,
+  isSelected,
   hideOptions,
   viewPokemon,
   ...props
@@ -120,25 +135,53 @@ const PokemonFavourite = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const anim = useAnimEngine(2, displayContent && showingOptions, 450);
+  const anim = useAnimEngine(
+    3,
+    displayContent && isSelected,
+    225,
+    75,
+    false,
+    1
+  );
 
   return (
-    <Card style={{ ...props.style }} className={classes.card}>
-      <CardActionArea disableTouchRipple={showingOptions} component="div">
+    <Card
+      style={{ ...props.style }}
+      className={classes.card}
+      elevation={isSelected ? 6 : 1}
+    >
+      <CardActionArea disableTouchRipple={isSelected} component="div">
         <Grid container>
+          <Grid item xs={1}>
+            <Box
+              display="flex"
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Typography component="h3" variant="h5">
+                {favouriteIndex + 1}
+              </Typography>
+            </Box>
+          </Grid>
           <Grid item className={classes.cardDetails}>
             <SwipeableViews
-              style={{ height: "100%" }}
+              style={{ ...swipeableStyle }}
               containerStyle={{ height: "100%" }}
-              index={showingOptions ? 0 : 1}
+              slideStyle={{ ...swipeableStyle }}
+              index={isSelected ? 0 : 1}
             >
               <Grid container className={classes.buttonGrid}>
                 <Grid item container xs={2} justify="flex-start">
-                  <IconButton onClick={(...args) => hideOptions()}>
-                    <Close />
-                  </IconButton>
+                  <CloseButton
+                    {...anim()}
+                    classes={classes}
+                    hideOptions={hideOptions}
+                    transitionType="Bounce"
+                    theme={theme}
+                  />
                 </Grid>
-                <Grid item container xs={7} justify="flex-end">
+                <Grid item container xs={6} sm={7} justify="flex-end">
                   <MoveButtons
                     {...anim()}
                     classes={classes}
@@ -147,7 +190,7 @@ const PokemonFavourite = ({
                     theme={theme}
                   />
                 </Grid>
-                <Grid item container xs={3}>
+                <Grid item container xs={4} sm={3}>
                   <ViewButton
                     {...anim()}
                     classes={classes}
@@ -187,13 +230,15 @@ const PokemonFavourite = ({
               </div>
             </SwipeableViews>
           </Grid>
-          <Box display="flex" alignItems="center">
-            <img
-              src={pokemonInfo.image}
-              className={classes.image}
-              alt={pokemonInfo.name}
-            />
-          </Box>
+          <Grid item xs={2}>
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <img
+                src={pokemonInfo.image}
+                className={classes.image}
+                alt={pokemonInfo.name}
+              />
+            </Box>
+          </Grid>
         </Grid>
       </CardActionArea>
     </Card>

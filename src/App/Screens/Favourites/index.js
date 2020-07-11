@@ -1,60 +1,17 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 
 import { useHistory } from "react-router-dom";
 
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Filter9PlusIcon from "@material-ui/icons/Filter9Plus";
+import SwapVerticalCircleTwoToneIcon from "@material-ui/icons/SwapVerticalCircleTwoTone";
+import DeleteSweepTwoToneIcon from "@material-ui/icons/DeleteSweepTwoTone";
 
-import PokemonFavourite from "./PokemonFavourite";
-
-import useAnimEngine from "Hooks/AnimEngine";
-
-const useStyles = makeStyles((theme) => ({
-  flexCol: {
-    display: "flex",
-    flexFlow: "column nowrap",
-    flex: "auto",
-    overflow: "hidden",
-  },
-  inflexible: {
-    flex: "none",
-  },
-  favouriteEntry: {
-    margin: `${theme.spacing(0.75)}px`,
-  },
-  buttonsRoot: {
-    borderTopLeftRadius: "0",
-    borderTopRightRadius: "0",
-    // marginLeft: "0%",
-    padding: `${theme.spacing(2.25)}px 3%`,
-    // paddingBottom: `${theme.spacing(2.75)}px`,
-    "& > div > div > button": {
-      //margin: `0 ${theme.spacing(2)}px`,
-      // padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
-      "&:first-child": {
-        // paddingLeft: `${theme.spacing(2.75)}px`,
-        // paddingRight: `${theme.spacing(3.25)}px`,
-      },
-      "&:last-child": {
-        // padding: `${theme.spacing(1)}px ${theme.spacing(4)}px`,
-        "& > span > svg": {
-          //fontSize: "2rem",
-        },
-      },
-    },
-  },
-  viewButton: {
-    backgroundColor: theme.palette.success.light,
-  },
-  viewBackIcon: {
-    transform: "scaleX(-1)",
-  },
-  removeButton: {
-    backgroundColor: theme.palette.error.main,
-  },
-}));
+import PokemonFavouritesList from "./PokemonFavouritesList";
 
 const mapStateToProps = (state) => {
   return {
@@ -64,25 +21,23 @@ const mapStateToProps = (state) => {
 };
 
 const FavouritesPage = ({ displayContent, favourites }) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
   const history = useHistory();
 
-  const [expanded, setExpanded] = React.useState(0);
+  const [selectedFavourite, setSelectedFavourite] = React.useState(0);
 
-  const isPanelExpanded = useCallback((panel) => expanded === panel, [
-    expanded,
-  ]);
+  const isFavouriteSelected = useCallback(
+    (favId) => selectedFavourite === favId,
+    [selectedFavourite]
+  );
 
-  const handleClickOn = (panel) => (event, newExpanded) => {
-    setExpanded(isPanelExpanded(panel) ? 0 : panel);
+  const handleSelectFavourite = (favId) => (event, newFavourite) => {
+    setSelectedFavourite(isFavouriteSelected(favId) ? 0 : favId);
   };
 
-  const handleClickAway = () => setExpanded(0);
+  const handleSelectNone = () => setSelectedFavourite(0);
 
-  const handleClickView = () =>
-    displayContent && history.push(`/view/?id=${expanded}`);
+  const handleViewFavourite = () =>
+    displayContent && history.push(`/view/?id=${selectedFavourite}`);
 
   const [animateIn, setAnimateIn] = useState(false);
 
@@ -90,49 +45,33 @@ const FavouritesPage = ({ displayContent, favourites }) => {
     setTimeout(() => setAnimateIn(true), 250);
   }, []);
 
-  const anim = useAnimEngine(
-    favourites.length,
-    displayContent && animateIn,
-    125
-  );
-
   return (
     <>
-      <h2>Favourite Pokemon </h2>
-      {/* <Grid item container spacing={5} className={classes.flexCol}>
-        <Grid item container spacing={4} className={classes.inflexible}> */}
-      <ClickAwayListener onClickAway={handleClickAway}>
-        <div>
-          {favourites.map((fav) => {
-            const showOptions = isPanelExpanded(fav.id);
-            console.log(
-              "MAPPING ",
-              fav.id,
-              " show options? ",
-              showOptions,
-              " because panel is: ",
-              expanded
-            );
-            return (
-              <div
-                key={fav.id}
-                className={classes.favouriteEntry}
-                onClick={!showOptions ? handleClickOn(fav.id) : null}
-              >
-                <PokemonFavourite
-                  {...anim()}
-                  variant="favourites"
-                  pokemonInfo={fav}
-                  displayContent={displayContent}
-                  showingOptions={showOptions}
-                  hideOptions={handleClickAway}
-                  viewPokemon={handleClickView}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </ClickAwayListener>
+      <Typography component="h3" variant="h5">
+        Favourite Pokemon <Filter9PlusIcon />
+      </Typography>
+      <Grid container direction="column">
+        <Grid item container xs={8}></Grid>
+        <Grid item container xs={4} justify="flex-end">
+          <IconButton>
+            <SwapVerticalCircleTwoToneIcon fontSize="large" />
+          </IconButton>
+          <IconButton>
+            <DeleteSweepTwoToneIcon fontSize="large" />
+          </IconButton>
+        </Grid>
+      </Grid>
+      <PokemonFavouritesList
+        {...{
+          favourites,
+          animateIn,
+          displayContent,
+          isFavouriteSelected,
+          handleSelectFavourite,
+          handleSelectNone,
+          handleViewFavourite,
+        }}
+      />
     </>
   );
 };

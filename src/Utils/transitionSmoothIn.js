@@ -11,9 +11,9 @@ const smoothBaseStyle = ({ delay, magnitude, doHeight }) => ({
     (doHeight
       ? `, max-height ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
       : ``),
-  transitionDelay: delay.in + "ms",
+  transitionDelay: `${delay.in}ms`,
   opacity: 0,
-  transform: "translate(0,-" + 2 * magnitude + "em)",
+  transform: `translate(0,${-2 * magnitude} em)`,
 });
 
 const smoothStateStyles = ({ delay, doHeight }) => ({
@@ -29,8 +29,8 @@ const smoothStateStyles = ({ delay, doHeight }) => ({
   },
   exiting: {
     transition:
-      `opacity ${delay.out}ms linear ${delay.out}ms, transform ${
-        delay.outDuration * 2
+      `opacity ${delay.outDuration}ms linear ${delay.out}ms, transform ${
+        delay.out * 2
       }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms` +
       (doHeight
         ? `, max-height ${
@@ -54,9 +54,9 @@ const smoothStateStyles = ({ delay, doHeight }) => ({
  ***********************/
 const bounceBaseStyle = ({ delay, theme }) => ({
   transitionProperty: "transform",
-  transitionDuration: delay.in,
+  transitionDuration: `${delay.inDuration}ms`,
   transitionTimingFunction: theme.transitions.easing.pokeBounceIn,
-  transitionDelay: delay.in,
+  transitionDelay: `${delay.in}ms`,
   transform: "scale(0)",
 });
 
@@ -65,8 +65,9 @@ const bounceStateStyles = ({ delay, theme }) => ({
   entered: { transform: "scale(1)" },
   exiting: {
     transform: "scale(0)",
+    transitionDuration: `${delay.outDuration}ms`,
     transitionTimingFunction: theme.transitions.easing.pokeBounceOut,
-    transitionDelay: delay.out,
+    transitionDelay: `${delay.out}ms`,
   },
   exited: {
     transform: "scale(0)",
@@ -98,12 +99,6 @@ const transitionStyles = (
   doHeight = false,
   theme = {}
 ) => ({
-  test: console.log(
-    "COMPUTING TRANSITIONSTYLES FOR TYPE: ",
-    transitionType,
-    baseStyles[transitionType]({ delay, magnitude, doHeight, theme }),
-    stateStyles[transitionType]({ delay, doHeight, theme })[state]
-  ),
   ...baseStyles[transitionType]({ delay, magnitude, doHeight, theme }),
   ...stateStyles[transitionType]({ delay, doHeight, theme })[state],
 });
