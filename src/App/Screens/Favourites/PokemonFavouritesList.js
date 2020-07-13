@@ -40,6 +40,8 @@ const PokemonFavouritesList = ({
     125
   );
 
+  const noneSelected = isFavouriteSelected(0);
+
   return (
     <ClickAwayListener onClickAway={handleSelectNone}>
       <div>
@@ -60,8 +62,12 @@ const PokemonFavouritesList = ({
                 favouriteIndex={i}
                 displayContent={displayContent}
                 isSelected={favouriteSelected}
+                isNotSelected={!noneSelected && !favouriteSelected}
                 hideOptions={handleSelectNone}
                 viewPokemon={handleViewFavourite}
+                style={{
+                  opacity: favouriteSelected || noneSelected ? "1" : "0.65",
+                }}
               />
             </div>
           );

@@ -6,11 +6,15 @@ import { CSSTransition } from "react-transition-group";
  * SMOOTH
  ***********************/
 const smoothBaseStyle = ({ delay, magnitude, doHeight }) => ({
-  transition:
-    `opacity ${delay.in}ms linear, transform ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)` +
-    (doHeight
-      ? `, max-height ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
-      : ``),
+  // transition: `opacity ${delay.in}ms linear, transform ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)` +
+  //   (doHeight
+  //     ? `, max-height ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
+  //     : ``),
+  transitionProperty: `opacity, transform${doHeight ? `, max-height` : ``}`,
+  transitionDuration: `${delay.in}ms`,
+  transitionTimingFunction: `linear, cubic-bezier(0.075, 0.82, 0.165, 1)${
+    doHeight ? `, cubic-bezier(0.075, 0.82, 0.165, 1)` : ``
+  }`,
   transitionDelay: `${delay.in}ms`,
   opacity: 0,
   transform: `translate(0,${-2 * magnitude} em)`,
@@ -28,16 +32,26 @@ const smoothStateStyles = ({ delay, doHeight }) => ({
     maxHeight: doHeight ? "100%" : undefined,
   },
   exiting: {
-    transition:
-      `opacity ${delay.outDuration}ms linear ${delay.out}ms, transform ${
-        delay.out * 2
-      }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms` +
-      (doHeight
-        ? `, max-height ${
-            delay.outDuration * 2
-          }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms`
-        : ``),
-    transitionDelay: `${delay.out * 0.75}ms`,
+    // transition:
+    //   `opacity ${delay.outDuration}ms linear ${delay.out}ms, transform ${
+    //     delay.out * 2
+    //   }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms` +
+    //   (doHeight
+    //     ? `, max-height ${
+    //         delay.outDuration * 2
+    //       }ms cubic-bezier(0.075, 0.82, 0.165, 1) ${delay.out * 0.75}ms`
+    //     : ``),
+    transitionProperty: `opacity, transform${doHeight ? `, max-height` : ``}`,
+    transitionDuration: `${delay.outDuration}ms, ${delay.out * 2}ms${
+      doHeight ? `, ${delay.outDuration}ms` : ``
+    }`,
+    transitionTimingFunction: `linear${
+      doHeight ? `, cubic-bezier(0.075, 0.82, 0.165, 1)` : ``
+    }`,
+    transitionDelay: `${delay.out}ms
+      ${delay.out * 0.75}ms,
+      ${delay.out * 0.75}ms`,
+    //`${delay.out * 0.75}ms`,
     opacity: 0,
     transform: "translate(0,-1em)",
     maxHeight: doHeight ? "0%" : undefined,

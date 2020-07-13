@@ -128,6 +128,7 @@ const PokemonFavourite = ({
   favouriteIndex,
   displayContent,
   isSelected,
+  isNotSelected,
   hideOptions,
   viewPokemon,
   ...props
@@ -146,11 +147,26 @@ const PokemonFavourite = ({
 
   return (
     <Card
-      style={{ ...props.style }}
+      style={{
+        ...props.style,
+      }}
       className={classes.card}
       elevation={isSelected ? 6 : 1}
     >
-      <CardActionArea disableTouchRipple={isSelected} component="div">
+      <CardActionArea
+        style={{
+          ...(isNotSelected
+            ? {
+                opacity: 0.65,
+                transitionProperty: "opacity",
+                transitionDuration: "375ms",
+                transitionDelay: "0ms",
+              }
+            : {}),
+        }}
+        disableTouchRipple={isSelected}
+        component="div"
+      >
         <Grid container>
           <Grid item xs={1}>
             <Box
@@ -159,7 +175,11 @@ const PokemonFavourite = ({
               alignItems="center"
               justifyContent="center"
             >
-              <Typography component="h3" variant="h5">
+              <Typography
+                component="h3"
+                variant="h5"
+                color={isSelected ? "textPrimary" : "textSecondary"}
+              >
                 {favouriteIndex + 1}
               </Typography>
             </Box>
