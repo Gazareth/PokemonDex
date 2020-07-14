@@ -34,11 +34,7 @@ const PokemonFavouritesList = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const anim = useAnimEngine(
-    favourites.length,
-    displayContent && animateIn,
-    125
-  );
+  const anim = useAnimEngine(favourites.length, displayContent && animateIn);
 
   const noneSelected = isFavouriteSelected(0);
 
