@@ -5,8 +5,6 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import PokemonFavourite from "./PokemonFavourite";
 
-import useAnimEngine from "Hooks/AnimEngine";
-
 const useStyles = makeStyles((theme) => ({
   favouriteEntry: {
     margin: `${theme.spacing(0.75)}px ${theme.spacing(1)}px`,
@@ -24,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PokemonFavouritesList = ({
   favourites,
-  animateIn,
+  anim,
   displayContent,
   isFavouriteSelected,
   handleSelectFavourite,
@@ -33,8 +31,6 @@ const PokemonFavouritesList = ({
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-
-  const anim = useAnimEngine(favourites.length, displayContent && animateIn);
 
   const noneSelected = isFavouriteSelected(0);
 

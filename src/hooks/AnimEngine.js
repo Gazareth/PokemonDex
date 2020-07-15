@@ -3,7 +3,7 @@ const useAnimEngine = (
   inOut,
   baseDelay = parseInt(process.env.REACT_APP_SWITCHSCREENINITIALPAUSE),
   staggerAmount = 150,
-  overflow = true,
+  overflow = false,
   staggerOffset = 0
 ) => {
   let staggerId = staggerOffset;
@@ -16,12 +16,13 @@ const useAnimEngine = (
       baseDelay + _staggerAmount * (Math.random() * 0.5 + staggerId++);
     const maxDelay = baseDelay + _staggerAmount * participants;
     const invDelay = maxDelay - newDelay;
+
     return {
       delay: {
         in: newDelay,
         out: invDelay,
         inDuration: overflow ? newDelay : baseDelay,
-        outDuration: invDelay + baseDelay,
+        outDuration: overflow ? maxDelay - newDelay : baseDelay,
         maxDelay,
       },
       show: inOut,

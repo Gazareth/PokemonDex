@@ -25,7 +25,6 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 
 import NavigateBeforeOutlinedIcon from "@material-ui/icons/NavigateBeforeOutlined";
-import Close from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -118,7 +117,7 @@ const MoveButtons = SmoothIn(({ classes, viewPokemon, ...props }) => (
 ));
 
 const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
-  <IconButton style={props.style} onClick={(...args) => hideOptions()}>
+  <IconButton style={props.style} onClick={() => hideOptions()}>
     <NavigateBeforeOutlinedIcon />
   </IconButton>
 ));

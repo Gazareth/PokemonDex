@@ -3,6 +3,11 @@ import { connect } from "react-redux";
 
 import { useHistory } from "react-router-dom";
 
+import { useTheme } from "@material-ui/core/styles";
+
+import useAnimEngine from "Hooks/AnimEngine";
+import SmoothIn from "Utils/transitionSmoothIn";
+
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
@@ -20,7 +25,16 @@ const mapStateToProps = (state) => {
   };
 };
 
+const ControlButton = SmoothIn(
+  ({ classes, IconComponent, hideOptions, ...props }) => (
+    <IconButton style={props.style} onClick={() => hideOptions()}>
+      <IconComponent fontSize="large" />
+    </IconButton>
+  )
+);
+
 const FavouritesPage = ({ displayContent, favourites }) => {
+  const theme = useTheme();
   const history = useHistory();
 
   const [selectedFavourite, setSelectedFavourite] = React.useState(0);
@@ -45,6 +59,11 @@ const FavouritesPage = ({ displayContent, favourites }) => {
     setTimeout(() => setAnimateIn(true), 250);
   }, []);
 
+  const anim = useAnimEngine(
+    favourites.length + 2,
+    displayContent && animateIn
+  );
+
   return (
     <>
       <Typography component="h3" variant="h5">
@@ -53,18 +72,24 @@ const FavouritesPage = ({ displayContent, favourites }) => {
       <Grid container direction="column">
         <Grid item container xs={8}></Grid>
         <Grid item container xs={4} justify="flex-end">
-          <IconButton>
-            <SwapVerticalCircleTwoToneIcon fontSize="large" />
-          </IconButton>
-          <IconButton>
-            <DeleteSweepTwoToneIcon fontSize="large" />
-          </IconButton>
+          <ControlButton
+            {...anim()}
+            IconComponent={SwapVerticalCircleTwoToneIcon}
+            transitionType="Bounce"
+            theme={theme}
+          />
+          <ControlButton
+            IconComponent={DeleteSweepTwoToneIcon}
+            transitionType="Bounce"
+            {...anim()}
+            theme={theme}
+          />
         </Grid>
       </Grid>
       <PokemonFavouritesList
         {...{
           favourites,
-          animateIn,
+          anim,
           displayContent,
           isFavouriteSelected,
           handleSelectFavourite,
