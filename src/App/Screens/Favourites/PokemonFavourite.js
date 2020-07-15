@@ -123,6 +123,7 @@ const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
 ));
 
 const PokemonFavourite = ({
+  dragHandleProps,
   pokemonInfo,
   favouriteIndex,
   displayContent,
@@ -154,12 +155,13 @@ const PokemonFavourite = ({
     >
       <CardActionArea
         style={{
+          transitionProperty: "filter",
+          transitionDuration: "475ms",
           ...(isNotSelected
             ? {
-                opacity: 0.65,
-                transitionProperty: "opacity",
-                transitionDuration: "375ms",
-                transitionDelay: "0ms",
+                //opacity: 0.25,
+                filter:
+                  "grayscale(90%) opacity(65%) contrast(90%) brightness(85%)",
               }
             : {}),
         }}
@@ -178,6 +180,7 @@ const PokemonFavourite = ({
                 component="h3"
                 variant="h5"
                 color={isSelected ? "textPrimary" : "textSecondary"}
+                {...dragHandleProps}
               >
                 {favouriteIndex + 1}
               </Typography>

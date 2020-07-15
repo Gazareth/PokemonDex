@@ -1,6 +1,10 @@
 import React from "react";
 
+import RootRef from "@material-ui/core/RootRef";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import PokemonFavourite from "./PokemonFavourite";
@@ -34,36 +38,62 @@ const PokemonFavouritesList = ({
 
   const noneSelected = isFavouriteSelected(0);
 
+  const onDragEnd = () => {
+    console.log("ended drag!");
+  };
+
   return (
     <ClickAwayListener onClickAway={handleSelectNone}>
       <div>
-        {favourites.map((fav, i) => {
-          const favouriteSelected = isFavouriteSelected(fav.id);
+        <DragDropContext>
+          <Droppable droppableId={"PokemonFavouritesListDroppable"}>
+            {(provided) => (
+              <RootRef rootRef={provided.innerRef}>
+                <div {...provided.droppableProps}>
+                  {favourites.map((fav, i) => {
+                    const favouriteSelected = isFavouriteSelected(fav.id);
 
-          return (
-            <div
-              key={fav.id}
-              className={classes.favouriteEntry}
-              onClick={
-                !favouriteSelected ? handleSelectFavourite(fav.id) : null
-              }
-            >
-              <PokemonFavourite
-                {...anim()}
-                pokemonInfo={fav}
-                favouriteIndex={i}
-                displayContent={displayContent}
-                isSelected={favouriteSelected}
-                isNotSelected={!noneSelected && !favouriteSelected}
-                hideOptions={handleSelectNone}
-                viewPokemon={handleViewFavourite}
-                style={{
-                  opacity: favouriteSelected || noneSelected ? "1" : "0.65",
-                }}
-              />
-            </div>
-          );
-        })}
+                    return (
+                      <Draggable
+                        key={fav.id}
+                        draggableId={`${fav.id}`}
+                        index={i}
+                      >
+                        {(provided) => (
+                          <div
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            className={classes.favouriteEntry}
+                            onClick={
+                              !favouriteSelected
+                                ? handleSelectFavourite(fav.id)
+                                : null
+                            }
+                          >
+                            <PokemonFavourite
+                              {...anim()}
+                              dragHandleProps={provided.dragHandleProps}
+                              pokemonInfo={fav}
+                              favouriteIndex={i}
+                              displayContent={displayContent}
+                              isSelected={favouriteSelected}
+                              isNotSelected={
+                                !noneSelected && !favouriteSelected
+                              }
+                              hideOptions={handleSelectNone}
+                              viewPokemon={handleViewFavourite}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              </RootRef>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </ClickAwayListener>
   );

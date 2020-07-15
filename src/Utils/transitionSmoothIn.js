@@ -53,7 +53,7 @@ const smoothStateStyles = ({ delay, doHeight }) => ({
       ${delay.out * 0.75}ms`,
     //`${delay.out * 0.75}ms`,
     opacity: 0,
-    transform: "translate(0,-2em)",
+    transform: "translate(0,-1em)",
     maxHeight: doHeight ? "0%" : undefined,
   },
   exited: {
