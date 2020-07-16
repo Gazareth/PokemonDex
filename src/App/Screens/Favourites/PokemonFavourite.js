@@ -4,6 +4,8 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import useAnimEngine from "Hooks/AnimEngine";
 
+import clsx from "clsx";
+
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -29,8 +31,26 @@ import NavigateBeforeOutlinedIcon from "@material-ui/icons/NavigateBeforeOutline
 const useStyles = makeStyles((theme) => ({
   card: {
     background: theme.palette.background.quaternary,
-    display: "flex",
-    flex: 1,
+    transition: "background 245ms ease-out",
+  },
+  cardFixed: {},
+
+  cardControllerInner: {
+    transitionProperty: "margin, filter, transform",
+    transitionDuration: "475ms",
+  },
+  innerControllerUnselected: {
+    filter: "grayscale(90%) opacity(65%) contrast(90%) brightness(85%)",
+    transform: "scale(0.95)",
+  },
+  innerControllerDraggable: {
+    margin: "0 10%",
+  },
+
+  draggableCard: {
+    border: "none",
+    background: "transparent",
+    //boxShadow: "none",
   },
 
   cardContent: {
@@ -41,9 +61,39 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+  cardActionArea: {
+    transition: "opacity 245ms ease-out",
+  },
+
+  actionAreaDisabled: {
+    "&:hover $focusHighlight": {
+      opacity: "0",
+    },
+  },
+
+  focusHighlight: {
+    opacity: "0",
+  },
+
+  rankingNumber: {
+    transition: "color 245ms ease-out",
+  },
+
+  rankingNumberOff: {
+    color: "transparent",
+  },
+
   cardDetails: {
     background: theme.palette.background.tertiary,
     flex: 1,
+  },
+
+  pokemonSprite: {
+    transition: "filter 245ms ease-out",
+  },
+
+  pokemonSpriteBusy: {
+    filter: "grayscale(30%) opacity(85%) contrast(90%) brightness(85%)",
   },
 
   buttonGrid: {
@@ -123,6 +173,7 @@ const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
 ));
 
 const PokemonFavourite = ({
+  inSwitchMode,
   dragHandleProps,
   pokemonInfo,
   favouriteIndex,
@@ -146,124 +197,159 @@ const PokemonFavourite = ({
   );
 
   return (
-    <Card
+    <div
       style={{
         ...props.style,
       }}
-      className={classes.card}
-      elevation={isSelected ? 6 : 1}
     >
-      <CardActionArea
-        style={{
-          transitionProperty: "filter",
-          transitionDuration: "475ms",
-          ...(isNotSelected
-            ? {
-                //opacity: 0.25,
-                filter:
-                  "grayscale(90%) opacity(65%) contrast(90%) brightness(85%)",
-              }
-            : {}),
-        }}
-        disableTouchRipple={isSelected}
-        component="div"
+      <div
+        className={clsx(classes.cardControllerInner, {
+          [classes.innerControllerUnselected]: isNotSelected,
+          [classes.innerControllerDraggable]: inSwitchMode,
+        })}
       >
-        <Grid container>
-          <Grid item xs={1}>
-            <Box
-              display="flex"
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Typography
-                component="h3"
-                variant="h5"
-                color={isSelected ? "textPrimary" : "textSecondary"}
-                {...dragHandleProps}
+        <Card
+          className={clsx(classes.card, {
+            [classes.draggableCard]: inSwitchMode,
+          })}
+          elevation={isSelected ? 6 : inSwitchMode ? 0 : 1}
+        >
+          <CardActionArea
+            disableTouchRipple={isSelected}
+            disableRipple={inSwitchMode}
+            className={clsx(classes.cardActionArea, {
+              [classes.actionAreaDisabled]: inSwitchMode,
+            })}
+            classes={{
+              ...(inSwitchMode
+                ? { focusHighlight: classes.focusHighlight }
+                : {}),
+              root: classes.cardActionArea,
+            }}
+            component="div"
+          >
+            <Grid container>
+              <Grid
+                item
+                xs={1}
+                style={{
+                  ...(inSwitchMode ? { maxWidth: "0" } : {}),
+                  transition: "max-width 245ms ease-out",
+                }}
               >
-                {favouriteIndex + 1}
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item className={classes.cardDetails}>
-            <SwipeableViews
-              style={{ ...swipeableStyle }}
-              containerStyle={{ height: "100%" }}
-              slideStyle={{ ...swipeableStyle }}
-              index={isSelected ? 0 : 1}
-            >
-              <Grid container className={classes.buttonGrid}>
-                <Grid item container xs={2} justify="flex-start">
-                  <CloseButton
-                    {...anim()}
-                    classes={classes}
-                    hideOptions={hideOptions}
-                    transitionType="Bounce"
-                    theme={theme}
-                  />
-                </Grid>
-                <Grid item container xs={6} sm={7} justify="flex-end">
-                  <MoveButtons
-                    {...anim()}
-                    classes={classes}
-                    viewPokemon={viewPokemon}
-                    transitionType="Bounce"
-                    theme={theme}
-                  />
-                </Grid>
-                <Grid item container xs={4} sm={3}>
-                  <ViewButton
-                    {...anim()}
-                    classes={classes}
-                    viewPokemon={viewPokemon}
-                    transitionType="Bounce"
-                    theme={theme}
-                  />
-                </Grid>
-              </Grid>
-              <div>
-                <CardContent className={classes.cardContent}>
-                  <Typography component="h2" variant="h5">
-                    <span
-                      style={{
-                        color: theme.palette.text.secondary,
-                      }}
-                    >
-                      {"#" + pokemonInfo.id + " "}
-                    </span>
-                    {pokemonInfo.name}
+                <Box
+                  display="flex"
+                  height="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography
+                    component="h3"
+                    variant="h5"
+                    className={clsx(classes.rankingNumber, {
+                      [classes.rankingNumberOff]: inSwitchMode,
+                    })}
+                    color={isSelected ? "textPrimary" : "textSecondary"}
+                  >
+                    {favouriteIndex + 1}
                   </Typography>
-                  <Typography variant="subtitle2" className={classes.types}>
-                    {pokemonInfo.types.map((type, i) => (
-                      <span key={i}>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                {...(inSwitchMode ? { ...dragHandleProps } : {})}
+                className={classes.cardDetails}
+              >
+                <SwipeableViews
+                  style={{ ...swipeableStyle }}
+                  containerStyle={{ height: "100%" }}
+                  slideStyle={{ ...swipeableStyle }}
+                  index={isSelected ? 0 : 1}
+                >
+                  <Grid container className={classes.buttonGrid}>
+                    <Grid item container xs={2} justify="flex-start">
+                      <CloseButton
+                        {...anim()}
+                        classes={classes}
+                        hideOptions={hideOptions}
+                        transitionType="Bounce"
+                        theme={theme}
+                      />
+                    </Grid>
+                    <Grid item container xs={6} sm={7} justify="flex-end">
+                      <MoveButtons
+                        {...anim()}
+                        classes={classes}
+                        viewPokemon={viewPokemon}
+                        transitionType="Bounce"
+                        theme={theme}
+                      />
+                    </Grid>
+                    <Grid item container xs={4} sm={3}>
+                      <ViewButton
+                        {...anim()}
+                        classes={classes}
+                        viewPokemon={viewPokemon}
+                        transitionType="Bounce"
+                        theme={theme}
+                      />
+                    </Grid>
+                  </Grid>
+                  <div>
+                    <CardContent className={classes.cardContent}>
+                      <Typography component="h2" variant="h5">
                         <span
                           style={{
-                            color: theme.palette.pokemonTypes[type],
+                            color: theme.palette.text.secondary,
                           }}
                         >
-                          {type}
+                          {"#" + pokemonInfo.id + " "}
                         </span>
-                        <>{i + 1 === pokemonInfo.types.length ? "" : ", "}</>
-                      </span>
-                    ))}
-                  </Typography>
-                </CardContent>
-              </div>
-            </SwipeableViews>
-          </Grid>
-          <Grid item xs={2}>
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <img
-                src={pokemonInfo.image}
-                className={classes.image}
-                alt={pokemonInfo.name}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-      </CardActionArea>
-    </Card>
+                        {pokemonInfo.name}
+                      </Typography>
+                      <Typography variant="subtitle2" className={classes.types}>
+                        {pokemonInfo.types.map((type, i) => (
+                          <span key={i}>
+                            <span
+                              style={{
+                                color: theme.palette.pokemonTypes[type],
+                              }}
+                            >
+                              {type}
+                            </span>
+                            <>
+                              {i + 1 === pokemonInfo.types.length ? "" : ", "}
+                            </>
+                          </span>
+                        ))}
+                      </Typography>
+                    </CardContent>
+                  </div>
+                </SwipeableViews>
+              </Grid>
+              <Grid
+                item
+                xs={2}
+                style={{
+                  ...(inSwitchMode ? { maxWidth: "0" } : {}),
+                  transition: "max-width 245ms ease-out",
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center">
+                  <img
+                    src={pokemonInfo.image}
+                    className={clsx(classes.pokemonSprite, {
+                      [classes.pokemonSpriteBusy]: inSwitchMode,
+                    })}
+                    alt={pokemonInfo.name}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+          </CardActionArea>
+        </Card>
+      </div>
+    </div>
   );
 };
 

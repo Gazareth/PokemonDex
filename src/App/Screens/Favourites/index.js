@@ -26,8 +26,8 @@ const mapStateToProps = (state) => {
 };
 
 const ControlButton = SmoothIn(
-  ({ classes, IconComponent, hideOptions, ...props }) => (
-    <IconButton style={props.style} onClick={() => hideOptions()}>
+  ({ classes, IconComponent, hideOptions, style, ...props }) => (
+    <IconButton style={style} onClick={() => hideOptions()} {...props}>
       <IconComponent fontSize="large" />
     </IconButton>
   )
@@ -37,6 +37,7 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   const theme = useTheme();
   const history = useHistory();
 
+  const [inSwitchMode, setSwitchMode] = React.useState(false);
   const [selectedFavourite, setSelectedFavourite] = React.useState(0);
 
   const isFavouriteSelected = useCallback(
@@ -74,6 +75,7 @@ const FavouritesPage = ({ displayContent, favourites }) => {
         <Grid item container xs={4} justify="flex-end">
           <ControlButton
             {...anim()}
+            onClick={() => setSwitchMode((switching) => !switching)}
             IconComponent={SwapVerticalCircleTwoToneIcon}
             transitionType="Bounce"
             theme={theme}
@@ -91,6 +93,7 @@ const FavouritesPage = ({ displayContent, favourites }) => {
           favourites,
           anim,
           displayContent,
+          inSwitchMode,
           isFavouriteSelected,
           handleSelectFavourite,
           handleSelectNone,

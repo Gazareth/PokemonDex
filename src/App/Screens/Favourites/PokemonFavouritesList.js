@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const PokemonFavouritesList = ({
   favourites,
   anim,
+  inSwitchMode,
   displayContent,
   isFavouriteSelected,
   handleSelectFavourite,
@@ -65,13 +66,14 @@ const PokemonFavouritesList = ({
                             ref={provided.innerRef}
                             className={classes.favouriteEntry}
                             onClick={
-                              !favouriteSelected
-                                ? handleSelectFavourite(fav.id)
-                                : null
+                              favouriteSelected || inSwitchMode
+                                ? null
+                                : handleSelectFavourite(fav.id)
                             }
                           >
                             <PokemonFavourite
                               {...anim()}
+                              inSwitchMode={inSwitchMode}
                               dragHandleProps={provided.dragHandleProps}
                               pokemonInfo={fav}
                               favouriteIndex={i}
