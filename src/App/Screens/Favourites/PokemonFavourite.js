@@ -19,10 +19,12 @@ import Button from "@material-ui/core/Button";
 
 import SwipeableViews from "react-swipeable-views";
 
+import Grow from "@material-ui/core/Grow";
 import SmoothIn from "Utils/transitionSmoothIn";
 
 import PokeballIcon from "Icons/PokeballIcon";
 
+import ReorderIcon from "@material-ui/icons/Reorder";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 
@@ -30,21 +32,26 @@ import NavigateBeforeOutlinedIcon from "@material-ui/icons/NavigateBeforeOutline
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    background: theme.palette.background.quaternary,
+    background: "transparent",
     transition: "background 245ms ease-out",
   },
   cardFixed: {},
 
   cardControllerInner: {
-    transitionProperty: "margin, filter, transform",
-    transitionDuration: "475ms",
+    transitionProperty: "margin, max-width, filter, transform",
+    transitionDuration: "345ms",
+    transitionDelay: "0ms",
+    transitionTimingFunction: theme.transitions.easing.pokeEase,
+    margin: "auto",
+    maxWidth: "100%",
   },
   innerControllerUnselected: {
     filter: "grayscale(90%) opacity(65%) contrast(90%) brightness(85%)",
     transform: "scale(0.95)",
   },
   innerControllerDraggable: {
-    margin: "0 10%",
+    maxWidth: "80%",
+    //transitionDelay: "345ms",
   },
 
   draggableCard: {
@@ -54,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   cardContent: {
-    background: theme.palette.background.tertiary,
     "&:last-child": {
       padding: `${theme.spacing(1.5)}px`,
       textAlign: "right",
@@ -80,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   rankingNumberOff: {
-    color: "transparent",
+    //color: "transparent",
   },
 
   cardDetails: {
@@ -89,11 +95,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   pokemonSprite: {
+    height: "96px",
     transition: "filter 245ms ease-out",
   },
 
   pokemonSpriteBusy: {
-    filter: "grayscale(30%) opacity(85%) contrast(90%) brightness(85%)",
+    filter: "grayscale(10%) opacity(85%) brightness(85%)",
   },
 
   buttonGrid: {
@@ -212,7 +219,8 @@ const PokemonFavourite = ({
           className={clsx(classes.card, {
             [classes.draggableCard]: inSwitchMode,
           })}
-          elevation={isSelected ? 6 : inSwitchMode ? 0 : 1}
+          elevation={0}
+          //elevation={isSelected ? 6 : inSwitchMode ? 0 : 1}
         >
           <CardActionArea
             disableTouchRipple={isSelected}
@@ -231,9 +239,8 @@ const PokemonFavourite = ({
             <Grid container>
               <Grid
                 item
-                xs={1}
+                xs={inSwitchMode ? 2 : 1}
                 style={{
-                  ...(inSwitchMode ? { maxWidth: "0" } : {}),
                   transition: "max-width 245ms ease-out",
                 }}
               >
@@ -243,22 +250,59 @@ const PokemonFavourite = ({
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Typography
-                    component="h3"
-                    variant="h5"
-                    className={clsx(classes.rankingNumber, {
-                      [classes.rankingNumberOff]: inSwitchMode,
-                    })}
-                    color={isSelected ? "textPrimary" : "textSecondary"}
+                  <SwipeableViews
+                    style={{
+                      ...swipeableStyle,
+                      width: "100%",
+                      background: theme.palette.background.tertiary,
+                    }}
+                    axis="y"
+                    containerStyle={{
+                      height: "100%",
+                      width: "100%",
+                      transitionTimingFunction:
+                        theme.transitions.easing.pokeEase,
+                      //...(!inSwitchMode ? { transitionDelay: "345ms" } : {}),
+                    }}
+                    slideStyle={{ ...swipeableStyle }}
+                    index={inSwitchMode ? 0 : 1}
                   >
-                    {favouriteIndex + 1}
-                  </Typography>
+                    <Grid
+                      item
+                      container
+                      justify="center"
+                      alignItems="center"
+                      style={{ height: "100%" }}
+                    >
+                      <ReorderIcon color="disabled" />
+                    </Grid>
+                    <Grid
+                      container
+                      justify="center"
+                      alignItems="center"
+                      style={{
+                        height: "100%",
+                      }}
+                    >
+                      <Typography
+                        component="h3"
+                        variant="h5"
+                        className={clsx(classes.rankingNumber, {
+                          [classes.rankingNumberOff]: inSwitchMode,
+                        })}
+                        color={isSelected ? "textPrimary" : "textSecondary"}
+                      >
+                        {favouriteIndex + 1}
+                      </Typography>
+                    </Grid>
+                  </SwipeableViews>
                 </Box>
               </Grid>
               <Grid
                 item
                 {...(inSwitchMode ? { ...dragHandleProps } : {})}
                 className={classes.cardDetails}
+                style={{ minWidth: "33%" }}
               >
                 <SwipeableViews
                   style={{ ...swipeableStyle }}
@@ -295,47 +339,71 @@ const PokemonFavourite = ({
                       />
                     </Grid>
                   </Grid>
-                  <div>
-                    <CardContent className={classes.cardContent}>
-                      <Typography component="h2" variant="h5">
-                        <span
-                          style={{
-                            color: theme.palette.text.secondary,
-                          }}
-                        >
-                          {"#" + pokemonInfo.id + " "}
-                        </span>
-                        {pokemonInfo.name}
-                      </Typography>
-                      <Typography variant="subtitle2" className={classes.types}>
-                        {pokemonInfo.types.map((type, i) => (
-                          <span key={i}>
-                            <span
-                              style={{
-                                color: theme.palette.pokemonTypes[type],
-                              }}
-                            >
-                              {type}
-                            </span>
-                            <>
-                              {i + 1 === pokemonInfo.types.length ? "" : ", "}
-                            </>
+                  <Grid container className={classes.buttonGrid}>
+                    <Grid
+                      item
+                      container
+                      //xs={10}
+                      direction="column"
+                      className={classes.cardContent}
+                      justify="center"
+                    >
+                      <Grid item container justify="flex-end">
+                        <Typography component="h2" variant="h5">
+                          <span
+                            style={{
+                              color: theme.palette.text.secondary,
+                            }}
+                          >
+                            {"#" + pokemonInfo.id + " "}
                           </span>
-                        ))}
-                      </Typography>
-                    </CardContent>
-                  </div>
+                          {pokemonInfo.name}
+                        </Typography>
+                      </Grid>
+                      <Grid item container justify="flex-end">
+                        <Typography
+                          variant="subtitle2"
+                          className={classes.types}
+                        >
+                          {pokemonInfo.types.map((type, i) => (
+                            <span key={i}>
+                              <span
+                                style={{
+                                  color: theme.palette.pokemonTypes[type],
+                                }}
+                              >
+                                {type}
+                              </span>
+                              <>
+                                {i + 1 === pokemonInfo.types.length ? "" : ", "}
+                              </>
+                            </span>
+                          ))}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </SwipeableViews>
               </Grid>
               <Grid
                 item
-                xs={2}
+                //xs={inSwitchMode ? 3 : 2}
                 style={{
-                  ...(inSwitchMode ? { maxWidth: "0" } : {}),
-                  transition: "max-width 245ms ease-out",
+                  ...(inSwitchMode ? { maxWidth: "0" } : { maxWidth: "96px" }),
+                  transition: `max-width 245ms ${theme.transitions.easing.pokeEase}`,
+                  overflow: "hidden",
                 }}
               >
-                <Box display="flex" alignItems="center" justifyContent="center">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  style={{
+                    background: theme.palette.background.quaternary,
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
                   <img
                     src={pokemonInfo.image}
                     className={clsx(classes.pokemonSprite, {
