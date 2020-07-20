@@ -45,12 +45,29 @@ const initialFavourites = [
   },
 ];
 
-const favouritesReducer = (state = initialFavourites, action) => {
+const favouritesReducer = (
+  state = { favourites: initialFavourites, favouritesDisplayOrder: [] },
+  action
+) => {
   switch (action.type) {
     case FAVOURITES.ADD:
-      return [action.payload, ...state];
+      const newFavourites = [action.payload, ...state.favourites];
+      const newIds = newFavourites.map((fav) => fav.id);
+      return {
+        ...state,
+        favourites: newFavourites,
+        favouritesDisplayOrder: newIds,
+      };
     case FAVOURITES.REMOVE:
-      return [...state].filter((fav) => fav.id !== action.payload);
+      const cleansedFavourites = state.favourites.filter(
+        (fav) => fav.id !== action.payload
+      );
+      const cleansedIds = newFavourites.map((fav) => fav.id);
+      return {
+        ...state,
+        favourites: cleansedFavourites,
+        favouritesDisplayOrder: cleansedIds,
+      };
     default:
       return state;
   }

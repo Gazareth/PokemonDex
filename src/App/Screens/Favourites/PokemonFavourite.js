@@ -10,7 +10,6 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -19,7 +18,6 @@ import Button from "@material-ui/core/Button";
 
 import SwipeableViews from "react-swipeable-views";
 
-import Grow from "@material-ui/core/Grow";
 import SmoothIn from "Utils/transitionSmoothIn";
 
 import PokeballIcon from "Icons/PokeballIcon";
@@ -32,10 +30,9 @@ import NavigateBeforeOutlinedIcon from "@material-ui/icons/NavigateBeforeOutline
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    background: "transparent",
-    transition: "background 245ms ease-out",
+    // background: "transparent",
+    // transition: "background 245ms ease-out",
   },
-  cardFixed: {},
 
   cardControllerInner: {
     transitionProperty: "margin, max-width, filter, transform",
@@ -51,20 +48,21 @@ const useStyles = makeStyles((theme) => ({
   },
   innerControllerDraggable: {
     maxWidth: "80%",
-    //transitionDelay: "345ms",
   },
 
   draggableCard: {
     border: "none",
     background: "transparent",
-    //boxShadow: "none",
   },
 
   cardContent: {
-    "&:last-child": {
-      padding: `${theme.spacing(1.5)}px`,
-      textAlign: "right",
-    },
+    transition: "padding 245ms ease-out",
+    height: "100%",
+    padding: `${theme.spacing(1.5)}px`,
+  },
+
+  cardContentDraggable: {
+    padding: `${theme.spacing(1.5)}px ${theme.spacing(3)}px`,
   },
 
   cardActionArea: {
@@ -82,11 +80,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   rankingNumber: {
-    transition: "color 245ms ease-out",
+    transition: "opacity 445ms ease-out",
   },
 
   rankingNumberOff: {
-    //color: "transparent",
+    opacity: "0",
+    transitionDuration: "145ms",
   },
 
   cardDetails: {
@@ -96,11 +95,12 @@ const useStyles = makeStyles((theme) => ({
 
   pokemonSprite: {
     height: "96px",
-    transition: "filter 245ms ease-out",
+    transition: "opacity 445ms ease-out",
   },
 
   pokemonSpriteBusy: {
-    filter: "grayscale(10%) opacity(85%) brightness(85%)",
+    opacity: "0",
+    transitionDuration: "145ms",
   },
 
   buttonGrid: {
@@ -239,63 +239,35 @@ const PokemonFavourite = ({
             <Grid container>
               <Grid
                 item
-                xs={inSwitchMode ? 2 : 1}
                 style={{
-                  transition: "max-width 245ms ease-out",
+                  ...(inSwitchMode
+                    ? { maxWidth: "0" }
+                    : { maxWidth: theme.spacing(6) }),
+                  width: theme.spacing(6),
+                  transition: `max-width ${theme.spacing(12) * 2.5}ms ease-out`,
+                  overflow: "hidden",
                 }}
               >
                 <Box
                   display="flex"
-                  height="100%"
                   alignItems="center"
                   justifyContent="center"
+                  style={{
+                    background: theme.palette.background.quaternary,
+                    height: "100%",
+                    width: "100%",
+                  }}
                 >
-                  <SwipeableViews
-                    style={{
-                      ...swipeableStyle,
-                      width: "100%",
-                      background: theme.palette.background.tertiary,
-                    }}
-                    axis="y"
-                    containerStyle={{
-                      height: "100%",
-                      width: "100%",
-                      transitionTimingFunction:
-                        theme.transitions.easing.pokeEase,
-                      //...(!inSwitchMode ? { transitionDelay: "345ms" } : {}),
-                    }}
-                    slideStyle={{ ...swipeableStyle }}
-                    index={inSwitchMode ? 0 : 1}
+                  <Typography
+                    component="h3"
+                    variant="h5"
+                    className={clsx(classes.rankingNumber, {
+                      [classes.rankingNumberOff]: inSwitchMode,
+                    })}
+                    color={isSelected ? "textPrimary" : "textSecondary"}
                   >
-                    <Grid
-                      item
-                      container
-                      justify="center"
-                      alignItems="center"
-                      style={{ height: "100%" }}
-                    >
-                      <ReorderIcon color="disabled" />
-                    </Grid>
-                    <Grid
-                      container
-                      justify="center"
-                      alignItems="center"
-                      style={{
-                        height: "100%",
-                      }}
-                    >
-                      <Typography
-                        component="h3"
-                        variant="h5"
-                        className={clsx(classes.rankingNumber, {
-                          [classes.rankingNumberOff]: inSwitchMode,
-                        })}
-                        color={isSelected ? "textPrimary" : "textSecondary"}
-                      >
-                        {favouriteIndex + 1}
-                      </Typography>
-                    </Grid>
-                  </SwipeableViews>
+                    {favouriteIndex + 1}
+                  </Typography>
                 </Box>
               </Grid>
               <Grid
@@ -339,14 +311,39 @@ const PokemonFavourite = ({
                       />
                     </Grid>
                   </Grid>
-                  <Grid container className={classes.buttonGrid}>
+                  <Grid
+                    item
+                    container
+                    className={clsx(classes.cardContent, {
+                      [classes.cardContentDraggable]: inSwitchMode,
+                    })}
+                    justify="space-around"
+                  >
+                    <Grid
+                      item
+                      container
+                      justify="center"
+                      alignItems="center"
+                      xs={1}
+                    >
+                      <ReorderIcon
+                        style={{
+                          transition: "opacity 750ms ease",
+                          opacity: "0",
+                          ...(inSwitchMode
+                            ? { opacity: "100%", transitionDelay: "345ms" }
+                            : { transitionDuration: "180ms" }),
+                        }}
+                        color="disabled"
+                      />
+                    </Grid>
                     <Grid
                       item
                       container
                       //xs={10}
                       direction="column"
-                      className={classes.cardContent}
                       justify="center"
+                      style={{ flex: "1" }}
                     >
                       <Grid item container justify="flex-end">
                         <Typography component="h2" variant="h5">
@@ -387,17 +384,18 @@ const PokemonFavourite = ({
               </Grid>
               <Grid
                 item
-                //xs={inSwitchMode ? 3 : 2}
                 style={{
-                  ...(inSwitchMode ? { maxWidth: "0" } : { maxWidth: "96px" }),
-                  transition: `max-width 245ms ${theme.transitions.easing.pokeEase}`,
+                  ...(inSwitchMode
+                    ? { maxWidth: "0" }
+                    : { maxWidth: theme.spacing(12) }),
+                  transition: `max-width ${theme.spacing(12) * 2.5}ms ease-out`,
                   overflow: "hidden",
                 }}
               >
                 <Box
                   display="flex"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="left"
                   style={{
                     background: theme.palette.background.quaternary,
                     height: "100%",
