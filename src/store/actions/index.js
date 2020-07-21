@@ -128,6 +128,23 @@ export const removeFavourite = (pokemonData) => ({
   payload: pokemonData.id,
 });
 
+export const moveFavourite = (sourceIndex, destIndex, favouriteId) => ({
+  type: FAVOURITES.REORDER,
+  payload: {
+    sourceIndex,
+    destIndex,
+    favouriteId,
+  },
+});
+
+export const reorderFavourites = () => ({
+  type: FAVOURITES.COMMIT_REORDER,
+});
+
+export const cancelReorderFavourites = () => ({
+  type: FAVOURITES.CANCEL_REORDER,
+});
+
 /***********
  *
  * THEME ACTIONS

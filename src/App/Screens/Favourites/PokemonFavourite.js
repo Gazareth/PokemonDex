@@ -79,11 +79,13 @@ const useStyles = makeStyles((theme) => ({
     opacity: "0",
   },
 
-  rankingNumber: {
-    transition: "opacity 445ms ease-out",
+  fader: {
+    transitionProperty: "opacity",
+    transitionDuration: "445ms",
+    transitionTimingFunction: "ease-out",
   },
 
-  rankingNumberOff: {
+  faderOut: {
     opacity: "0",
     transitionDuration: "145ms",
   },
@@ -95,12 +97,6 @@ const useStyles = makeStyles((theme) => ({
 
   pokemonSprite: {
     height: "96px",
-    transition: "opacity 445ms ease-out",
-  },
-
-  pokemonSpriteBusy: {
-    opacity: "0",
-    transitionDuration: "145ms",
   },
 
   buttonGrid: {
@@ -244,7 +240,9 @@ const PokemonFavourite = ({
                     ? { maxWidth: "0" }
                     : { maxWidth: theme.spacing(6) }),
                   width: theme.spacing(6),
-                  transition: `max-width ${theme.spacing(12) * 2.5}ms ease-out`,
+                  transition: `max-width ${theme.spacing(12) * 2.5}ms ${
+                    theme.transitions.easing.pokeEase
+                  }`,
                   overflow: "hidden",
                 }}
               >
@@ -261,8 +259,8 @@ const PokemonFavourite = ({
                   <Typography
                     component="h3"
                     variant="h5"
-                    className={clsx(classes.rankingNumber, {
-                      [classes.rankingNumberOff]: inSwitchMode,
+                    className={clsx(classes.fader, {
+                      [classes.faderOut]: inSwitchMode,
                     })}
                     color={isSelected ? "textPrimary" : "textSecondary"}
                   >
@@ -272,7 +270,7 @@ const PokemonFavourite = ({
               </Grid>
               <Grid
                 item
-                {...(inSwitchMode ? { ...dragHandleProps } : {})}
+                {...dragHandleProps}
                 className={classes.cardDetails}
                 style={{ minWidth: "33%" }}
               >
@@ -327,12 +325,12 @@ const PokemonFavourite = ({
                       xs={1}
                     >
                       <ReorderIcon
+                        className={clsx(classes.fader, {
+                          [classes.faderOut]: !inSwitchMode,
+                        })}
                         style={{
-                          transition: "opacity 750ms ease",
-                          opacity: "0",
-                          ...(inSwitchMode
-                            ? { opacity: "100%", transitionDelay: "345ms" }
-                            : { transitionDuration: "180ms" }),
+                          transitionDuration: inSwitchMode ? "750ms" : "195ms",
+                          ...(inSwitchMode ? { transitionDelay: "345ms" } : {}),
                         }}
                         color="disabled"
                       />
@@ -388,7 +386,9 @@ const PokemonFavourite = ({
                   ...(inSwitchMode
                     ? { maxWidth: "0" }
                     : { maxWidth: theme.spacing(12) }),
-                  transition: `max-width ${theme.spacing(12) * 2.5}ms ease-out`,
+                  transition: `max-width ${theme.spacing(12) * 2.5}ms ${
+                    theme.transitions.easing.pokeEase
+                  }`,
                   overflow: "hidden",
                 }}
               >
@@ -404,8 +404,8 @@ const PokemonFavourite = ({
                 >
                   <img
                     src={pokemonInfo.image}
-                    className={clsx(classes.pokemonSprite, {
-                      [classes.pokemonSpriteBusy]: inSwitchMode,
+                    className={clsx(classes.pokemonSprite, classes.fader, {
+                      [classes.faderOut]: inSwitchMode,
                     })}
                     alt={pokemonInfo.name}
                   />

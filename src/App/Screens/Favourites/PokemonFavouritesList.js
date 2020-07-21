@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
 
 const PokemonFavouritesList = ({
   favourites,
+  moveFavourite,
+  reorderFavourites,
+  cancelReorderFavourites,
+  removeFavourite,
   anim,
   inSwitchMode,
   displayContent,
@@ -39,14 +43,24 @@ const PokemonFavouritesList = ({
 
   const noneSelected = isFavouriteSelected(0);
 
-  const onDragEnd = () => {
-    console.log("ended drag!");
+  const onDragEnd = ({ destination, source, draggableId }) => {
+    console.log("ondragend!!!", destination, source, draggableId);
+    if (
+      !destination ||
+      destination.droppableId !== source.droppableId ||
+      destination.index === source.index
+    )
+      return;
+
+    console.log("DOING MOVE FAV!!!");
+    moveFavourite(source.index, destination.index, parseInt(draggableId));
+    reorderFavourites();
   };
 
   return (
     <ClickAwayListener onClickAway={handleSelectNone}>
       <div>
-        <DragDropContext>
+        <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId={"PokemonFavouritesListDroppable"}>
             {(provided) => (
               <RootRef rootRef={provided.innerRef}>
@@ -58,6 +72,7 @@ const PokemonFavouritesList = ({
                       <Draggable
                         key={fav.id}
                         draggableId={`${fav.id}`}
+                        isDragDisabled={!inSwitchMode}
                         index={i}
                       >
                         {(provided) => (

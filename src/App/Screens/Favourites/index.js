@@ -1,5 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { connect } from "react-redux";
+
+import {
+  moveFavourite,
+  reorderFavourites,
+  cancelReorderFavourites,
+  removeFavourite,
+} from "Store/actions";
 
 import { useHistory } from "react-router-dom";
 
@@ -20,9 +27,17 @@ import PokemonFavouritesList from "./PokemonFavouritesList";
 
 const mapStateToProps = (state) => {
   return {
-    favourites: state.favourites.favourites,
+    storedFavourites: state.favourites.favourites,
+    favouritesOrder: state.favourites.favouritesOrder,
     loading: state.pokemon.loading,
   };
+};
+
+const mapDispatchToProps = {
+  moveFavourite,
+  reorderFavourites,
+  cancelReorderFavourites,
+  removeFavourite,
 };
 
 const ControlButton = SmoothIn(
@@ -33,7 +48,15 @@ const ControlButton = SmoothIn(
   )
 );
 
-const FavouritesPage = ({ displayContent, favourites }) => {
+const FavouritesPage = ({
+  displayContent,
+  storedFavourites,
+  favouritesOrder,
+  moveFavourite,
+  reorderFavourites,
+  cancelReorderFavourites,
+  removeFavourite,
+}) => {
   const theme = useTheme();
   const history = useHistory();
 
@@ -43,6 +66,16 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   const isFavouriteSelected = useCallback(
     (favId) => selectedFavourite === favId,
     [selectedFavourite]
+  );
+
+  const favourites = useMemo(
+    () =>
+      inSwitchMode
+        ? favouritesOrder.map((favId) =>
+            storedFavourites.find(({ id }) => id === favId)
+          )
+        : storedFavourites,
+    [favouritesOrder, inSwitchMode, storedFavourites]
   );
 
   const handleSelectFavourite = (favId) => (event, newFavourite) => {
@@ -91,6 +124,10 @@ const FavouritesPage = ({ displayContent, favourites }) => {
       <PokemonFavouritesList
         {...{
           favourites,
+          moveFavourite,
+          reorderFavourites,
+          cancelReorderFavourites,
+          removeFavourite,
           anim,
           displayContent,
           inSwitchMode,
@@ -104,4 +141,6 @@ const FavouritesPage = ({ displayContent, favourites }) => {
   );
 };
 
-export default React.memo(connect(mapStateToProps)(FavouritesPage));
+export default React.memo(
+  connect(mapStateToProps, mapDispatchToProps)(FavouritesPage)
+);
