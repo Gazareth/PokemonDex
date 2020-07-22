@@ -190,14 +190,7 @@ const PokemonFavourite = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const anim = useAnimEngine(
-    3,
-    displayContent && isSelected,
-    225,
-    75,
-    false,
-    1
-  );
+  const anim = useAnimEngine(3, displayContent && isSelected, 225, 75);
 
   return (
     <div

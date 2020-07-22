@@ -1,29 +1,34 @@
 const defaultDelayTime = () =>
   parseInt(process.env.REACT_APP_SWITCHSCREENINITIALPAUSE);
 
+const defaultTotalTime = () =>
+  parseInt(process.env.REACT_APP_SWITCHSCREENDELAY);
+
 const useAnimEngine = (
   participants,
   inOut,
   timing,
-  staggerAmount = 150,
+  staggerAmount = 3000,
   overflow = false,
   staggerOffset = 0
 ) => {
   let staggerId = staggerOffset;
   let baseDelay = defaultDelayTime();
+  let totalTime = defaultTotalTime() - baseDelay;
   let duration = baseDelay;
 
   if (typeof timing === "object") {
     console.log("Timing is object!! delay before: ", baseDelay);
     baseDelay = timing.delay || baseDelay;
     duration = timing.duration;
-    console.log("   Timing is object!! after ", baseDelay, duration);
+    totalTime = timing.total - baseDelay || totalTime;
+    console.log("   Timing is object!! after ", baseDelay, duration, totalTime);
   }
 
   return () => {
     const _staggerAmount = Math.min(
       staggerAmount,
-      (process.env.REACT_APP_SWITCHSCREENDELAY - baseDelay) / participants
+      (totalTime - baseDelay) / participants
     );
 
     const newDelay =

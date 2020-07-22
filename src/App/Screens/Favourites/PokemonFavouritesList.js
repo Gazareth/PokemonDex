@@ -27,9 +27,6 @@ const useStyles = makeStyles((theme) => ({
 const PokemonFavouritesList = ({
   favourites,
   moveFavourite,
-  reorderFavourites,
-  cancelReorderFavourites,
-  removeFavourite,
   anim,
   inSwitchMode,
   displayContent,

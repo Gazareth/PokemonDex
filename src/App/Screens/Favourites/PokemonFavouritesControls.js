@@ -48,27 +48,35 @@ const ControlButton = SmoothIn(
 const MakeControlButton = (
   key,
   theme,
-  anim,
+  animProps,
   onClick,
   IconComponent,
   auxShow,
-  props = {}
-) => (
-  <ControlButton
-    {...{
-      ...anim(),
-      key,
-      onClick,
-      IconComponent,
-      transitionType: "Bounce",
-      theme,
-      auxShow,
-      unmountOnExit: true,
-      mountOnEnter: true,
-      ...props,
-    }}
-  />
-);
+  otherProps = {}
+) => {
+  const { placeholder, ...props } = otherProps;
+
+  const modifiedDelayProps = {
+    ...animProps,
+    ...(placeholder ? { show: !(animProps.show && auxShow) } : {}),
+  };
+  return (
+    <ControlButton
+      {...{
+        ...modifiedDelayProps,
+        key,
+        onClick,
+        IconComponent,
+        transitionType: "Bounce",
+        theme,
+        auxShow,
+        unmountOnExit: true,
+        mountOnEnter: true,
+        ...props,
+      }}
+    />
+  );
+};
 
 function PokemonFavouritesControls({
   anim,
@@ -99,38 +107,58 @@ function PokemonFavouritesControls({
     [cancelReorderFavourites]
   );
 
+  const animProps1 = anim();
+  const animProps2 = anim();
+
   const ControlButtonDefinitions = [
-    [toggleSwitchMode, SwapVerticalCircleTwoToneIcon, inDefaultMode],
-    [toggleDeleteMode, DeleteSweepTwoToneIcon, inDefaultMode],
     [
+      animProps1,
+      toggleSwitchMode,
+      SwapVerticalCircleTwoToneIcon,
+      inDefaultMode,
+    ],
+    [animProps2, toggleDeleteMode, DeleteSweepTwoToneIcon, inDefaultMode],
+    [
+      animProps1,
       () => doReorder(toggleSwitchMode),
       CheckCircleTwoToneIcon,
       inSwitchMode,
       { style: { color: green[500] } },
     ],
     [
+      animProps2,
       () => cancelReorder(toggleSwitchMode),
       CancelTwoToneIcon,
       inSwitchMode,
       { style: { color: red[500] } },
     ],
     [
+      animProps1,
       () => doReorder(toggleDeleteMode),
       CheckCircleTwoToneIcon,
       inDeleteMode,
       { style: { color: green[500] } },
     ],
     [
+      animProps2,
       () => cancelReorder(toggleDeleteMode),
       CancelTwoToneIcon,
       inDeleteMode,
       { style: { color: red[500] } },
     ],
+    [
+      animProps1,
+      //placeholder!
+      () => {},
+      CancelTwoToneIcon,
+      true,
+      { style: { opacity: 0 }, placeholder: true },
+    ],
   ];
 
   const ControlButtons = () =>
     ControlButtonDefinitions.map((buttonDef, index) =>
-      MakeControlButton(index, theme, anim, ...buttonDef)
+      MakeControlButton(index, theme, ...buttonDef)
     );
 
   return (

@@ -94,12 +94,19 @@ const FavouritesPage = ({
     setTimeout(() => setAnimateIn(true), 250);
   }, []);
 
+  const [animateControlsIn, setAnimateControlsIn] = useState(false);
+
+  useEffect(() => {
+    setTimeout(
+      () => setAnimateControlsIn(true),
+      parseInt(process.env.REACT_APP_SWITCHSCREENDELAY)
+    );
+  }, []);
+
   const buttonsAnim = useAnimEngine(
     2,
-    displayContent && animateIn,
-    {
-      duration: 245,
-    },
+    displayContent && animateControlsIn,
+    225,
     75
   );
 
