@@ -11,7 +11,7 @@ const mapStateToProps = (state) => {
     pokemonData: state.pokemon.data,
     loading: state.pokemon.loading,
     havePokemon: state.pokemon.haveData,
-    favourites: state.favourites,
+    favourites: state.favourites.favouritesOrder,
   };
 };
 
@@ -21,7 +21,7 @@ const mapDispatchToProps = {
 };
 
 const getIsFavourite = (favourites, id) =>
-  favourites.filter((fav) => fav.id === id).length > 0;
+  favourites.filter((favId) => favId === id).length > 0;
 
 const PokemonPage = ({
   displayContent,

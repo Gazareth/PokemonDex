@@ -54,7 +54,6 @@ const PokemonFavouritesList = ({
 
     console.log("DOING MOVE FAV!!!");
     moveFavourite(source.index, destination.index, parseInt(draggableId));
-    reorderFavourites();
   };
 
   return (

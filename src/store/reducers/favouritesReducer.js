@@ -51,6 +51,7 @@ const favouritesReducer = (
   state = { favourites: initialFavourites, favouritesOrder: initialOrder },
   action
 ) => {
+  let order = [...state.favouritesOrder];
   switch (action.type) {
     case FAVOURITES.ADD:
       const newFavourites = [action.payload, ...state.favourites];
@@ -61,21 +62,13 @@ const favouritesReducer = (
         favouritesOrder: newIds,
       };
     case FAVOURITES.REORDER:
-      console.log(
-        "REORDERING FAVOURITES",
-        action.payload,
-        "OLD ORDER: ",
-        state.favouritesOrder
-      );
-      let order = [...state.favouritesOrder];
       order.splice(action.payload.sourceIndex, 1);
       order.splice(action.payload.destIndex, 0, action.payload.favouriteId);
-      console.log("NEW ORDER: ", order);
       return {
         ...state,
         favouritesOrder: order,
       };
-    case FAVOURITES.COMMIT_REORDER:
+    case FAVOURITES.COMMIT_REORDER: //also works for removals
       const reorderedFavourites = state.favouritesOrder.map((favId) =>
         state.favourites.find(({ id }) => id === favId)
       );
@@ -89,14 +82,10 @@ const favouritesReducer = (
         favouritesOrder: state.favourites.map(({ id }) => id),
       };
     case FAVOURITES.REMOVE:
-      const cleansedFavourites = state.favourites.filter(
-        (fav) => fav.id !== action.payload
-      );
-      const cleansedIds = newFavourites.map((fav) => fav.id);
+      order.splice(action.payload, 1);
       return {
         ...state,
-        favourites: cleansedFavourites,
-        favouritesDisplayOrder: cleansedIds,
+        favouritesOrder: order,
       };
     default:
       return state;

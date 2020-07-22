@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { connect } from "react-redux";
 
+import useAnimEngine from "Hooks/AnimEngine";
+
 import {
   moveFavourite,
   reorderFavourites,
@@ -10,20 +12,23 @@ import {
 
 import { useHistory } from "react-router-dom";
 
-import { useTheme } from "@material-ui/core/styles";
-
-import useAnimEngine from "Hooks/AnimEngine";
-import SmoothIn from "Utils/transitionSmoothIn";
-
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-
-import Filter9PlusIcon from "@material-ui/icons/Filter9Plus";
-import SwapVerticalCircleTwoToneIcon from "@material-ui/icons/SwapVerticalCircleTwoTone";
-import DeleteSweepTwoToneIcon from "@material-ui/icons/DeleteSweepTwoTone";
-
+import PokemonFavouritesControls from "./PokemonFavouritesControls";
 import PokemonFavouritesList from "./PokemonFavouritesList";
+
+const favouritesControlModes = {
+  DEFAULT: "FAVOURITES",
+  SWITCH: "FAVOURITES_SWITCH",
+  DELETE: "FAVOURITES_DELETE",
+};
+
+const toggleSwitchMode = (mode) =>
+  mode === favouritesControlModes.SWITCH
+    ? favouritesControlModes.DEFAULT
+    : favouritesControlModes.SWITCH;
+const toggleDeleteMode = (mode) =>
+  mode === favouritesControlModes.DELETE
+    ? favouritesControlModes.DEFAULT
+    : favouritesControlModes.DELETE;
 
 const mapStateToProps = (state) => {
   return {
@@ -40,14 +45,6 @@ const mapDispatchToProps = {
   removeFavourite,
 };
 
-const ControlButton = SmoothIn(
-  ({ classes, IconComponent, hideOptions, style, ...props }) => (
-    <IconButton style={style} onClick={() => hideOptions()} {...props}>
-      <IconComponent fontSize="large" />
-    </IconButton>
-  )
-);
-
 const FavouritesPage = ({
   displayContent,
   storedFavourites,
@@ -57,16 +54,20 @@ const FavouritesPage = ({
   cancelReorderFavourites,
   removeFavourite,
 }) => {
-  const theme = useTheme();
   const history = useHistory();
 
-  const [inSwitchMode, setSwitchMode] = React.useState(false);
+  const [favouritesMode, setFavouritesMode] = React.useState(
+    favouritesControlModes.DEFAULT
+  );
   const [selectedFavourite, setSelectedFavourite] = React.useState(0);
 
   const isFavouriteSelected = useCallback(
     (favId) => selectedFavourite === favId,
     [selectedFavourite]
   );
+
+  const inSwitchMode = favouritesMode === favouritesControlModes.SWITCH;
+  const inDeleteMode = favouritesMode === favouritesControlModes.DELETE;
 
   const favourites = useMemo(
     () =>
@@ -93,42 +94,40 @@ const FavouritesPage = ({
     setTimeout(() => setAnimateIn(true), 250);
   }, []);
 
-  const anim = useAnimEngine(
-    favourites.length + 2,
+  const buttonsAnim = useAnimEngine(
+    2,
+    displayContent && animateIn,
+    {
+      duration: 245,
+    },
+    75
+  );
+
+  const favListAnim = useAnimEngine(
+    favourites.length,
     displayContent && animateIn
   );
 
   return (
     <>
-      <Typography component="h3" variant="h5">
-        Favourite Pokemon <Filter9PlusIcon />
-      </Typography>
-      <Grid container direction="column">
-        <Grid item container xs={8}></Grid>
-        <Grid item container xs={4} justify="flex-end">
-          <ControlButton
-            {...anim()}
-            onClick={() => setSwitchMode((switching) => !switching)}
-            IconComponent={SwapVerticalCircleTwoToneIcon}
-            transitionType="Bounce"
-            theme={theme}
-          />
-          <ControlButton
-            IconComponent={DeleteSweepTwoToneIcon}
-            transitionType="Bounce"
-            {...anim()}
-            theme={theme}
-          />
-        </Grid>
-      </Grid>
+      <PokemonFavouritesControls
+        toggleSwitchMode={() => setFavouritesMode(toggleSwitchMode)}
+        toggleDeleteMode={() => setFavouritesMode(toggleDeleteMode)}
+        {...{
+          anim: buttonsAnim,
+          inDefaultMode: favouritesMode === favouritesControlModes.DEFAULT,
+          inSwitchMode,
+          inDeleteMode,
+          reorderFavourites,
+          cancelReorderFavourites,
+        }}
+      />
       <PokemonFavouritesList
         {...{
           favourites,
           moveFavourite,
-          reorderFavourites,
-          cancelReorderFavourites,
           removeFavourite,
-          anim,
+          anim: favListAnim,
           displayContent,
           inSwitchMode,
           isFavouriteSelected,

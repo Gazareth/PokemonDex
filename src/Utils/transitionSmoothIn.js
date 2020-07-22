@@ -124,12 +124,16 @@ const SmoothIn = (ComponentToTransition) => ({
   doHeight,
   transitionType,
   theme,
+  auxShow = true,
+  mountOnEnter,
+  unmountOnExit,
   ...otherProps
 }) => (
   <CSSTransition
-    in={show}
+    in={show && auxShow}
     appear={true}
     timeout={show ? delay.in : delay.outDuration}
+    {...{ mountOnEnter, unmountOnExit, onEnter: (node) => node.offsetHeight }}
   >
     {(state) => (
       <ComponentToTransition
