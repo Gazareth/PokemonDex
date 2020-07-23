@@ -82,7 +82,8 @@ const favouritesReducer = (
         favouritesOrder: state.favourites.map(({ id }) => id),
       };
     case FAVOURITES.REMOVE:
-      order.splice(action.payload, 1);
+      const removeIndex = state.favouritesOrder.indexOf(action.payload);
+      order.splice(removeIndex, 1);
       return {
         ...state,
         favouritesOrder: order,

@@ -25,20 +25,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PokemonFavouritesList = ({
-  favourites,
-  moveFavourite,
   anim,
+  favourites,
+  inDefaultMode,
   inSwitchMode,
   displayContent,
   isFavouriteSelected,
   handleSelectFavourite,
   handleSelectNone,
   handleViewFavourite,
+  moveFavourite,
+  removeFavourite,
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   const noneSelected = isFavouriteSelected(0);
+
+  console.log("RERENDERING LIST: ", favourites);
 
   const onDragEnd = ({ destination, source, draggableId }) => {
     console.log("ondragend!!!", destination, source, draggableId);
@@ -77,24 +81,28 @@ const PokemonFavouritesList = ({
                             ref={provided.innerRef}
                             className={classes.favouriteEntry}
                             onClick={
-                              favouriteSelected || inSwitchMode
+                              favouriteSelected || !inDefaultMode
                                 ? null
                                 : handleSelectFavourite(fav.id)
                             }
                           >
                             <PokemonFavourite
-                              {...anim()}
-                              inSwitchMode={inSwitchMode}
+                              {...{
+                                ...anim(),
+                                displayContent,
+                                inDefaultMode,
+                                inSwitchMode,
+                              }}
                               dragHandleProps={provided.dragHandleProps}
                               pokemonInfo={fav}
                               favouriteIndex={i}
-                              displayContent={displayContent}
                               isSelected={favouriteSelected}
                               isNotSelected={
                                 !noneSelected && !favouriteSelected
                               }
                               hideOptions={handleSelectNone}
                               viewPokemon={handleViewFavourite}
+                              removeAsFavourite={() => removeFavourite(fav.id)}
                             />
                           </div>
                         )}

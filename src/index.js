@@ -1,7 +1,5 @@
 import React from "react";
 
-//import wdyr from "./wdyr";
-
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";

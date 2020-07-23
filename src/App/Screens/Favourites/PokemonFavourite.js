@@ -1,6 +1,7 @@
 import React from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Color from "color";
 
 import useAnimEngine from "Hooks/AnimEngine";
 
@@ -23,6 +24,8 @@ import SmoothIn from "Utils/transitionSmoothIn";
 import PokeballIcon from "Icons/PokeballIcon";
 
 import ReorderIcon from "@material-ui/icons/Reorder";
+import DeleteTwoToneIcon from "@material-ui/icons/DeleteTwoTone";
+
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 
@@ -46,11 +49,11 @@ const useStyles = makeStyles((theme) => ({
     filter: "grayscale(90%) opacity(65%) contrast(90%) brightness(85%)",
     transform: "scale(0.95)",
   },
-  innerControllerDraggable: {
-    maxWidth: "80%",
+  innerControllerMutable: {
+    maxWidth: "90%",
   },
 
-  draggableCard: {
+  mutableCard: {
     border: "none",
     background: "transparent",
   },
@@ -61,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     padding: `${theme.spacing(1.5)}px`,
   },
 
-  cardContentDraggable: {
+  cardContentMutable: {
     padding: `${theme.spacing(1.5)}px ${theme.spacing(3)}px`,
   },
 
@@ -176,6 +179,7 @@ const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
 ));
 
 const PokemonFavourite = ({
+  inDefaultMode,
   inSwitchMode,
   dragHandleProps,
   pokemonInfo,
@@ -185,6 +189,7 @@ const PokemonFavourite = ({
   isNotSelected,
   hideOptions,
   viewPokemon,
+  removeAsFavourite,
   ...props
 }) => {
   const theme = useTheme();
@@ -201,26 +206,26 @@ const PokemonFavourite = ({
       <div
         className={clsx(classes.cardControllerInner, {
           [classes.innerControllerUnselected]: isNotSelected,
-          [classes.innerControllerDraggable]: inSwitchMode,
+          [classes.innerControllerMutable]: !inDefaultMode,
         })}
       >
         <Card
           className={clsx(classes.card, {
-            [classes.draggableCard]: inSwitchMode,
+            [classes.mutableCard]: !inDefaultMode,
           })}
           elevation={0}
           //elevation={isSelected ? 6 : inSwitchMode ? 0 : 1}
         >
           <CardActionArea
             disableTouchRipple={isSelected}
-            disableRipple={inSwitchMode}
+            disableRipple={!inDefaultMode}
             className={clsx(classes.cardActionArea, {
-              [classes.actionAreaDisabled]: inSwitchMode,
+              [classes.actionAreaDisabled]: !inDefaultMode,
             })}
             classes={{
-              ...(inSwitchMode
-                ? { focusHighlight: classes.focusHighlight }
-                : {}),
+              ...(inDefaultMode
+                ? {}
+                : { focusHighlight: classes.focusHighlight }),
               root: classes.cardActionArea,
             }}
             component="div"
@@ -229,9 +234,10 @@ const PokemonFavourite = ({
               <Grid
                 item
                 style={{
-                  ...(inSwitchMode
-                    ? { maxWidth: "0" }
-                    : { maxWidth: theme.spacing(6) }),
+                  ...(inDefaultMode
+                    ? { maxWidth: theme.spacing(6) }
+                    : { maxWidth: "0" }),
+                  padding: "0.509px",
                   width: theme.spacing(6),
                   transition: `max-width ${theme.spacing(12) * 2.5}ms ${
                     theme.transitions.easing.pokeEase
@@ -244,7 +250,18 @@ const PokemonFavourite = ({
                   alignItems="center"
                   justifyContent="center"
                   style={{
-                    background: theme.palette.background.quaternary,
+                    transition: `border-radius ${theme.spacing(12) * 2.5}ms ${
+                      theme.transitions.easing.pokeEase
+                    }`,
+                    border: "1px transparent",
+                    borderRadius: "0.25rem",
+                    borderTopRightRadius: isSelected ? "1rem" : "0.55rem",
+                    borderBottomLeftRadius: isSelected ? "1.2rem" : "0.6rem",
+                    background: Color(theme.palette.background.tertiary).mix(
+                      Color(theme.palette.background.quaternary),
+                      0.6
+                    ),
+                    detail3: Color(theme.palette.primary.main),
                     height: "100%",
                     width: "100%",
                   }}
@@ -253,7 +270,7 @@ const PokemonFavourite = ({
                     component="h3"
                     variant="h5"
                     className={clsx(classes.fader, {
-                      [classes.faderOut]: inSwitchMode,
+                      [classes.faderOut]: !inDefaultMode,
                     })}
                     color={isSelected ? "textPrimary" : "textSecondary"}
                   >
@@ -261,148 +278,144 @@ const PokemonFavourite = ({
                   </Typography>
                 </Box>
               </Grid>
-              <Grid
-                item
-                {...dragHandleProps}
-                className={classes.cardDetails}
-                style={{ minWidth: "33%" }}
-              >
-                <SwipeableViews
-                  style={{ ...swipeableStyle }}
-                  containerStyle={{ height: "100%" }}
-                  slideStyle={{ ...swipeableStyle }}
-                  index={isSelected ? 0 : 1}
+              <Grid item container style={{ flex: 1 }} {...dragHandleProps}>
+                <Grid
+                  item
+                  className={classes.cardDetails}
+                  style={{ minWidth: "33%" }}
                 >
-                  <Grid container className={classes.buttonGrid}>
-                    <Grid item container xs={2} justify="flex-start">
-                      <CloseButton
-                        {...anim()}
-                        classes={classes}
-                        hideOptions={hideOptions}
-                        transitionType="Bounce"
-                        theme={theme}
-                      />
-                    </Grid>
-                    <Grid item container xs={6} sm={7} justify="flex-end">
-                      <MoveButtons
-                        {...anim()}
-                        classes={classes}
-                        viewPokemon={viewPokemon}
-                        transitionType="Bounce"
-                        theme={theme}
-                      />
-                    </Grid>
-                    <Grid item container xs={4} sm={3}>
-                      <ViewButton
-                        {...anim()}
-                        classes={classes}
-                        viewPokemon={viewPokemon}
-                        transitionType="Bounce"
-                        theme={theme}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    className={clsx(classes.cardContent, {
-                      [classes.cardContentDraggable]: inSwitchMode,
-                    })}
-                    justify="space-around"
+                  <SwipeableViews
+                    style={{ ...swipeableStyle }}
+                    containerStyle={{ height: "100%" }}
+                    slideStyle={{ ...swipeableStyle }}
+                    index={isSelected ? 0 : 1}
                   >
+                    <Grid container className={classes.buttonGrid}>
+                      <Grid item container xs={2} justify="flex-start">
+                        <CloseButton
+                          {...anim()}
+                          classes={classes}
+                          hideOptions={hideOptions}
+                          transitionType="Bounce"
+                          theme={theme}
+                        />
+                      </Grid>
+                      <Grid item container xs={6} sm={7} justify="flex-end">
+                        <MoveButtons
+                          {...anim()}
+                          classes={classes}
+                          viewPokemon={viewPokemon}
+                          transitionType="Bounce"
+                          theme={theme}
+                        />
+                      </Grid>
+                      <Grid item container xs={4} sm={3}>
+                        <ViewButton
+                          {...anim()}
+                          classes={classes}
+                          viewPokemon={viewPokemon}
+                          transitionType="Bounce"
+                          theme={theme}
+                        />
+                      </Grid>
+                    </Grid>
                     <Grid
                       item
                       container
-                      justify="center"
-                      alignItems="center"
-                      xs={1}
+                      className={clsx(classes.cardContent, {
+                        [classes.cardContentMutable]: !inDefaultMode,
+                      })}
+                      justify="space-around"
                     >
-                      <ReorderIcon
+                      <Grid
+                        item
+                        container
+                        justify="center"
+                        alignItems="center"
                         className={clsx(classes.fader, {
-                          [classes.faderOut]: !inSwitchMode,
+                          [classes.faderOut]: inDefaultMode,
                         })}
                         style={{
-                          transitionDuration: inSwitchMode ? "750ms" : "195ms",
-                          ...(inSwitchMode ? { transitionDelay: "345ms" } : {}),
+                          transitionDuration: inDefaultMode ? "195ms" : "750ms",
+                          ...(inDefaultMode
+                            ? {}
+                            : { transitionDelay: "345ms" }),
                         }}
-                        color="disabled"
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      container
-                      //xs={10}
-                      direction="column"
-                      justify="center"
-                      style={{ flex: "1" }}
-                    >
-                      <Grid item container justify="flex-end">
-                        <Typography component="h2" variant="h5">
-                          <span
-                            style={{
-                              color: theme.palette.text.secondary,
-                            }}
-                          >
-                            {"#" + pokemonInfo.id + " "}
-                          </span>
-                          {pokemonInfo.name}
-                        </Typography>
+                        xs={1}
+                      >
+                        {inSwitchMode ? (
+                          <ReorderIcon color="disabled" />
+                        ) : (
+                          <IconButton onClick={removeAsFavourite}>
+                            <DeleteTwoToneIcon color="error" />
+                          </IconButton>
+                        )}
                       </Grid>
-                      <Grid item container justify="flex-end">
-                        <Typography
-                          variant="subtitle2"
-                          className={classes.types}
-                        >
-                          {pokemonInfo.types.map((type, i) => (
-                            <span key={i}>
-                              <span
-                                style={{
-                                  color: theme.palette.pokemonTypes[type],
-                                }}
-                              >
-                                {type}
-                              </span>
-                              <>
-                                {i + 1 === pokemonInfo.types.length ? "" : ", "}
-                              </>
+                      <Grid
+                        item
+                        container
+                        //xs={10}
+                        direction="column"
+                        justify="center"
+                        style={{ flex: "1" }}
+                      >
+                        <Grid item container justify="flex-end">
+                          <Typography component="h2" variant="h5">
+                            <span
+                              style={{
+                                color: theme.palette.text.secondary,
+                              }}
+                            >
+                              {"#" + pokemonInfo.id + " "}
                             </span>
-                          ))}
-                        </Typography>
+                            {pokemonInfo.name}
+                          </Typography>
+                        </Grid>
+                        <Grid item container justify="flex-end">
+                          <Typography
+                            variant="subtitle2"
+                            className={classes.types}
+                          >
+                            {pokemonInfo.types.map((type, i) => (
+                              <span key={i}>
+                                <span
+                                  style={{
+                                    color: theme.palette.pokemonTypes[type],
+                                  }}
+                                >
+                                  {type}
+                                </span>
+                                <>
+                                  {i + 1 === pokemonInfo.types.length
+                                    ? ""
+                                    : ", "}
+                                </>
+                              </span>
+                            ))}
+                          </Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
-                </SwipeableViews>
-              </Grid>
-              <Grid
-                item
-                style={{
-                  ...(inSwitchMode
-                    ? { maxWidth: "0" }
-                    : { maxWidth: theme.spacing(12) }),
-                  transition: `max-width ${theme.spacing(12) * 2.5}ms ${
-                    theme.transitions.easing.pokeEase
-                  }`,
-                  overflow: "hidden",
-                }}
-              >
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="left"
-                  style={{
-                    background: theme.palette.background.quaternary,
-                    height: "100%",
-                    width: "100%",
-                  }}
-                >
-                  <img
-                    src={pokemonInfo.image}
-                    className={clsx(classes.pokemonSprite, classes.fader, {
-                      [classes.faderOut]: inSwitchMode,
-                    })}
-                    alt={pokemonInfo.name}
-                  />
-                </Box>
+                  </SwipeableViews>
+                </Grid>
+                <Grid item>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="left"
+                    style={{
+                      background: theme.palette.background.quaternary,
+                      height: "100%",
+                      width: "100%",
+                    }}
+                  >
+                    <img
+                      src={pokemonInfo.image}
+                      className={clsx(classes.pokemonSprite)}
+                      alt={pokemonInfo.name}
+                    />
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
           </CardActionArea>
@@ -412,4 +425,12 @@ const PokemonFavourite = ({
   );
 };
 
-export default SmoothIn(PokemonFavourite);
+const areEqual = (prevProps, nextProps) =>
+  prevProps.inDefaultMode === nextProps.inDefaultMode &&
+  prevProps.pokemonInfo === nextProps.pokemonInfo &&
+  prevProps.favouriteIndex === nextProps.favouriteIndex &&
+  prevProps.displayContent === nextProps.displayContent &&
+  prevProps.isSelected === nextProps.isSelected &&
+  prevProps.isNotSelected === nextProps.isNotSelected;
+
+export default React.memo(SmoothIn(PokemonFavourite), areEqual);

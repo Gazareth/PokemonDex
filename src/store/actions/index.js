@@ -123,9 +123,9 @@ export const addFavourite = (pokemonData) => ({
   payload: pick(pokemonData, POKEMON_FAVOURITE_FIELDS),
 });
 
-export const removeFavourite = (pokemonData) => ({
+export const removeFavourite = (index) => ({
   type: FAVOURITES.REMOVE,
-  payload: pokemonData.id,
+  payload: index,
 });
 
 export const moveFavourite = (sourceIndex, destIndex, favouriteId) => ({

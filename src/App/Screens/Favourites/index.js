@@ -66,18 +66,19 @@ const FavouritesPage = ({
     [selectedFavourite]
   );
 
+  const inDefaultMode = favouritesMode === favouritesControlModes.DEFAULT;
   const inSwitchMode = favouritesMode === favouritesControlModes.SWITCH;
   const inDeleteMode = favouritesMode === favouritesControlModes.DELETE;
 
   const favourites = useMemo(
     () =>
-      inSwitchMode
-        ? favouritesOrder.map((favId) =>
-            storedFavourites.find(({ id }) => id === favId)
-          )
-        : storedFavourites,
-    [favouritesOrder, inSwitchMode, storedFavourites]
+      favouritesOrder.map((favId) =>
+        storedFavourites.find(({ id }) => id === favId)
+      ),
+    [favouritesOrder, storedFavourites]
   );
+
+  console.log("RERENDERING BECAUSE OF FAVOURITES CHANGE!", favourites);
 
   const handleSelectFavourite = (favId) => (event, newFavourite) => {
     setSelectedFavourite(isFavouriteSelected(favId) ? 0 : favId);
@@ -96,23 +97,37 @@ const FavouritesPage = ({
 
   const [animateControlsIn, setAnimateControlsIn] = useState(false);
 
-  useEffect(() => {
-    setTimeout(
-      () => setAnimateControlsIn(true),
-      parseInt(process.env.REACT_APP_SWITCHSCREENDELAY)
-    );
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(
+  //     () => setAnimateControlsIn(true),
+  //     parseInt(process.env.REACT_APP_SWITCHSCREENDELAY)
+  //   );
+  // }, []);
+
+  const displayControls = useMemo(() => displayContent && animateControlsIn, [
+    animateControlsIn,
+    displayContent,
+  ]);
+  const displayList = useMemo(() => displayContent && animateIn, [
+    animateIn,
+    displayContent,
+  ]);
 
   const buttonsAnim = useAnimEngine(
     2,
     displayContent && animateControlsIn,
     225,
-    75
+    100
   );
 
   const favListAnim = useAnimEngine(
     favourites.length,
-    displayContent && animateIn
+    displayList,
+    {},
+    3000,
+    false,
+    0,
+    () => setAnimateControlsIn(true)
   );
 
   return (
@@ -122,7 +137,8 @@ const FavouritesPage = ({
         toggleDeleteMode={() => setFavouritesMode(toggleDeleteMode)}
         {...{
           anim: buttonsAnim,
-          inDefaultMode: favouritesMode === favouritesControlModes.DEFAULT,
+          displayContent: displayControls,
+          inDefaultMode,
           inSwitchMode,
           inDeleteMode,
           reorderFavourites,
@@ -135,7 +151,8 @@ const FavouritesPage = ({
           moveFavourite,
           removeFavourite,
           anim: favListAnim,
-          displayContent,
+          displayContent: displayList,
+          inDefaultMode,
           inSwitchMode,
           isFavouriteSelected,
           handleSelectFavourite,

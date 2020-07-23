@@ -80,11 +80,11 @@ const MakeControlButton = (
 
 function PokemonFavouritesControls({
   anim,
+  displayContent,
   toggleSwitchMode,
   toggleDeleteMode,
   reorderFavourites,
   cancelReorderFavourites,
-  onClickDeleteCancel,
   inDefaultMode,
   inSwitchMode,
   inDeleteMode,
@@ -177,4 +177,10 @@ function PokemonFavouritesControls({
 
 PokemonFavouritesControls.propTypes = {};
 
-export default PokemonFavouritesControls;
+const areEqual = (prevProps, nextProps) =>
+  prevProps.displayContent === nextProps.displayContent &&
+  prevProps.inDefaultMode === nextProps.inDefaultMode &&
+  prevProps.inSwitchMode === nextProps.inSwitchMode &&
+  prevProps.inDeleteMode === nextProps.inDeleteMode;
+
+export default React.memo(PokemonFavouritesControls, areEqual);

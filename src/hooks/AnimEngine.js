@@ -4,13 +4,16 @@ const defaultDelayTime = () =>
 const defaultTotalTime = () =>
   parseInt(process.env.REACT_APP_SWITCHSCREENDELAY);
 
+const noop = () => {};
+
 const useAnimEngine = (
   participants,
   inOut,
   timing,
   staggerAmount = 3000,
   overflow = false,
-  staggerOffset = 0
+  staggerOffset = 0,
+  providedCallback = noop
 ) => {
   let staggerId = staggerOffset;
   let baseDelay = defaultDelayTime();
@@ -18,11 +21,9 @@ const useAnimEngine = (
   let duration = baseDelay;
 
   if (typeof timing === "object") {
-    console.log("Timing is object!! delay before: ", baseDelay);
     baseDelay = timing.delay || baseDelay;
-    duration = timing.duration;
+    duration = timing.duration || baseDelay;
     totalTime = timing.total - baseDelay || totalTime;
-    console.log("   Timing is object!! after ", baseDelay, duration, totalTime);
   }
 
   return () => {
@@ -45,6 +46,7 @@ const useAnimEngine = (
         maxDelay,
       },
       show: inOut,
+      ...(staggerId === participants ? { providedCallback } : {}), //pass callback for onEntered for last participant
     };
   };
 };
