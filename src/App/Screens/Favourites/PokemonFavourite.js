@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Color from "color";
@@ -156,21 +156,23 @@ const ViewButton = SmoothIn(({ classes, viewPokemon, ...props }) => (
   </Button>
 ));
 
-const MoveButtons = SmoothIn(({ classes, viewPokemon, ...props }) => (
-  <ButtonGroup
-    style={props.style}
-    variant="contained"
-    color="primary"
-    size="small"
-  >
-    <Button>
-      <ArrowUpward />
-    </Button>
-    <Button>
-      <ArrowDownward />
-    </Button>
-  </ButtonGroup>
-));
+const MoveButtons = SmoothIn(
+  ({ classes, viewPokemon, moveSwapFavourite, ...props }) => (
+    <ButtonGroup
+      style={props.style}
+      variant="contained"
+      color="primary"
+      size="small"
+    >
+      <Button>
+        <ArrowUpward onClick={() => moveSwapFavourite(true)} />
+      </Button>
+      <Button>
+        <ArrowDownward onClick={() => moveSwapFavourite(false)} />
+      </Button>
+    </ButtonGroup>
+  )
+);
 
 const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
   <IconButton style={props.style} onClick={() => hideOptions()}>
@@ -179,16 +181,19 @@ const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
 ));
 
 const PokemonFavourite = ({
+  forwardRef,
   inDefaultMode,
   inSwitchMode,
   dragHandleProps,
   pokemonInfo,
   favouriteIndex,
+  isLast,
   displayContent,
   isSelected,
   isNotSelected,
   hideOptions,
   viewPokemon,
+  moveSwapFavourite,
   removeAsFavourite,
   ...props
 }) => {
@@ -199,6 +204,7 @@ const PokemonFavourite = ({
 
   return (
     <div
+      ref={forwardRef}
       style={{
         ...props.style,
       }}
@@ -302,9 +308,8 @@ const PokemonFavourite = ({
                       </Grid>
                       <Grid item container xs={6} sm={7} justify="flex-end">
                         <MoveButtons
-                          {...anim()}
+                          {...{ ...anim(), viewPokemon, moveSwapFavourite }}
                           classes={classes}
-                          viewPokemon={viewPokemon}
                           transitionType="Bounce"
                           theme={theme}
                         />
@@ -426,6 +431,7 @@ const PokemonFavourite = ({
 };
 
 const areEqual = (prevProps, nextProps) =>
+  prevProps.favouriteIndex === nextProps.favouriteIndex &&
   prevProps.inDefaultMode === nextProps.inDefaultMode &&
   prevProps.pokemonInfo === nextProps.pokemonInfo &&
   prevProps.favouriteIndex === nextProps.favouriteIndex &&

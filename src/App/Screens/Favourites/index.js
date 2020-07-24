@@ -78,8 +78,6 @@ const FavouritesPage = ({
     [favouritesOrder, storedFavourites]
   );
 
-  console.log("RERENDERING BECAUSE OF FAVOURITES CHANGE!", favourites);
-
   const handleSelectFavourite = (favId) => (event, newFavourite) => {
     setSelectedFavourite(isFavouriteSelected(favId) ? 0 : favId);
   };
@@ -96,13 +94,6 @@ const FavouritesPage = ({
   }, []);
 
   const [animateControlsIn, setAnimateControlsIn] = useState(false);
-
-  // useEffect(() => {
-  //   setTimeout(
-  //     () => setAnimateControlsIn(true),
-  //     parseInt(process.env.REACT_APP_SWITCHSCREENDELAY)
-  //   );
-  // }, []);
 
   const displayControls = useMemo(() => displayContent && animateControlsIn, [
     animateControlsIn,
@@ -150,6 +141,7 @@ const FavouritesPage = ({
           favourites,
           moveFavourite,
           removeFavourite,
+          reorderFavourites,
           anim: favListAnim,
           displayContent: displayList,
           inDefaultMode,

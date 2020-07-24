@@ -17,25 +17,6 @@ import DeleteSweepTwoToneIcon from "@material-ui/icons/DeleteSweepTwoTone";
 import CheckCircleTwoToneIcon from "@material-ui/icons/CheckCircleTwoTone";
 import CancelTwoToneIcon from "@material-ui/icons/CancelTwoTone";
 
-/* FOR REFERENCE:
-        <ControlButton
-          {...anim()}
-          onClick={toggleSwitchMode}
-          IconComponent={SwapVerticalCircleTwoToneIcon}
-          transitionType="Bounce"
-          theme={theme}
-          auxShow={inSwitchMode}
-        />
-        <ControlButton
-          {...anim()}
-          onClick={toggleDeleteMode}
-          IconComponent={DeleteSweepTwoToneIcon}
-          transitionType="Bounce"
-          theme={theme}
-        />
-      </>
-*/
-
 const ControlButton = SmoothIn(
   ({ classes, IconComponent, hideOptions, style, ...props }) => (
     <IconButton style={style} onClick={() => hideOptions()} {...props}>
