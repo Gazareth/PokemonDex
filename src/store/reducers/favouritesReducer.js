@@ -24,13 +24,6 @@ const initialFavourites = [
   },
   {
     image:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/48.png",
-    name: "Venonat",
-    id: 48,
-    types: ["Bug", "Poison"],
-  },
-  {
-    image:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/130.png",
     name: "Gyarados",
     id: 130,
@@ -42,6 +35,48 @@ const initialFavourites = [
     name: "Magikarp",
     id: 129,
     types: ["Water"],
+  },
+  {
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/24.png",
+    name: "Arbok",
+    id: 24,
+    types: ["Poison"],
+  },
+  {
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
+    name: "Ditto",
+    id: 132,
+    types: ["Normal"],
+  },
+  {
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/50.png",
+    name: "Diglett",
+    id: 50,
+    types: ["Ground"],
+  },
+  {
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/62.png",
+    name: "Poliwrath",
+    id: 62,
+    types: ["Water", "Fighting"],
+  },
+  {
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png",
+    name: "Jigglypuff",
+    id: 39,
+    types: ["Fairy"],
+  },
+  {
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/48.png",
+    name: "Venonat",
+    id: 48,
+    types: ["Bug", "Poison"],
   },
 ];
 

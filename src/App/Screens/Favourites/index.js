@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { connect } from "react-redux";
 
+import Grid from "@material-ui/core/Grid";
+
 import useAnimEngine from "Hooks/AnimEngine";
 
 import {
@@ -122,7 +124,7 @@ const FavouritesPage = ({
   );
 
   return (
-    <>
+    <Grid container style={{ height: "100%" }} direction="column">
       <PokemonFavouritesControls
         toggleSwitchMode={() => setFavouritesMode(toggleSwitchMode)}
         toggleDeleteMode={() => setFavouritesMode(toggleDeleteMode)}
@@ -152,7 +154,7 @@ const FavouritesPage = ({
           handleViewFavourite,
         }}
       />
-    </>
+    </Grid>
   );
 };
 
