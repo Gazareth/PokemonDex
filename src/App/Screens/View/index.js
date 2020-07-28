@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
+
+import { SEARCH_POKEMON } from "Store/actions/types";
 
 import { addFavourite, removeFavourite } from "Store/actions";
 
@@ -10,6 +12,7 @@ const mapStateToProps = (state) => {
   return {
     pokemonData: state.pokemon.data,
     loading: state.pokemon.loading,
+    searching: state.pokemon.searching,
     havePokemon: state.pokemon.haveData,
     favourites: state.favourites.favouritesOrder,
   };
@@ -26,7 +29,9 @@ const getIsFavourite = (favourites, id) =>
 const PokemonPage = ({
   displayContent,
   pokemonData,
+  searching,
   havePokemon,
+  loading,
   favourites,
   addFavourite,
   removeFavourite,
@@ -34,11 +39,9 @@ const PokemonPage = ({
   //const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
   const [isFavourite, setIsFavourite] = useState(false);
 
-  useEffect(() => setIsFavourite(getIsFavourite(favourites, pokemonData.id)), [
-    favourites.size,
-    pokemonData.id,
-    favourites,
-  ]);
+  useEffect(() => {
+    setIsFavourite(getIsFavourite(favourites, pokemonData.id));
+  }, [favourites.size, pokemonData.id, favourites]);
 
   //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
   const addRemoveFavourite = useCallback(() => {
@@ -46,25 +49,23 @@ const PokemonPage = ({
     isFavourite ? removeFavourite(pokemonData) : addFavourite(pokemonData);
   }, [addFavourite, isFavourite, pokemonData, removeFavourite]);
 
-  // const pokemonInfo = useMemo(
-  //   () => (havePokemon > 0 ? ParsePokemonData(...dataArr) : {}),
-  //   [havePokemon, dataArr]
-  // );
+  console.log("Loading??", loading);
 
-  return (
-    <>
-      {!havePokemon && <PokemonNoDisplay {...{ displayContent }} />}
-      {havePokemon && (
-        <PokemonDisplay
-          {...{
-            pokemonInfo: pokemonData,
-            displayContent,
-            isFavourite,
-            addToFavourites: addRemoveFavourite,
-          }}
-        />
-      )}
-    </>
+  return havePokemon === 0 ||
+    havePokemon !== searching ||
+    ["INIT", "FOUND", "SPECIES_FOUND", "MOVES_FOUND", "DONE"]
+      .map((key) => SEARCH_POKEMON[key])
+      .includes(loading) ? (
+    <PokemonNoDisplay {...{ displayContent }} />
+  ) : (
+    <PokemonDisplay
+      {...{
+        pokemonInfo: pokemonData,
+        displayContent,
+        isFavourite,
+        addToFavourites: addRemoveFavourite,
+      }}
+    />
   );
 };
 

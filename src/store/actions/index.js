@@ -69,7 +69,7 @@ export const searchPokemon = (pokemonName) => {
             )
           )
       )
-      .then(sleep(process.env.REACT_APP_TABSWITCHTIME))
+      .then(sleep(process.env.REACT_APP_SWITCHSCREENDELAY))
       .then(() => dispatch(action(SEARCH_POKEMON.NONE)))
       .catch((error) => {
         dispatch(setPokemonError());
