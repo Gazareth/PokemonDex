@@ -351,9 +351,11 @@ const PokemonFavourite = ({
                         {inSwitchMode ? (
                           <ReorderIcon color="disabled" />
                         ) : (
-                          <IconButton onClick={removeAsFavourite}>
-                            <DeleteTwoToneIcon color="error" />
-                          </IconButton>
+                          !inDefaultMode && (
+                            <IconButton onClick={removeAsFavourite}>
+                              <DeleteTwoToneIcon />
+                            </IconButton>
+                          )
                         )}
                       </Grid>
                       <Grid

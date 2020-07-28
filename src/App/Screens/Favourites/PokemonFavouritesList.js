@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 
+import Color from "color";
+
 import RootRef from "@material-ui/core/RootRef";
 
 import clsx from "clsx";
@@ -14,14 +16,42 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import PokemonFavourite from "./PokemonFavourite";
 
 const useStyles = makeStyles((theme) => ({
-  verticalScroll: {
-    backgroundColor: theme.palette.secondary.light,
+  verticalTrack: {
+    transition: "background-color 650ms ease-out 150ms",
+    backgroundColor: Color(theme.palette.background.default)
+      .lighten(0.3)
+      .toString(),
     borderRadius: theme.spacing(2),
-    opacity: 0.25,
+    height: "100%",
+    top: 0,
+    right: 0,
   },
-  verticalScrollInactive: {
-    backgroundColor: theme.palette.secondary.light,
-    opacity: 1,
+  verticalTrackActive: {
+    transition: "background-color 125ms ease-out",
+    backgroundColor: Color(theme.palette.secondary.light)
+      .darken(0.3)
+      .desaturate(0.3)
+      .lighten(0.2)
+      .toString(),
+  },
+  verticalThumb: {
+    transition: "background-color 350ms ease-in",
+    backgroundColor: Color(theme.palette.background.septenary)
+      .darken(0.2)
+      .toString(),
+    borderRadius: theme.spacing(2),
+  },
+  verticalThumbReady: {
+    //transition: "background-color 125ms ease-out",
+    backgroundColor: Color(theme.palette.background.octonary)
+      .darken(0.2)
+      .toString(),
+  },
+  verticalThumbActive: {
+    transition: "background-color 125ms ease-in",
+    backgroundColor: Color(theme.palette.background.nonary)
+      .darken(0.2)
+      .toString(),
   },
   listContainer: {
     paddingRight: theme.spacing(0.65),
@@ -39,6 +69,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.error.main,
   },
 }));
+
+let scrollTimer = null;
 
 const PokemonFavouritesList = ({
   anim,
@@ -58,6 +90,7 @@ const PokemonFavouritesList = ({
   const classes = useStyles(theme);
 
   const [hovering, setHovering] = useState(false);
+  const [scrolling, setScrolling] = useState(false);
   const [flipMoveDisabled, setDisableFlipMove] = useState(false);
 
   const noneSelected = isFavouriteSelected(0);
@@ -102,15 +135,28 @@ const PokemonFavouritesList = ({
         onMouseLeave={() => setHovering(false)}
       >
         <Scrollbars
-          style={{
-            height: "100%",
+          onScrollFrame={() => {
+            setScrolling(true);
+            scrollTimer = setTimeout(() => setScrolling(false), 500);
           }}
+          // onScrollStart={() => setScrolling(true)}
+          // onScrollStop={() => setScrolling(false)}
+          renderTrackVertical={(props) => (
+            <div
+              {...props}
+              className={clsx(classes.verticalTrack, {
+                [classes.verticalTrackActive]: scrolling,
+              })}
+            />
+          )}
           renderThumbVertical={({ style, ...props }) => {
             return (
               <div
+                {...props}
                 style={style}
-                className={clsx(classes.verticalScroll, {
-                  [classes.verticalScrollInactive]: hovering,
+                className={clsx(classes.verticalThumb, {
+                  [classes.verticalThumbReady]: hovering,
+                  [classes.verticalThumbActive]: scrolling,
                 })}
               />
             );
@@ -124,7 +170,15 @@ const PokemonFavouritesList = ({
               >
                 {(provided) => (
                   <RootRef rootRef={provided.innerRef}>
-                    <div {...provided.droppableProps}>
+                    <div
+                      {...{
+                        ...provided.droppableProps,
+                        style: {
+                          ...provided.droppableProps.style,
+                          position: "relative",
+                        },
+                      }}
+                    >
                       <FlipMove
                         typeName={null}
                         disableAllAnimations={flipMoveDisabled}
