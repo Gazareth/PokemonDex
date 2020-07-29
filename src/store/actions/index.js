@@ -25,6 +25,14 @@ const sleep = (sleepms = sleepTime) => (response) =>
   );
 
 export const searchPokemon = (pokemonName) => {
+  if (!pokemonName)
+    return (dispatch) => {
+      dispatch(setPokemonError());
+      return setTimeout(
+        () => dispatch(setPokemonData(SEARCH_POKEMON.NONE)),
+        sleepErrorTime
+      );
+    };
   let pokemonId = 0;
   let pokemonData = {};
   let speciesUrl = "",

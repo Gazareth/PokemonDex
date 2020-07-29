@@ -91,8 +91,11 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
         );
       }
     }
-    if (screenIndex === 0 || loadingPokemon === SEARCH_POKEMON.DONE)
+    if (screenIndex === 0 && loadingPokemon === SEARCH_POKEMON.DONE)
       history.push(`/view/?id=${havePokemon}`);
+
+    if (screenIndex === 1 && loadingPokemon === SEARCH_POKEMON.FAILED)
+      history.push(`/search/`);
   }, [
     loadingPokemon,
     history,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useLocation, useHistory } from "react-router";
 
@@ -8,8 +8,10 @@ import PokemonDexScreens from "./Screens";
 
 import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
-const getIndexFromPath = (path) => {
+const getIndexFromPath = ({ pathname: path }, location, history) => {
+  console.log("Getting index from path... ", path, location, history);
   const pathPage = path.split("/")[1];
+  console.log("   pathPage: ", pathPage);
   const pageIndex = PokemonDexURLs.findIndex((endpt) =>
     pathPage.startsWith(endpt)
   );
@@ -17,6 +19,8 @@ const getIndexFromPath = (path) => {
 };
 
 const getPathFromIndex = (index) => {
+  console.log("Getting path... index: ", index);
+  console.log(" Got path: ", PokemonDexURLs[index]);
   return `/${PokemonDexURLs[index]}/`;
 };
 
@@ -33,17 +37,24 @@ const validateQuery = (query) => {
 const PokemonRouter = () => {
   const location = useLocation();
   const history = useHistory();
-  let screenIndex = getIndexFromPath(location.pathname);
 
+  let screenIndex = useMemo(
+    () => getIndexFromPath(location, location, history),
+    [history, location]
+  );
+
+  console.log("got screenIndex: ", screenIndex);
   if (screenIndex === -1) {
     //redirect to search page if nothing found
     screenIndex = 0;
-    history.push(getPathFromIndex(screenIndex));
+    const indexPath = getPathFromIndex(screenIndex);
+    console.log("redirecting!", indexPath);
+    history.push(indexPath);
   }
 
   // Pass pokemon ID if view/?id=<number>
   const query = location.search && queryString.parse(location.search).id;
-  console.log("Got query: ", query);
+  //console.log("Got query: ", query);
   const pokemonToView = validateQuery(query) ? parseInt(query, 10) : 0;
   console.log("ToView: ", pokemonToView);
 

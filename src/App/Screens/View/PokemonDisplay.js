@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import PokemonDisplayMain from "Components/PokemonCard";
 import PokemonDisplayStats from "./Sections/PokemonDisplayStats";
 import PokemonDisplaySpecies from "./Sections/PokemonDisplaySpecies";
-import PokemonDisplayMoves from "./Sections/PokemonDisplayMoves";
+import PokemonDisplayMoves from "./Sections/PokemonDisplayMovesModal";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {

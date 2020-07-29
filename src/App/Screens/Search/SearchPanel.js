@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import { SEARCH_POKEMON } from "Store/actions/types";
+import { LOADING_STRINGS as loadingStrings } from "Constants";
 
 import clsx from "clsx";
 import Color from "color";
@@ -162,16 +163,6 @@ const subheadingCharPoses = {
       damping: 1000,
     }),
   },
-};
-
-const loadingStrings = {
-  [SEARCH_POKEMON.NONE]: "947 Available", //TODO: make dynamic
-  [SEARCH_POKEMON.INIT]: "Initialised...",
-  [SEARCH_POKEMON.FOUND]: "Searching for species...",
-  [SEARCH_POKEMON.SPECIES_FOUND]: "Searching for moves...",
-  [SEARCH_POKEMON.MOVES_FOUND]: "Pokemon moves found...",
-  [SEARCH_POKEMON.DONE]: "Search complete!",
-  [SEARCH_POKEMON.FAILED]: "Error. Pokemon not found.",
 };
 
 const ErrorProgress = ({ color }) => {
