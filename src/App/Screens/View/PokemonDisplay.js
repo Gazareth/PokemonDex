@@ -28,8 +28,8 @@ const PokemonDisplay = ({
   isFavourite,
   addToFavourites,
 }) => {
-  const mainTheme = useTheme();
-  const classes = useStyles(mainTheme);
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const [animateIn, setAnimateIn] = useState(false);
 
   useEffect(() => {
@@ -40,14 +40,14 @@ const PokemonDisplay = ({
 
   return (
     <>
-      <Grid item container spacing={5} className={classes.flexCol}>
+      <Grid container spacing={5} justify="space-between" direction="column">
+        <Grid item>
+          <PokemonDisplayMain
+            {...{ pokemonInfo, isFavourite, addToFavourites }}
+            {...anim()}
+          />
+        </Grid>
         <Grid item container spacing={4} className={classes.inflexible}>
-          <Grid item xs={12}>
-            <PokemonDisplayMain
-              {...{ pokemonInfo, isFavourite, addToFavourites }}
-              {...anim()}
-            />
-          </Grid>
           <Grid item container xs={5}>
             <PokemonDisplayStats pokemonStats={pokemonInfo.stats} {...anim()} />
           </Grid>
@@ -58,7 +58,7 @@ const PokemonDisplay = ({
             />
           </Grid>
         </Grid>
-        <Grid item container xs={12} className={classes.flexCol}>
+        <Grid item container>
           <PokemonDisplayMoves
             pokemonMoves={pokemonInfo.moves}
             {...anim()}

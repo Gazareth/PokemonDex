@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
   },
   verticalTrackActive: {
     transition: "background-color 125ms ease-out",
-    backgroundColor: Color(theme.palette.secondary.light)
-      .darken(0.3)
+    backgroundColor: Color(theme.palette.background.default)
+      .darken(0.2)
       .desaturate(0.3)
       .lighten(0.2)
       .toString(),

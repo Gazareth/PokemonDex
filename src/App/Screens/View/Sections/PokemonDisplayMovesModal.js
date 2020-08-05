@@ -7,6 +7,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -16,17 +22,21 @@ import Slide from "@material-ui/core/Slide";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+import ControlCameraIcon from "@material-ui/icons/ControlCamera";
+
+const useStyles = makeStyles((theme) => ({
   media: {
     height: 140,
   },
-  movesButton: {
-    margin: "2.8em",
-    marginTop: "2.2em",
+  movesButtonOuter: {
+    margin: "0 15%",
   },
-});
+  movesButton: {
+    backgroundColor: theme.palette.background.tertiary,
+  },
+}));
 
-const MovesButton = ({ onClick }) => {
+const MovesButton2 = ({ onClick }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -43,6 +53,35 @@ const MovesButton = ({ onClick }) => {
         </CardContent>
       </CardActionArea>
     </Card>
+  );
+};
+
+const MovesButton = ({ onClick }) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
+  return (
+    <List className={classes.movesButtonOuter}>
+      <ListItem
+        // classes={{
+        //   root: classes["typeBackgroundColor-" + move.type],
+        // }}
+        classes={{ root: classes.movesButton }}
+        button
+        onClick={onClick}
+      >
+        <ListItemAvatar>
+          <Avatar>
+            <ControlCameraIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          //classes={{ secondary: classes["typeTextColor-" + move.type] }}
+          primary={"Moves"}
+          secondary={"(34)"}
+        />
+      </ListItem>
+    </List>
   );
 };
 
