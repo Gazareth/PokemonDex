@@ -2,10 +2,7 @@ import React from "react";
 
 import Button from "@material-ui/core/Button";
 
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+import SmoothIn from "Utils/transitionSmoothIn";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -22,7 +19,7 @@ import Slide from "@material-ui/core/Slide";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import ControlCameraIcon from "@material-ui/icons/ControlCamera";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -30,66 +27,47 @@ const useStyles = makeStyles((theme) => ({
   },
   movesButtonOuter: {
     margin: "0 15%",
+    flex: 1,
   },
   movesButton: {
+    borderRadius: theme.spacing(0.5),
     backgroundColor: theme.palette.background.tertiary,
+    filter: `drop-shadow(0px 2px 10px ${theme.palette.background.default})`,
   },
 }));
 
-const MovesButton2 = ({ onClick }) => {
+const MovesButton = SmoothIn(({ onClick, style }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   return (
-    <Card className={classes.movesButton}>
-      <CardActionArea onClick={onClick}>
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Moves
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            (34)
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
-};
-
-const MovesButton = ({ onClick }) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
-  return (
-    <List className={classes.movesButtonOuter}>
+    <List className={classes.movesButtonOuter} {...{ style }}>
       <ListItem
-        // classes={{
-        //   root: classes["typeBackgroundColor-" + move.type],
-        // }}
         classes={{ root: classes.movesButton }}
         button
         onClick={onClick}
       >
         <ListItemAvatar>
           <Avatar>
-            <ControlCameraIcon />
+            <SvgIcon>
+              <path
+                fill="currentColor"
+                d="M6.92,5H5L14,14L15,13.06M19.96,19.12L19.12,19.96C18.73,20.35 18.1,20.35 17.71,19.96L14.59,16.84L11.91,19.5L10.5,18.09L11.92,16.67L3,7.75V3H7.75L16.67,11.92L18.09,10.5L19.5,11.91L16.83,14.58L19.95,17.7C20.35,18.1 20.35,18.73 19.96,19.12Z"
+              />
+            </SvgIcon>
           </Avatar>
         </ListItemAvatar>
-        <ListItemText
-          //classes={{ secondary: classes["typeTextColor-" + move.type] }}
-          primary={"Moves"}
-          secondary={"(34)"}
-        />
+        <ListItemText primary={"Moves"} secondary={"(34)"} />
       </ListItem>
     </List>
   );
-};
+});
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const ModalTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const PokemonMovesModal = () => {
+const PokemonMovesModal = ({ show, delay }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -101,11 +79,11 @@ const PokemonMovesModal = () => {
   };
 
   return (
-    <div>
-      <MovesButton onClick={handleClickOpen} />
+    <>
+      <MovesButton {...{ show, delay }} onClick={handleClickOpen} />
       <Dialog
         open={open}
-        TransitionComponent={Transition}
+        TransitionComponent={ModalTransition}
         keepMounted
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
@@ -116,8 +94,7 @@ const PokemonMovesModal = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            Pokemon moves will go here.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -129,7 +106,7 @@ const PokemonMovesModal = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 };
 

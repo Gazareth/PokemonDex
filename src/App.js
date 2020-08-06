@@ -15,7 +15,6 @@ import ConnectedTheme from "Contexts/ConnectedTheme";
 
 import MainPage from "./App/MainPage";
 import Box from "@material-ui/core/Box";
-import PokeAppBar from "App/PokeAppBar";
 
 const useStyles = makeStyles((theme) => ({
   rootBox: {
@@ -42,7 +41,6 @@ const App = () => {
       <ConnectedTheme>
         <CssBaseline />
         <Box className={classes.rootBox} bgcolor="background.default">
-          <PokeAppBar />
           <MainPage />
         </Box>
       </ConnectedTheme>

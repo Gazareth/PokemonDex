@@ -8,6 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
+import PokeAppBar from "App/PokeAppBar";
 import PokemonDexRouter from "./PokemonDexRouter";
 
 const Copyright = ({ theme }) => {
@@ -81,6 +82,7 @@ const MainPage = () => {
 
   return (
     <Router>
+      <PokeAppBar />
       <Switch>
         <Route path="/">
           <main className={clsx(classes.flexCol, classes.layout)}>

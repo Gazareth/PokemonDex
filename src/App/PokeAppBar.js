@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { useHistory } from "react-router";
+
 import Color from "color";
 
 import { setThemeMode } from "Store/actions";
@@ -17,6 +19,10 @@ import Typography from "@material-ui/core/Typography";
 
 import PokedexSVG from "Icons/PokedexIconV2";
 
+import PokeballIcon from "Icons/PokeballIcon";
+import SearchIcon from "@material-ui/icons/Search";
+import GradeTwoToneIcon from "@material-ui/icons/GradeTwoTone";
+
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
@@ -30,14 +36,19 @@ const styles = (theme) => ({
   appBar: {
     position: "relative",
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
+  // menuButton: {
+  //   marginRight: theme.spacing(2),
+  // },
   title: {
-    flexGrow: 1,
+    flexGrow: 0.5,
   },
   alignRight: {
     marginLeft: "auto",
+  },
+  switchContainer: {
+    display: "flex",
+    flexGrow: 0.5,
+    justifyContent: "flex-end",
   },
   switchBase: {
     color: theme.palette.primary.dark,
@@ -65,6 +76,7 @@ const DarkLightIcon = ({ theme, themeMode }) => {
 
 const PokeAppBar = ({ setThemeMode, themeMode }) => {
   const [classes, theme] = useThemedClasses(styles);
+  const history = useHistory();
 
   const handleThemeSwitch = () => {
     setThemeMode(themeMode === "dark" ? "light" : "dark");
@@ -105,27 +117,45 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
           />
         </IconButton>
         <Typography
-          variant="h6"
+          variant="caption"
           color="textSecondary"
           className={classes.title}
           noWrap
         >
           Pokémon Dex
         </Typography>
-        <FormControlLabel
-          value={themeMode}
-          control={
-            <Switch
-              checked={themeMode === "light"}
-              onChange={handleThemeSwitch}
-              classes={{
-                ...pick(classes, ["switchBase", "checked", "track"]),
-              }}
-            />
-          }
-          label={<DarkLightIcon {...{ theme, themeMode }} />}
-          labelPlacement="start"
-        />
+        <div
+          style={{
+            backgroundColor: theme.palette.background.quaternary,
+            borderRadius: theme.spacing(5),
+          }}
+        >
+          <IconButton onClick={() => history.push("search")}>
+            <SearchIcon />
+          </IconButton>
+          <IconButton onClick={() => history.push("view/?id=50")}>
+            <PokeballIcon />
+          </IconButton>
+          <IconButton onClick={() => history.push("favourites")}>
+            <GradeTwoToneIcon />
+          </IconButton>
+        </div>
+        <div className={classes.switchContainer}>
+          <FormControlLabel
+            value={themeMode}
+            control={
+              <Switch
+                checked={themeMode === "light"}
+                onChange={handleThemeSwitch}
+                classes={{
+                  ...pick(classes, ["switchBase", "checked", "track"]),
+                }}
+              />
+            }
+            label={<DarkLightIcon {...{ theme, themeMode }} />}
+            labelPlacement="start"
+          />
+        </div>
       </Toolbar>
     </AppBar>
   );

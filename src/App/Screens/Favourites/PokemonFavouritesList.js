@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   verticalTrackActive: {
     transition: "background-color 125ms ease-out",
     backgroundColor: Color(theme.palette.background.default)
-      .darken(0.2)
+      .darken(0.1)
       .desaturate(0.3)
       .lighten(0.2)
       .toString(),
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   verticalThumbActive: {
     transition: "background-color 125ms ease-in",
     backgroundColor: Color(theme.palette.background.nonary)
-      .darken(0.2)
+      .darken(0.35)
       .toString(),
   },
   listContainer: {

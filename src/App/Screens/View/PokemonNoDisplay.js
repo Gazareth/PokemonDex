@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: "0",
     height: "75px",
     left: "0",
-    margin: "auto",
+    margin: `${theme.spacing(5)}px auto`,
     position: "relative",
     right: "0",
     top: "0",
@@ -178,7 +178,7 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
             }}
             appear
           >
-            <Grid container direction="column" spacing={4}>
+            <Grid container direction="column" spacing={2}>
               <Grid item>
                 <PokeballLoader classes={classes} />
               </Grid>
