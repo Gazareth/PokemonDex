@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 import Color from "color";
 
@@ -29,6 +29,18 @@ import Switch from "@material-ui/core/Switch";
 import Brightness5Icon from "@material-ui/icons/Brightness5";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 
+import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
+
+const pathIdMatch = (path, id) =>
+  console.log(
+    "checking path match...",
+    path,
+    id,
+    "MatchIndex: ",
+    PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)),
+    PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)) === id
+  ) || PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)) === id;
+
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -36,14 +48,18 @@ const styles = (theme) => ({
   appBar: {
     position: "relative",
   },
-  // menuButton: {
-  //   marginRight: theme.spacing(2),
-  // },
   title: {
     flexGrow: 0.5,
   },
-  alignRight: {
-    marginLeft: "auto",
+  navIconInactive: {
+    transform: "scale(0.95)",
+    color: theme.palette.text.secondary,
+  },
+  navIconActive: {
+    //color: theme.palette.primary.light,
+    backgroundColor: Color(theme.palette.background.quinary)
+      .lighten(0.1)
+      .toString(),
   },
   switchContainer: {
     display: "flex",
@@ -59,8 +75,6 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.warning.light,
     },
   },
-  checked: {},
-  track: {},
 });
 
 const DarkLightIcon = ({ theme, themeMode }) => {
@@ -74,9 +88,33 @@ const DarkLightIcon = ({ theme, themeMode }) => {
   return <Component {...styles} />;
 };
 
-const PokeAppBar = ({ setThemeMode, themeMode }) => {
+const NavIconButton = ({
+  classNameActive,
+  classNameInactive,
+  navId,
+  navPath,
+  currentPath,
+  navFunc,
+  disabled,
+  iconComponent: IconComponent,
+}) => (
+  <IconButton
+    {...{
+      disabled,
+      className: pathIdMatch(currentPath, navId)
+        ? classNameActive
+        : classNameInactive,
+    }}
+    onClick={() => navFunc(navPath)}
+  >
+    <IconComponent />
+  </IconButton>
+);
+
+const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   const [classes, theme] = useThemedClasses(styles);
   const history = useHistory();
+  const { pathname } = useLocation();
 
   const handleThemeSwitch = () => {
     setThemeMode(themeMode === "dark" ? "light" : "dark");
@@ -90,6 +128,7 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
           className={classes.menuButton}
           color="inherit"
           aria-label="menu"
+          size="small"
         >
           <SvgIcon
             component={PokedexSVG}
@@ -127,18 +166,22 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
         <div
           style={{
             backgroundColor: theme.palette.background.quaternary,
-            borderRadius: theme.spacing(5),
+            borderRadius: theme.spacing(3),
           }}
         >
-          <IconButton onClick={() => history.push("search")}>
-            <SearchIcon />
-          </IconButton>
-          <IconButton onClick={() => history.push("view/?id=50")}>
-            <PokeballIcon />
-          </IconButton>
-          <IconButton onClick={() => history.push("favourites")}>
-            <GradeTwoToneIcon />
-          </IconButton>
+          {PokemonDexURLs.map((url, i) => (
+            <NavIconButton
+              key={i}
+              navId={i}
+              disabled={i === 1 && !(pokemonAvailable > 0)}
+              classNameActive={classes.navIconActive}
+              classNameInactive={classes.navIconInactive}
+              navPath={`/${url}/${i === 1 ? `?id=${pokemonAvailable}` : ""}`}
+              currentPath={pathname}
+              navFunc={history.push}
+              iconComponent={[SearchIcon, PokeballIcon, GradeTwoToneIcon][i]}
+            />
+          ))}
         </div>
         <div className={classes.switchContainer}>
           <FormControlLabel
@@ -163,6 +206,7 @@ const PokeAppBar = ({ setThemeMode, themeMode }) => {
 
 const mapStateToProps = (state) => ({
   themeMode: state.theme.mode,
+  pokemonAvailable: state.pokemon.haveData,
 });
 
 const mapDispatchToProps = {

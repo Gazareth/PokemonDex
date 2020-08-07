@@ -8,10 +8,8 @@ import PokemonDexScreens from "./Screens";
 
 import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
-const getIndexFromPath = ({ pathname: path }, location, history) => {
-  console.log("Getting index from path... ", path, location, history);
+const getIndexFromPath = ({ pathname: path }) => {
   const pathPage = path.split("/")[1];
-  console.log("   pathPage: ", pathPage);
   const pageIndex = PokemonDexURLs.findIndex((endpt) =>
     pathPage.startsWith(endpt)
   );
@@ -19,8 +17,6 @@ const getIndexFromPath = ({ pathname: path }, location, history) => {
 };
 
 const getPathFromIndex = (index) => {
-  console.log("Getting path... index: ", index);
-  console.log(" Got path: ", PokemonDexURLs[index]);
   return `/${PokemonDexURLs[index]}/`;
 };
 
@@ -43,7 +39,6 @@ const PokemonRouter = () => {
     [history, location]
   );
 
-  console.log("got screenIndex: ", screenIndex);
   if (screenIndex === -1) {
     //redirect to search page if nothing found
     screenIndex = 0;
