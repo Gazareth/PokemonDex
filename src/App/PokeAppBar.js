@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import { useHistory, useLocation } from "react-router";
 
+import clsx from "clsx";
 import Color from "color";
 
 import { setThemeMode } from "Store/actions";
@@ -52,8 +53,13 @@ const styles = (theme) => ({
   },
   logoTitle: {
     //flexGrow: 0.5,
+    height: "100%",
   },
   logoButton: {
+    [theme.breakpoints.down("xs")]: {
+      position: "absolute",
+      margin: "3px",
+    },
     //marginRight: theme.spacing(1.5),
   },
   title: {
@@ -70,7 +76,23 @@ const styles = (theme) => ({
   },
   navIconActive: {
     //color: theme.palette.primary.light,
-    backgroundColor: theme.palette.background.septenary,
+    backgroundColor: Color(theme.palette.background.senary)
+      .lighten(0.1)
+      .toString(),
+    "&:hover": {
+      backgroundColor: Color(theme.palette.background.senary)
+        .lighten(0.2)
+        .toString(),
+    },
+  },
+  navIconSearchActive: {
+    color: theme.palette.info.light,
+  },
+  navIconViewActive: {
+    color: theme.palette.secondary.light,
+  },
+  navIconFavouritesActive: {
+    color: theme.palette.warning.light,
   },
   switchContainer: {
     display: "flex",
@@ -107,25 +129,32 @@ const DarkLightIcon = ({ theme, themeMode }) => {
 const NavIconButton = ({
   classNameActive,
   classNameInactive,
+  classNameActiveSpecial,
   navId,
   navPath,
   currentPath,
   navFunc,
   disabled,
   iconComponent: IconComponent,
-}) => (
-  <IconButton
-    {...{
-      disabled,
-      className: pathIdMatch(currentPath, navId)
-        ? classNameActive
-        : classNameInactive,
-    }}
-    onClick={() => navFunc(navPath)}
-  >
-    <IconComponent />
-  </IconButton>
-);
+}) => {
+  const isActive = pathIdMatch(currentPath, navId);
+  console.log("Got activeIconClassName: ", classNameActiveSpecial);
+  return (
+    <IconButton
+      {...{
+        disabled,
+        className: clsx(
+          isActive
+            ? [classNameActive, classNameActiveSpecial]
+            : classNameInactive
+        ),
+      }}
+      onClick={() => navFunc(navPath)}
+    >
+      <IconComponent />
+    </IconButton>
+  );
+};
 
 const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   const [classes, theme] = useThemedClasses(styles);
@@ -198,6 +227,11 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
                   disabled={i === 1 && !(pokemonAvailable > 0)}
                   classNameActive={classes.navIconActive}
                   classNameInactive={classes.navIconInactive}
+                  classNameActiveSpecial={
+                    ["Search", "View", "Favourites"].map(
+                      (name) => classes[`navIcon${name}Active`]
+                    )[i]
+                  }
                   navPath={`/${url}/${
                     i === 1 ? `?id=${pokemonAvailable}` : ""
                   }`}

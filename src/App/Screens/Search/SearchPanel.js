@@ -51,8 +51,8 @@ const useStyles = makeStyles((theme) => {
     },
     /* CARD */
     card: {
-      marginLeft: "24%",
-      marginRight: "24%",
+      marginLeft: "23.5%",
+      marginRight: "23.5%",
       ...trsn.build([
         [
           "background-color",
@@ -74,8 +74,8 @@ const useStyles = makeStyles((theme) => {
         ["margin-right", ...pokeBounceIn],
       ]),
       backgroundColor: theme.palette.background.default,
-      marginLeft: "10%",
-      marginRight: "10%",
+      marginLeft: "13%",
+      marginRight: "13%",
     },
     "card-Busy": {
       ...trsn.build([
@@ -95,8 +95,8 @@ const useStyles = makeStyles((theme) => {
         ["transform", 825, 425, ease.pokeSwish],
       ]),
       textAlign: "center",
-      marginTop: "1.5em",
-      marginBottom: "-2.25em",
+      marginTop: "1.65em",
+      marginBottom: "-1.5em",
       transform: "scale(1.1,1.1)",
     },
     "cardHeader-Open": {
@@ -138,7 +138,8 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       padding: "0px",
       justifyContent: "center",
-      marginBottom: "0.75em",
+      marginTop: "0.85em",
+      marginBottom: "1.35em",
     },
     "cardContent-Open": {
       ...trsn.build([["margin-bottom", ...pokeBounceIn]]),

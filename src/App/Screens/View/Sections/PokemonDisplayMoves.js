@@ -92,8 +92,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   listMargin: {
-    margin: "2.8em",
-    marginTop: "2.2em",
+    margin: "5%",
   },
   levelNumber: {
     fontWeight: "800",

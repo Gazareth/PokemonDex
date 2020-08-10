@@ -17,6 +17,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 
+import PokemonMoves from "./PokemonDisplayMoves";
+
+import useAnimEngine from "Hooks/AnimEngine";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -67,7 +71,7 @@ const ModalTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const PokemonMovesModal = ({ show, delay }) => {
+const PokemonMovesModal = ({ displayContent, pokemonMoves, show, delay }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -78,11 +82,15 @@ const PokemonMovesModal = ({ show, delay }) => {
     setOpen(false);
   };
 
+  const anim = useAnimEngine(4, displayContent);
+
   return (
     <>
       <MovesButton {...{ show, delay }} onClick={handleClickOpen} />
       <Dialog
         open={open}
+        //fullWidth
+        //maxWidth={"sm"}
         TransitionComponent={ModalTransition}
         keepMounted
         onClose={handleClose}
@@ -93,9 +101,7 @@ const PokemonMovesModal = ({ show, delay }) => {
           {"Pokemon moves"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Pokemon moves will go here.
-          </DialogContentText>
+          <PokemonMoves {...{ pokemonMoves, ...anim() }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

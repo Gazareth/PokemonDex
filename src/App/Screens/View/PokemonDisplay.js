@@ -60,6 +60,7 @@ const PokemonDisplay = ({
         </Grid>
         <Grid item container>
           <PokemonDisplayMoves
+            displayContent={displayContent && animateIn}
             pokemonMoves={pokemonInfo.moves}
             {...anim()}
             doHeight
