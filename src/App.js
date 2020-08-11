@@ -5,6 +5,7 @@ import "typeface-roboto";
 
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
+import saveState from "Store/middleware/saveState";
 import { Provider as StoreProvider } from "react-redux";
 import rootReducer from "./Store/reducers";
 
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk, saveState))
 );
 
 const App = () => {

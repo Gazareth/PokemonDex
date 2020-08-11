@@ -89,8 +89,8 @@ const PokemonMovesModal = ({ displayContent, pokemonMoves, show, delay }) => {
       <MovesButton {...{ show, delay }} onClick={handleClickOpen} />
       <Dialog
         open={open}
-        //fullWidth
-        //maxWidth={"sm"}
+        fullWidth
+        maxWidth={"sm"}
         TransitionComponent={ModalTransition}
         keepMounted
         onClose={handleClose}
