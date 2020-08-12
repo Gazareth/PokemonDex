@@ -2,15 +2,11 @@
 
 import { SEARCH_POKEMON } from "../actions/types";
 
-const storedPokemonData = localStorage.lastViewedPokemon
-  ? JSON.parse(localStorage.lastViewedPokemon)
-  : {};
-
 //Default store
 const pokemonDefaultState = Object.freeze({
-  data: storedPokemonData,
+  data: {},
   searching: 0,
-  haveData: storedPokemonData.id || 0,
+  haveData: 0,
 });
 
 const pokemonReducer = (

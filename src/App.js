@@ -28,9 +28,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const loadStoreFromStorage = () => {
+  try {
+    const serializedState = localStorage.getItem("state");
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   rootReducer,
+  loadStoreFromStorage(),
   composeEnhancers(applyMiddleware(thunk, saveState))
 );
 

@@ -192,7 +192,7 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
                   style={{ flex: "1" }}
                   variant="buffer"
                   value={progress}
-                  valueBuffer={"100%"}
+                  valueBuffer={100}
                 />
               </Grid>
               <Grid item>
