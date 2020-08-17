@@ -3,20 +3,25 @@
 import { SEARCH_POKEMON } from "../actions/types";
 
 //Default store
-const pokemonDefaultState = Object.freeze({
+const pokemonInitialState = {
   data: {},
   searching: 0,
   haveData: 0,
-});
+  loading: SEARCH_POKEMON.NONE,
+};
 
 const pokemonReducer = (
-  state = { loading: SEARCH_POKEMON.NONE, ...pokemonDefaultState },
+  state = { loading: SEARCH_POKEMON.NONE, ...pokemonInitialState },
   action
 ) => {
   const loadingUpdate = () => ({
     ...state,
     loading: action.type,
   });
+
+  if (!state.hydrated) {
+    state = { ...pokemonInitialState, ...state, hydrated: true };
+  }
 
   switch (action.type) {
     case SEARCH_POKEMON.NONE:
@@ -27,7 +32,7 @@ const pokemonReducer = (
       return loadingUpdate();
     case SEARCH_POKEMON.FOUND:
       return {
-        ...pokemonDefaultState, // wipes data & ids
+        ...pokemonInitialState, // wipes data & ids
         loading: action.type,
         searching: action.payload,
       };

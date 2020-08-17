@@ -9,6 +9,7 @@ import PokemonDisplayMain from "Components/PokemonCard";
 import PokemonDisplayStats from "./Sections/PokemonDisplayStats";
 import PokemonDisplaySpecies from "./Sections/PokemonDisplaySpecies";
 import PokemonDisplayMoves from "./Sections/PokemonDisplayMovesModal";
+import PokemonDisplayEvolutions from "./Sections/PokemonDisplayEvolutions";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {
@@ -36,7 +37,7 @@ const PokemonDisplay = ({
     setTimeout(() => setAnimateIn(true), 250);
   }, []);
 
-  const anim = useAnimEngine(4, displayContent && animateIn);
+  const anim = useAnimEngine(5, displayContent && animateIn);
 
   return (
     <>
@@ -64,6 +65,12 @@ const PokemonDisplay = ({
             pokemonMoves={pokemonInfo.moves}
             {...anim()}
             doHeight
+          />
+        </Grid>
+        <Grid item container>
+          <PokemonDisplayEvolutions
+            pokemonStats={pokemonInfo.stats}
+            {...anim()}
           />
         </Grid>
       </Grid>

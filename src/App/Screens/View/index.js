@@ -46,13 +46,13 @@ const PokemonPage = ({
   //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
   const addRemoveFavourite = useCallback(() => {
     console.log("ADDING/REMOVING FAVOURITE. Is favourite? ", isFavourite);
-    isFavourite ? removeFavourite(pokemonData) : addFavourite(pokemonData);
+    isFavourite ? removeFavourite(pokemonData.id) : addFavourite(pokemonData);
   }, [addFavourite, isFavourite, pokemonData, removeFavourite]);
 
   console.log("Loading??", loading);
 
   return havePokemon === 0 ||
-    havePokemon !== searching ||
+    (searching > 0 && havePokemon !== searching) ||
     ["INIT", "FOUND", "SPECIES_FOUND", "MOVES_FOUND", "DONE"]
       .map((key) => SEARCH_POKEMON[key])
       .includes(loading) ? (

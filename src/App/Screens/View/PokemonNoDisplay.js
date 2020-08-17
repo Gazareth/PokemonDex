@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   loadingBar: {
-    margin: `0 40%`,
+    margin: `0 45%`,
     filter: "grayscale(50%) opacity(80%)",
   },
   // loadingMainColor: {
@@ -182,7 +182,7 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
               <Grid item>
                 <PokeballLoader classes={classes} />
               </Grid>
-              <Grid item style={{ flex: 1 }}>
+              {/* <Grid item style={{ flex: 1 }}>
                 <LinearProgress
                   classes={{
                     root: classes.loadingBar,
@@ -194,9 +194,13 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
                   value={progress}
                   valueBuffer={100}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item>
-                <Typography color="textSecondary" align="center">
+                <Typography
+                  color="textSecondary"
+                  variant="caption"
+                  align="center"
+                >
                   {loadingStrings[loading]}
                 </Typography>
               </Grid>

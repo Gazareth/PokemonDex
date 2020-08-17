@@ -13,7 +13,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 
 import IconButton from "@material-ui/core/IconButton";
-import StarIcon from "@material-ui/icons/Star";
+import StarBorderOutlinedIcon from "@material-ui/icons/StarBorderOutlined";
+import StarTwoToneIcon from "@material-ui/icons/StarTwoTone";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   favouriteIcon: {
     alignSelf: "center",
     justifySelf: "center",
-    color: theme.palette.pokemonTypes["Electric"],
+    color: theme.palette.warning.light,
     filter: "brightness(0.85) saturate(2)",
   },
   colourDisabled: {
@@ -46,6 +47,14 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.disabled,
   },
 }));
+
+const FavouritesIcon = ({ isFavourite, ...otherProps }) => {
+  const Icon = isFavourite ? StarTwoToneIcon : StarBorderOutlinedIcon;
+
+  console.log("FAVOURITES ICON PROPS", otherProps);
+
+  return <Icon {...{ ...otherProps }} />;
+};
 
 const PokemonDisplayMain = ({
   variant,
@@ -120,8 +129,9 @@ const PokemonDisplayMain = ({
                 onClick={addToFavourites}
                 className={classes.favouriteIconButton}
               >
-                <StarIcon
+                <FavouritesIcon
                   fontSize="large"
+                  isFavourite={isFavourite}
                   className={clsx(
                     classes.favouriteIcon,
                     !isFavourite && classes.colourDisabled

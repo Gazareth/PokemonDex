@@ -82,10 +82,18 @@ const initialFavourites = [
 
 const initialOrder = initialFavourites.map(({ id }) => id);
 
-const favouritesReducer = (
-  state = { favourites: initialFavourites, favouritesOrder: initialOrder },
-  action
-) => {
+const favouritesInitialState = {
+  favourites: initialFavourites,
+  favouritesOrder: initialOrder,
+};
+
+const favouritesReducer = (state = favouritesInitialState, action) => {
+  if (!state.hydrated) {
+    state = { ...favouritesInitialState, ...state, hydrated: true };
+  }
+
+  console.log("FAVOURITES REDUCER!", "GOT ACTION: ", action);
+
   let order = [...state.favouritesOrder];
   switch (action.type) {
     case FAVOURITES.ADD:

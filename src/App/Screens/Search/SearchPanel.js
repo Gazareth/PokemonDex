@@ -74,8 +74,8 @@ const useStyles = makeStyles((theme) => {
         ["margin-right", ...pokeBounceIn],
       ]),
       backgroundColor: theme.palette.background.default,
-      marginLeft: "13%",
-      marginRight: "13%",
+      marginLeft: "17%",
+      marginRight: "17%",
     },
     "card-Busy": {
       ...trsn.build([
