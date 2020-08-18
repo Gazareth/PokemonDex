@@ -9,7 +9,7 @@ import PokemonDisplayMain from "Components/PokemonCard";
 import PokemonDisplayStats from "./Sections/PokemonDisplayStats";
 import PokemonDisplaySpecies from "./Sections/PokemonDisplaySpecies";
 import PokemonDisplayMoves from "./Sections/PokemonDisplayMovesModal";
-import PokemonDisplayEvolutions from "./Sections/PokemonDisplayEvolutions";
+import PokemonDisplayEvolutions from "./Sections/Evolutions";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {

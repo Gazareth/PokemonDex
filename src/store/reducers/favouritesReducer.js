@@ -92,8 +92,6 @@ const favouritesReducer = (state = favouritesInitialState, action) => {
     state = { ...favouritesInitialState, ...state, hydrated: true };
   }
 
-  console.log("FAVOURITES REDUCER!", "GOT ACTION: ", action);
-
   let order = [...state.favouritesOrder];
   switch (action.type) {
     case FAVOURITES.ADD:

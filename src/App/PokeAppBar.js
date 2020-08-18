@@ -113,6 +113,8 @@ const styles = (theme) => ({
       backgroundColor: theme.palette.warning.light,
     },
   },
+  checked: {},
+  track: {},
 });
 
 const DarkLightIcon = ({ theme, themeMode }) => {
@@ -189,7 +191,7 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
                     detail2: Color(theme.palette.secondary.light)
                       .desaturate(0.15)
                       .mix(Color(theme.palette.text.primary), 0.75),
-                    detail3: Color(theme.palette.primary.main)
+                    detail3: Color(theme.palette.info.main)
                       .mix(Color(theme.palette.background.primary), 0.15)
                       .saturate(1),
                     detail4: Color(theme.palette.secondary.dark)
