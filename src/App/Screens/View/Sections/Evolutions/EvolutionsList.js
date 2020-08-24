@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import IconButton from "@material-ui/core/IconButton";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+
 import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles((theme) => ({
@@ -12,14 +15,23 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     placeItems: "center",
   },
+  evolButton: {
+    position: "absolute",
+  },
+  evolButtonRight: {
+    transform: `translateX(${theme.spacing(6)}px)`,
+  },
+  evolButtonLeft: {
+    transform: `translateX(${theme.spacing(-6)}px)`,
+  },
   evolutionEntry: {
     position: "absolute",
     backgroundColor: theme.palette.background.secondary,
     padding: theme.spacing(1),
     width: theme.spacing(6),
     height: theme.spacing(6),
-    transform: "translateX(0)",
-    transition: `transform 475ms cubic-bezier(0.34, 1.56, 0.64, 1) 75ms`,
+    transform: "translateX(0) scale(0.8)",
+    transition: `transform 475ms ease-out 75ms`,
   },
 }));
 
@@ -47,14 +59,21 @@ const evolutions = [
 ];
 
 const evolutionsVisible = 5; // able to see 5 evolutions at once across the width of the component
+const spreadPaddingFactor = 25;
 
-const evolutionPosition = (current, i, spread) => (i - current) * spread;
+const spreadPadding = (iDiff = 0) =>
+  iDiff === 0 ? 0 : (Math.abs(iDiff) / iDiff) * spreadPaddingFactor;
+
+const evolutionPosition = (current, i, spread) => {
+  const iDiff = i - current;
+
+  return iDiff * spread + spreadPadding(iDiff);
+};
 
 const Evolutions = ({ classes, listWidth }) => {
   const [currentEvolution, setEvolution] = useState(1);
 
   const spreadDist = listWidth / evolutionsVisible;
-  //const radius = listWidth * 0.5;
 
   return (
     <>
@@ -76,9 +95,14 @@ const Evolutions = ({ classes, listWidth }) => {
                 currentEvolution,
                 i,
                 spreadDist
-              )}px)`,
+              )}px) scale(${i === currentEvolution ? 1 : 0.8})`,
           }}
         />
+      ))}
+      {[classes.evolButtonLeft, classes.evolButtonRight].map((buttonClass) => (
+        <IconButton className={clsx(classes.evolButton, buttonClass)}>
+          <ArrowRightIcon />
+        </IconButton>
       ))}
     </>
   );
@@ -88,7 +112,7 @@ export default function EvolutionsList({ pokemonStats, show, delay }) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const listWidth = theme.breakpoints.values.sm * 0.65;
+  const listWidth = theme.breakpoints.values.sm * 0.55;
 
   return (
     <div className={classes.evolutionsListOuter}>

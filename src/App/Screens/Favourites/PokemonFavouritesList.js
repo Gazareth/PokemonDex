@@ -70,8 +70,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-let scrollTimer = null;
-
 const PokemonFavouritesList = ({
   anim,
   favourites,
@@ -137,10 +135,7 @@ const PokemonFavouritesList = ({
         <Scrollbars
           onScrollFrame={() => {
             setScrolling(true);
-            scrollTimer = setTimeout(() => setScrolling(false), 500);
           }}
-          // onScrollStart={() => setScrolling(true)}
-          // onScrollStop={() => setScrolling(false)}
           renderTrackVertical={(props) => (
             <div
               {...props}
