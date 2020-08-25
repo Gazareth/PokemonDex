@@ -14,7 +14,7 @@ import Box from "@material-ui/core/Box";
 
 import IconButton from "@material-ui/core/IconButton";
 import StarBorderOutlinedIcon from "@material-ui/icons/StarBorderOutlined";
-import StarTwoToneIcon from "@material-ui/icons/StarTwoTone";
+import GradeIcon from "@material-ui/icons/Grade";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FavouritesIcon = ({ isFavourite, ...otherProps }) => {
-  const Icon = isFavourite ? StarTwoToneIcon : StarBorderOutlinedIcon;
+  const Icon = isFavourite ? GradeIcon : StarBorderOutlinedIcon;
 
   console.log("FAVOURITES ICON PROPS", otherProps);
 

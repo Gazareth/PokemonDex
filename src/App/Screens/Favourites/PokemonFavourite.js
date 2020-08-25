@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useMemo } from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Color from "color";
@@ -17,6 +17,8 @@ import IconButton from "@material-ui/core/IconButton";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 
+import Avatar from "@material-ui/core/Avatar";
+
 import SwipeableViews from "react-swipeable-views";
 
 import SmoothIn from "Utils/transitionSmoothIn";
@@ -30,6 +32,8 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 
 import NavigateBeforeOutlinedIcon from "@material-ui/icons/NavigateBeforeOutlined";
+
+import ContactSupportRoundedIcon from "@material-ui/icons/ContactSupportRounded";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -99,7 +103,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   pokemonSprite: {
-    height: "96px",
+    height: theme.spacing(12),
+    width: theme.spacing(12),
+  },
+
+  noSprite: {
+    padding: theme.spacing(3),
   },
 
   buttonGrid: {
@@ -200,6 +209,10 @@ const PokemonFavourite = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const isLoaded = useMemo(() => typeof pokemonInfo.image !== undefined, [
+    pokemonInfo,
+  ]);
+
   const anim = useAnimEngine(3, displayContent && isSelected, 225, 75);
 
   return (
@@ -294,7 +307,7 @@ const PokemonFavourite = ({
                     style={{ ...swipeableStyle }}
                     containerStyle={{ height: "100%" }}
                     slideStyle={{ ...swipeableStyle }}
-                    index={isSelected ? 0 : 1}
+                    index={isLoaded ? (isSelected ? 0 : 1) : 2}
                   >
                     <Grid container className={classes.buttonGrid}>
                       <Grid item container xs={2} justify="flex-start">
@@ -416,11 +429,19 @@ const PokemonFavourite = ({
                       width: "100%",
                     }}
                   >
-                    <img
+                    <Avatar
                       src={pokemonInfo.image}
-                      className={clsx(classes.pokemonSprite)}
+                      variant="square"
+                      className={classes.pokemonSprite}
                       alt={pokemonInfo.name}
-                    />
+                    >
+                      <ContactSupportRoundedIcon
+                        className={clsx(
+                          classes.pokemonSprite,
+                          classes.noSprite
+                        )}
+                      />
+                    </Avatar>
                   </Box>
                 </Grid>
               </Grid>

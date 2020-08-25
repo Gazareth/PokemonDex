@@ -23,6 +23,8 @@ const favouritesControlModes = {
   DELETE: "FAVOURITES_DELETE",
 };
 
+const UNLOADED_FAVOURITE = { name: "", types: [] };
+
 const toggleSwitchMode = (mode) =>
   mode === favouritesControlModes.SWITCH
     ? favouritesControlModes.DEFAULT
@@ -74,8 +76,12 @@ const FavouritesPage = ({
 
   const favourites = useMemo(
     () =>
-      favouritesOrder.map((favId) =>
-        storedFavourites.find(({ id }) => id === favId)
+      favouritesOrder.map(
+        (favId) =>
+          storedFavourites.find(({ id }) => id === favId) || {
+            ...UNLOADED_FAVOURITE,
+            id: favId,
+          }
       ),
     [favouritesOrder, storedFavourites]
   );

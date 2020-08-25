@@ -76,13 +76,9 @@ const styles = (theme) => ({
   },
   navIconActive: {
     //color: theme.palette.primary.light,
-    backgroundColor: Color(theme.palette.background.senary)
-      .lighten(0.1)
-      .toString(),
+    backgroundColor: Color(theme.palette.text.disabled).fade(0.75).toString(),
     "&:hover": {
-      backgroundColor: Color(theme.palette.background.senary)
-        .lighten(0.2)
-        .toString(),
+      backgroundColor: Color(theme.palette.text.disabled).fade(0.65).toString(),
     },
   },
   navIconSearchActive: {
