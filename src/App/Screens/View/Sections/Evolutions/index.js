@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "default !important",
   },
   evolutionsOuter: {
-    margin: "0 20%",
+    margin: "0 10%",
     width: "100%",
     height: "96px",
   },

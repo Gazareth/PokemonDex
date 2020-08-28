@@ -6,45 +6,62 @@ import Color from "color";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import { Tooltip } from "@material-ui/core";
+
 import IconButton from "@material-ui/core/IconButton";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 import Avatar from "@material-ui/core/Avatar";
+
+const LIST_WIDTH_FACTOR = 0.175;
 
 const useStyles = makeStyles((theme) => ({
   evolutionsListOuter: {
     height: "96px",
     display: "grid",
     placeItems: "center",
+    position: "relative",
   },
   evolButton: {
     position: "absolute",
+    zIndex: 50,
+    padding: theme.spacing(0.5),
+    "& svg ": {
+      fontSize: "1rem",
+      zIndex: 50,
+    },
+  },
+  evolButtonLeft: {
+    transform: `translateX(${theme.spacing(-6)}px) rotate(0.5turn)`,
   },
   evolButtonRight: {
     transform: `translateX(${theme.spacing(6)}px)`,
   },
-  evolButtonLeft: {
-    transform: `translateX(${theme.spacing(-6)}px)`,
-  },
   evolutionEntry: {
+    cursor: "pointer",
     position: "absolute",
     backgroundColor: theme.palette.background.secondary,
     padding: theme.spacing(1),
     width: theme.spacing(6),
     height: theme.spacing(6),
     transform: "translateX(0) scale(0.8)",
-    transition: `transform 475ms ${theme.transitions.easing.pokeEase} 75ms, border 375ms ${theme.transitions.easing.pokeEase} 75ms`,
+    transition: `transform 475ms ${theme.transitions.easing.pokeEase}, border 375ms ${theme.transitions.easing.pokeEase}`,
   },
   evolutionEntryInactive: {
     border: `5px solid ${Color(theme.palette.background.tertiary)
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
+    "&:hover": {
+      filter: "brightness(1.35)",
+    },
   },
   evolutionEntryActive: {
-    border: `2.5px solid ${Color(theme.palette.background.tertiary)
+    border: `2.85px solid ${Color(theme.palette.background.tertiary)
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
+    "&:hover": {
+      filter: "brightness(1.15)",
+    },
   },
 }));
 
@@ -69,57 +86,90 @@ const evolutions = [
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
     name: "Ditto",
   },
+  {
+    img:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/50.png",
+    name: "Diglett",
+  },
+  {
+    img:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/62.png",
+    name: "Poliwrath",
+  },
 ];
 
-const evolutionsVisible = 5; // able to see 5 evolutions at once across the width of the component
-const spreadPaddingFactor = 85;
+const interEvolutionPaddingFactor = 5; // % of remaining space to use as padding between each evolution
+const PADDING_SELECTED = 75; // 75 each side
 
-const spreadPadding = (iDiff = 0) =>
-  iDiff === 0 ? 0 : (Math.abs(iDiff) / iDiff) * spreadPaddingFactor;
+const selectedPadding = (iDiff = 0) =>
+  iDiff === 0 ? 0 : (Math.abs(iDiff) / iDiff) * PADDING_SELECTED;
 
-const evolutionPosition = (current, i, spread) => {
-  const iDiff = i - current;
-
-  return iDiff * spread + spreadPadding(iDiff);
-};
+const evolutionPosition = (iDiff, spread) =>
+  selectedPadding(iDiff) + iDiff * spread;
 
 const Evolutions = ({ classes, listWidth }) => {
   const [currentEvolution, setEvolution] = useState(1);
 
-  const spreadDist = listWidth / evolutionsVisible;
+  const spreadDist =
+    (listWidth * 0.9 - 75 * 2) * (interEvolutionPaddingFactor / 100);
 
   return (
     <>
-      {evolutions.map((evolution, i) => (
-        <Avatar
-          key={evolution.name}
-          alt={evolution.name}
-          src={evolution.img}
-          className={clsx(
-            classes.evolutionEntry,
-            currentEvolution === i
-              ? classes.evolutionEntryActive
-              : classes.evolutionEntryInactive
-          )}
-          style={{
-            transform: `translateX(${evolutionPosition(
-              currentEvolution,
-              i,
-              spreadDist
-            )}px) scale(${i === currentEvolution ? 1 : 0.6})`,
-          }}
-        />
-      ))}
+      {evolutions.map((evolution, i) => {
+        const iDiff = i - currentEvolution;
+        const evolutionsOnSide = evolutions.filter((evo, j) =>
+          iDiff > 0 ? j > currentEvolution : j < currentEvolution
+        ).length; // how many evolutions on this side of the selected
+        const evolutionsAhead = evolutions.filter((evo, j) =>
+          iDiff > 0 ? j > i : j < i
+        ).length;
+
+        const evolutionExtend =
+          (evolutionsOnSide - evolutionsAhead) / evolutionsOnSide; // how far along till the end is this evolution
+        console.log(
+          "evolutionsOnSide: ",
+          evolutionsOnSide,
+          "evolutionsAhead",
+          evolutionsAhead,
+          "evolutionExtend",
+          evolutionExtend
+        );
+        const evolScale =
+          0.775 - (evolutionsOnSide === 1 ? 0 : 0.2 * evolutionExtend);
+        console.log("Scale: ", evolScale);
+
+        return (
+          <Avatar
+            key={evolution.name}
+            onClick={() => setEvolution(i)}
+            alt={evolution.name}
+            src={evolution.img}
+            className={clsx(
+              classes.evolutionEntry,
+              currentEvolution === i
+                ? classes.evolutionEntryActive
+                : classes.evolutionEntryInactive
+            )}
+            style={{
+              transform: `translateX(${evolutionPosition(
+                iDiff,
+                spreadDist
+              )}px) scale(${i === currentEvolution ? 1 : evolScale})`,
+              zIndex: i === currentEvolution ? 1 : Math.round(evolScale * 100),
+            }}
+          />
+        );
+      })}
       {[
         {
           class: classes.evolButtonLeft,
           label: "Previous Evolution",
-          component: ArrowLeftIcon,
+          component: PlayArrowIcon,
         },
         {
           class: classes.evolButtonRight,
           label: "Next Evolution",
-          component: ArrowRightIcon,
+          component: PlayArrowIcon,
         },
       ].map((buttonInfo, i) => (
         <IconButton
@@ -128,7 +178,7 @@ const Evolutions = ({ classes, listWidth }) => {
           onClick={() => setEvolution(currentEvolution + (i * 2 - 1))}
           className={clsx(classes.evolButton, buttonInfo.class)}
         >
-          <buttonInfo.component fontSize="small" />
+          <buttonInfo.component />
         </IconButton>
       ))}
     </>
@@ -139,7 +189,7 @@ export default function EvolutionsList({ pokemonStats, show, delay }) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const listWidth = theme.breakpoints.values.sm * 0.175;
+  const listWidth = Math.min(theme.breakpoints.values.sm, window.innerWidth);
 
   return (
     <div className={classes.evolutionsListOuter}>
