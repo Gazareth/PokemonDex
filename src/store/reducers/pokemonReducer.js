@@ -27,6 +27,8 @@ const pokemonReducer = (
     case SEARCH_POKEMON.NONE:
     case SEARCH_POKEMON.INIT:
     case SEARCH_POKEMON.SPECIES_FOUND:
+    case SEARCH_POKEMON.EVOLUTION_CHAIN_FOUND:
+    case SEARCH_POKEMON.EVOLUTIONS_FOUND:
     case SEARCH_POKEMON.MOVES_FOUND:
     case SEARCH_POKEMON.FAILED:
       return loadingUpdate();

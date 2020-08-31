@@ -24,11 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
   evolButton: {
     position: "absolute",
-    zIndex: 50,
+    zIndex: 100,
     padding: theme.spacing(0.5),
     "& svg ": {
       fontSize: "1rem",
-      zIndex: 50,
     },
   },
   evolButtonLeft: {
@@ -101,6 +100,13 @@ const evolutions = [
 const interEvolutionPaddingFactor = 5; // % of remaining space to use as padding between each evolution
 const PADDING_SELECTED = 75; // 75 each side
 
+const newEvolution = (currentEvolution, direction) =>
+  currentEvolution + (direction * 2 - 1);
+
+const isAtEnd = (evolutionsLength, newEvolution) => {
+  return [-1, evolutionsLength].includes(newEvolution);
+};
+
 const selectedPadding = (iDiff = 0) =>
   iDiff === 0 ? 0 : (Math.abs(iDiff) / iDiff) * PADDING_SELECTED;
 
@@ -135,7 +141,7 @@ const Evolutions = ({ classes, listWidth }) => {
           evolutionExtend
         );
         const evolScale =
-          0.775 - (evolutionsOnSide === 1 ? 0 : 0.2 * evolutionExtend);
+          0.75 - (evolutionsOnSide === 1 ? 0 : 0.2 * evolutionExtend);
         console.log("Scale: ", evolScale);
 
         return (
@@ -171,16 +177,23 @@ const Evolutions = ({ classes, listWidth }) => {
           label: "Next Evolution",
           component: PlayArrowIcon,
         },
-      ].map((buttonInfo, i) => (
-        <IconButton
-          key={i}
-          aria-label={buttonInfo.label}
-          onClick={() => setEvolution(currentEvolution + (i * 2 - 1))}
-          className={clsx(classes.evolButton, buttonInfo.class)}
-        >
-          <buttonInfo.component />
-        </IconButton>
-      ))}
+      ].map((buttonInfo, i) => {
+        const nextEvolution = newEvolution(currentEvolution, i);
+        const canScroll = !isAtEnd(evolutions.length, nextEvolution);
+        return (
+          <IconButton
+            key={i}
+            aria-label={buttonInfo.label}
+            disabled={!canScroll}
+            onClick={() => {
+              if (canScroll) setEvolution(nextEvolution);
+            }}
+            className={clsx(classes.evolButton, buttonInfo.class)}
+          >
+            <buttonInfo.component />
+          </IconButton>
+        );
+      })}
     </>
   );
 };

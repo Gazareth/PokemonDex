@@ -36,6 +36,9 @@ export const searchPokemon = (pokemonName) => {
   let pokemonId = 0;
   let pokemonData = {};
   let speciesUrl = "",
+    evolutionsUrl = "";
+  let evolutionChain = {},
+    evolutions = [],
     moves = [];
 
   let movesData = [],
@@ -43,51 +46,87 @@ export const searchPokemon = (pokemonName) => {
 
   return (dispatch) => {
     dispatch(setPokemonData(SEARCH_POKEMON.INIT));
-    return axiosDelayed
-      .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
-      .then(sleep())
-      .then((response) => {
-        pokemonData = response.data;
-        pokemonId = pokemonData.id;
-        speciesUrl = pokemonData.species.url;
-        moves = pokemonData.moves;
-        dispatch(setPokemonData(SEARCH_POKEMON.FOUND, pokemonId));
-        return axios.get(speciesUrl);
-      })
-      .then(sleep())
-      .then((response) => {
-        speciesData = response.data;
-
-        dispatch(action(SEARCH_POKEMON.SPECIES_FOUND));
-        return axios.all(getAllMoves(moves));
-      })
-      .then(sleep())
-      .then((response) => {
-        movesData = response.map((moveResponse) => moveResponse.data);
-        dispatch(action(SEARCH_POKEMON.MOVES_FOUND));
-      })
-      .then(sleep())
-      .then(
-        () =>
-          console.log("DONE!!") ||
+    return (
+      axiosDelayed
+        /***** MAIN *****/
+        .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
+        .then(sleep())
+        .then((response) => {
+          pokemonData = response.data;
+          pokemonId = pokemonData.id;
+          speciesUrl = pokemonData.species.url;
+          dispatch(setPokemonData(SEARCH_POKEMON.FOUND, pokemonId));
+          /***** SPECIES *****/
+          return axios.get(speciesUrl);
+        })
+        .then(sleep())
+        .then((response) => {
+          speciesData = response.data;
+          dispatch(action(SEARCH_POKEMON.SPECIES_FOUND));
+          /***** EVOLUTION CHAIN *****/
+          evolutionsUrl = speciesData.evolution_chain;
+          return axios.get(evolutionsUrl);
+        })
+        .then(sleep())
+        .then((response) => {
+          dispatch(action(SEARCH_POKEMON.EVOLUTION_CHAIN_FOUND));
+          evolutionChain = response.chain;
+          /***** EVOLUTIONS *****/
+          return axios.all(getAllEvolutions(evolutionChain.chain));
+        })
+        .then(sleep())
+        .then((response) => {
+          dispatch(action(SEARCH_POKEMON.EVOLUTIONS_FOUND));
+          /***** MOVES *****/
+          return axios.all(getAllMoves(moves));
+        })
+        .then(sleep())
+        .then((response) => {
+          movesData = response.map((moveResponse) => moveResponse.data);
+          dispatch(action(SEARCH_POKEMON.MOVES_FOUND));
+        })
+        .then(sleep())
+        /***** DONE *****/
+        .then(() =>
           dispatch(
             setPokemonData(
               SEARCH_POKEMON.DONE,
               ParsePokemonData(pokemonData, speciesData, movesData)
             )
           )
-      )
-      .then(sleep(process.env.REACT_APP_SWITCHSCREENDELAY))
-      .then(() => dispatch(action(SEARCH_POKEMON.NONE)))
-      .catch((error) => {
-        dispatch(setPokemonError());
-        setTimeout(
-          () => dispatch(setPokemonData(SEARCH_POKEMON.NONE)),
-          sleepErrorTime
-        );
-        throw error;
-      });
+        )
+        .then(sleep(process.env.REACT_APP_SWITCHSCREENDELAY))
+        .then(() => dispatch(action(SEARCH_POKEMON.NONE)))
+        .catch((error) => {
+          dispatch(setPokemonError());
+          setTimeout(
+            () => dispatch(setPokemonData(SEARCH_POKEMON.NONE)),
+            sleepErrorTime
+          );
+          throw error;
+        })
+    );
   };
+};
+
+const getAllEvolutions = (evolutionChain) => {
+  let species = [];
+  let unresolved = [];
+
+  if (evolutionChain.species.name === "") {
+    return;
+  }
+
+  species.push(evolutionChain.species);
+  unresolved = evolutionChain.evolves_to;
+  console.log("INITIAL PUSH: ", species, unresolved);
+
+  while (unresolved.length > 0) {
+    const currentEvol = unresolved.pop();
+    species.push(currentEvol.species);
+    unresolved = [...unresolved, ...currentEvol.evolves_to];
+  }
+  return species.map((spec) => spec.url);
 };
 
 const getAllMoves = (moves) =>
