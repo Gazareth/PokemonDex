@@ -195,14 +195,16 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
                   valueBuffer={100}
                 />
               </Grid> */}
-              <Grid item>
-                <Typography
-                  color="textSecondary"
-                  variant="caption"
-                  align="center"
-                >
-                  {loadingStrings[loading]}
-                </Typography>
+              <Grid item container justify="center">
+                <Grid item>
+                  <Typography
+                    color="textSecondary"
+                    variant="caption"
+                    align="center"
+                  >
+                    {loadingStrings[loading]}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Fade>

@@ -37,11 +37,10 @@ export const searchPokemon = (pokemonName) => {
   let pokemonData = {};
   let speciesUrl = "",
     evolutionsUrl = "";
-  let evolutionChain = {},
-    evolutions = [],
-    moves = [];
+  let moves = [];
 
   let movesData = [],
+    evolutionsData = [],
     speciesData = {};
 
   return (dispatch) => {
@@ -51,32 +50,54 @@ export const searchPokemon = (pokemonName) => {
         /***** MAIN *****/
         .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
         .then(sleep())
-        .then((response) => {
-          pokemonData = response.data;
+        .then(({ data: RESP_pokemon }) => {
+          pokemonData = RESP_pokemon;
           pokemonId = pokemonData.id;
           speciesUrl = pokemonData.species.url;
+          moves = pokemonData.moves;
           dispatch(setPokemonData(SEARCH_POKEMON.FOUND, pokemonId));
           /***** SPECIES *****/
           return axios.get(speciesUrl);
         })
         .then(sleep())
-        .then((response) => {
-          speciesData = response.data;
+        .then(({ data: RESP_species }) => {
+          speciesData = RESP_species;
           dispatch(action(SEARCH_POKEMON.SPECIES_FOUND));
           /***** EVOLUTION CHAIN *****/
-          evolutionsUrl = speciesData.evolution_chain;
+          evolutionsUrl = speciesData.evolution_chain.url;
           return axios.get(evolutionsUrl);
         })
         .then(sleep())
-        .then((response) => {
+        .then(({ data: RESP_evolutionChain }) => {
           dispatch(action(SEARCH_POKEMON.EVOLUTION_CHAIN_FOUND));
-          evolutionChain = response.chain;
-          /***** EVOLUTIONS *****/
-          return axios.all(getAllEvolutions(evolutionChain.chain));
+          /***** EVOLUTIONS SPECIES *****/
+          return axios.all(
+            getAllEvolutions(RESP_evolutionChain.chain).map((evol) =>
+              axios.get(evol.url)
+            )
+          );
         })
         .then(sleep())
-        .then((response) => {
+        .then((RESP_evolutionSpecies) => {
+          dispatch(action(SEARCH_POKEMON.EVOLUTIONS_SPECIES_FOUND));
+          /***** EVOLUTIONS *****/
+          return axios.all(
+            RESP_evolutionSpecies.map((evolSpec) =>
+              axios.get(
+                apiUrl +
+                  "pokemon/" +
+                  evolSpec.data.pokedex_numbers[0].entry_number
+              )
+            )
+          );
+        })
+        .then(sleep())
+        .then((RESP_evolutionPokemon) => {
           dispatch(action(SEARCH_POKEMON.EVOLUTIONS_FOUND));
+          evolutionsData = RESP_evolutionPokemon.map(
+            (evolPkmn) => evolPkmn.data
+          );
+
           /***** MOVES *****/
           return axios.all(getAllMoves(moves));
         })
@@ -91,7 +112,12 @@ export const searchPokemon = (pokemonName) => {
           dispatch(
             setPokemonData(
               SEARCH_POKEMON.DONE,
-              ParsePokemonData(pokemonData, speciesData, movesData)
+              ParsePokemonData(
+                pokemonData,
+                speciesData,
+                evolutionsData,
+                movesData
+              )
             )
           )
         )
@@ -119,14 +145,13 @@ const getAllEvolutions = (evolutionChain) => {
 
   species.push(evolutionChain.species);
   unresolved = evolutionChain.evolves_to;
-  console.log("INITIAL PUSH: ", species, unresolved);
 
   while (unresolved.length > 0) {
     const currentEvol = unresolved.pop();
     species.push(currentEvol.species);
     unresolved = [...unresolved, ...currentEvol.evolves_to];
   }
-  return species.map((spec) => spec.url);
+  return species;
 };
 
 const getAllMoves = (moves) =>

@@ -75,20 +75,14 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
     // If we're on pokemon page
     if (screenIndex === 1) {
       // If we don't have the right pokemon loaded
-      console.log("on page 1. Loading is: ", loadingPokemon);
       if (
         (havePokemon === 0 || havePokemon !== searchingPokemon) &&
         loadingPokemon === SEARCH_POKEMON.NONE
       ) {
-        console.log(" Don't have the right pokemon...");
         // Search for the pokemon in question
-        console.log("   DISPATCHING SEARCHPokemon!");
         dispatch(searchPokemon(searchingPokemon));
       } else {
         // We have a pokemon but it doesn't match the search??
-        console.log(
-          "We have a pokemon and it's the one set to be searched/loaded through the URL!!"
-        );
       }
     }
     if (screenIndex === 0 && loadingPokemon === SEARCH_POKEMON.DONE)

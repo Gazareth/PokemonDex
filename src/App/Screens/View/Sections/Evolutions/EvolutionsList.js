@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const evolutions = [
+const placeholderEvolutions = [
   {
     img:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/44.png",
@@ -113,8 +113,11 @@ const selectedPadding = (iDiff = 0) =>
 const evolutionPosition = (iDiff, spread) =>
   selectedPadding(iDiff) + iDiff * spread;
 
-const Evolutions = ({ classes, listWidth }) => {
-  const [currentEvolution, setEvolution] = useState(1);
+/*** EVOLUTIONS ****/
+const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
+  const [currentEvolution, setEvolution] = useState(
+    evolutions.findIndex((evol) => evol.id === viewingId)
+  );
 
   const spreadDist =
     (listWidth * 0.9 - 75 * 2) * (interEvolutionPaddingFactor / 100);
@@ -132,21 +135,13 @@ const Evolutions = ({ classes, listWidth }) => {
 
         const evolutionExtend =
           (evolutionsOnSide - evolutionsAhead) / evolutionsOnSide; // how far along till the end is this evolution
-        console.log(
-          "evolutionsOnSide: ",
-          evolutionsOnSide,
-          "evolutionsAhead",
-          evolutionsAhead,
-          "evolutionExtend",
-          evolutionExtend
-        );
+
         const evolScale =
-          0.75 - (evolutionsOnSide === 1 ? 0 : 0.2 * evolutionExtend);
-        console.log("Scale: ", evolScale);
+          0.75 - (evolutionsOnSide === 1 ? 0 : 0.4 * evolutionExtend);
 
         return (
           <Avatar
-            key={evolution.name}
+            key={evolution.id}
             onClick={() => setEvolution(i)}
             alt={evolution.name}
             src={evolution.img}
@@ -198,7 +193,7 @@ const Evolutions = ({ classes, listWidth }) => {
   );
 };
 
-export default function EvolutionsList({ pokemonStats, show, delay }) {
+export default function EvolutionsList({ pokemonId, pokemonEvolutions }) {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -206,7 +201,14 @@ export default function EvolutionsList({ pokemonStats, show, delay }) {
 
   return (
     <div className={classes.evolutionsListOuter}>
-      <Evolutions {...{ classes, listWidth }}></Evolutions>
+      <Evolutions
+        {...{
+          viewingId: pokemonId,
+          evolutions: pokemonEvolutions,
+          classes,
+          listWidth,
+        }}
+      ></Evolutions>
     </div>
   );
 }

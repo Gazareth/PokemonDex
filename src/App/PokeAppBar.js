@@ -35,14 +35,7 @@ import Brightness4Icon from "@material-ui/icons/Brightness4";
 import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
 const pathIdMatch = (path, id) =>
-  console.log(
-    "checking path match...",
-    path,
-    id,
-    "MatchIndex: ",
-    PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)),
-    PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)) === id
-  ) || PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)) === id;
+  PokemonDexURLs.findIndex((urlPath) => path.includes(urlPath)) === id;
 
 const styles = (theme) => ({
   root: {
@@ -136,7 +129,6 @@ const NavIconButton = ({
   iconComponent: IconComponent,
 }) => {
   const isActive = pathIdMatch(currentPath, navId);
-  console.log("Got activeIconClassName: ", classNameActiveSpecial);
   return (
     <IconButton
       {...{

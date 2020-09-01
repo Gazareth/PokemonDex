@@ -69,7 +69,8 @@ const PokemonDisplay = ({
         </Grid>
         <Grid item container>
           <PokemonDisplayEvolutions
-            pokemonStats={pokemonInfo.stats}
+            pokemonId={pokemonInfo.id}
+            pokemonEvolutions={pokemonInfo.evolutions}
             {...anim()}
           />
         </Grid>

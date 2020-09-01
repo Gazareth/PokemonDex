@@ -51,8 +51,6 @@ const useStyles = makeStyles((theme) => ({
 const FavouritesIcon = ({ isFavourite, ...otherProps }) => {
   const Icon = isFavourite ? GradeIcon : StarBorderOutlinedIcon;
 
-  console.log("FAVOURITES ICON PROPS", otherProps);
-
   return <Icon {...{ ...otherProps }} />;
 };
 

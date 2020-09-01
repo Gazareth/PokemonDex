@@ -43,15 +43,12 @@ const PokemonRouter = () => {
     //redirect to search page if nothing found
     screenIndex = 0;
     const indexPath = getPathFromIndex(screenIndex);
-    console.log("redirecting!", indexPath);
     history.push(indexPath);
   }
 
   // Pass pokemon ID if view/?id=<number>
   const query = location.search && queryString.parse(location.search).id;
-  //console.log("Got query: ", query);
   const pokemonToView = validateQuery(query) ? parseInt(query, 10) : 0;
-  console.log("ToView: ", pokemonToView);
 
   return (
     <PokemonDexScreens {...{ screenIndex }} searchingPokemon={pokemonToView} />

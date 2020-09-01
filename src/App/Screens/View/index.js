@@ -45,11 +45,8 @@ const PokemonPage = ({
 
   //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
   const addRemoveFavourite = useCallback(() => {
-    console.log("ADDING/REMOVING FAVOURITE. Is favourite? ", isFavourite);
     isFavourite ? removeFavourite(pokemonData.id) : addFavourite(pokemonData);
   }, [addFavourite, isFavourite, pokemonData, removeFavourite]);
-
-  console.log("Loading??", loading);
 
   return havePokemon === 0 ||
     (searching > 0 && havePokemon !== searching) ||

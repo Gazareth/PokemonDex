@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PokemonDisplayEvolutions({
-  pokemonStats,
+  pokemonId,
+  pokemonEvolutions,
   show,
   delay,
 }) {
@@ -38,7 +39,7 @@ export default function PokemonDisplayEvolutions({
         {...{ show, delay }}
         inputRootClasses={clsx(classes.defaultCursor, classes.softBg)}
       >
-        <Evolutions {...{ classes, pokemonStats }}></Evolutions>
+        <Evolutions {...{ classes, pokemonId, pokemonEvolutions }}></Evolutions>
       </OutlinedDiv>
     </Box>
   );
