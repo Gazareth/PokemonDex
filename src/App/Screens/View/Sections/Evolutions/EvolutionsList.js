@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
+import { useHistory } from "react-router-dom";
+
 import Color from "color";
 
 import clsx from "clsx";
@@ -118,6 +120,8 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
   const [currentEvolution, setEvolution] = useState(
     evolutions.findIndex((evol) => evol.id === viewingId)
   );
+  const history = useHistory();
+  const toNewView = (id) => history.push(`/view/?id=${id}`);
 
   const spreadDist =
     (listWidth * 0.9 - 75 * 2) * (interEvolutionPaddingFactor / 100);
@@ -142,7 +146,14 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
         return (
           <Avatar
             key={evolution.id}
-            onClick={() => setEvolution(i)}
+            onClick={
+              iDiff === 0
+                ? () =>
+                    console.log("Clicking!!! iDiff: ", iDiff) ||
+                    toNewView(evolution.id)
+                : () =>
+                    console.log("Clicking!!! iDiff: ", iDiff) || setEvolution(i)
+            }
             alt={evolution.name}
             src={evolution.img}
             className={clsx(

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
 import { useHistory, useLocation } from "react-router";
@@ -16,6 +16,17 @@ import Grid from "@material-ui/core/Grid";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Drawer from "@material-ui/core/Drawer";
+
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+
+import InboxIcon from "@material-ui/icons/Inbox";
+import MailIcon from "@material-ui/icons/Mail";
+
 import IconButton from "@material-ui/core/IconButton";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import Typography from "@material-ui/core/Typography";
@@ -40,6 +51,9 @@ const pathIdMatch = (path, id) =>
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
+  },
+  drawerList: {
+    width: 250,
   },
   appBar: {
     position: "relative",
@@ -151,9 +165,53 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   const history = useHistory();
   const { pathname } = useLocation();
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   const handleThemeSwitch = () => {
     setThemeMode(themeMode === "dark" ? "light" : "dark");
   };
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawerOpen(open);
+  };
+
+  const list = () => (
+    <div
+      className={classes.drawerList}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {["All mail", "Trash", "Spam"].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
 
   return (
     <AppBar position="absolute" color="default" className={classes.appBar}>
@@ -164,6 +222,7 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
               <IconButton
                 edge="start"
                 className={classes.logoButton}
+                onClick={toggleDrawer(true)}
                 color="inherit"
                 aria-label="menu"
                 size="small"
@@ -193,6 +252,13 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
                   viewBox="0 0 640 650"
                 />
               </IconButton>
+              <Drawer
+                anchor={"left"}
+                open={drawerOpen}
+                onClose={toggleDrawer(false)}
+              >
+                {list()}
+              </Drawer>
               <Typography
                 variant="subtitle2"
                 color="textSecondary"

@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { useHistory } from "react-router-dom";
+
 import clsx from "clsx";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -12,20 +14,43 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
 import IconButton from "@material-ui/core/IconButton";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  paginationList: {
+    margin: 0,
+    display: "flex",
+    padding: 0,
+    flexWrap: "wrap",
+    listStyle: "none",
+    alignItems: 2,
+  },
+}));
+
+const getNewUrl = (pokemonId) => `/view/?id=${pokemonId}`;
 
 const PokemonDisplayIDNav = ({ pokemonId, ...props }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const history = useHistory();
+
+  const toNewView = (id) => () => history.push(getNewUrl(id));
+
   return (
-    <Grid item container justify="center" style={{ ...props.style }}>
+    <Grid
+      item
+      container
+      spacing={1}
+      justify="center"
+      style={{ ...props.style }}
+    >
       <Grid item>
-        <IconButton>
-          <ArrowBackIosIcon />
+        <IconButton onClick={toNewView(pokemonId - 1)}>
+          <ArrowForwardIosIcon
+            style={{ transform: "rotate(0.5turn)" }}
+            size="small"
+          />
         </IconButton>
       </Grid>
       <Grid item>
@@ -48,8 +73,8 @@ const PokemonDisplayIDNav = ({ pokemonId, ...props }) => {
         </Box>
       </Grid>
       <Grid item>
-        <IconButton>
-          <ArrowForwardIosIcon />
+        <IconButton onClick={toNewView(pokemonId + 1)}>
+          <ArrowForwardIosIcon size="small" />
         </IconButton>
       </Grid>
     </Grid>
