@@ -58,9 +58,9 @@ const parseData_Pokemon = (
       flavorText: SpeciesFlavorText,
       genus: PikachuGenus[0].genus,
     },
-    evolutions: pokemonEvolutionsData.map((evolPkmn, i) => ({
+    evolutions: pokemonEvolutionsData.map((evolPkmn) => ({
       id: evolPkmn.id,
-      name: evolPkmn.name,
+      name: capitalise(evolPkmn.name),
       img: evolPkmn.sprites.front_default,
     })),
     moves: pokemonMoves.map((moveObj) => ({

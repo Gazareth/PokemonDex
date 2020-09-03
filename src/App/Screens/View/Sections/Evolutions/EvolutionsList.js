@@ -8,14 +8,16 @@ import Color from "color";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import { Tooltip } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+
+import Button from "@material-ui/core/Button";
+import PokeballIcon from "Icons/PokeballIcon";
 
 import IconButton from "@material-ui/core/IconButton";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 import Avatar from "@material-ui/core/Avatar";
-
-const LIST_WIDTH_FACTOR = 0.175;
 
 const useStyles = makeStyles((theme) => ({
   evolutionsListOuter: {
@@ -66,38 +68,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const placeholderEvolutions = [
-  {
-    img:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/44.png",
-    name: "Gloom",
+const useStylesBootstrap = makeStyles((theme) => ({
+  arrow: {
+    color: theme.palette.text.disabled,
   },
-  {
-    img:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/129.png",
-    name: "Magikarp",
+  tooltip: {
+    backgroundColor: theme.palette.background.default,
+    borderRadius: theme.spacing(1),
   },
-  {
-    img:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/130.png",
-    name: "Gyarados",
-  },
-  {
-    img:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-    name: "Ditto",
-  },
-  {
-    img:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/50.png",
-    name: "Diglett",
-  },
-  {
-    img:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/62.png",
-    name: "Poliwrath",
-  },
-];
+}));
+
+const EvolutionTooltip = ({ evolution, isCurrent }) => {
+  const theme = useTheme();
+
+  return (
+    <div style={{ padding: isCurrent ? theme.spacing(2) : 0 }}>
+      <div style={{ paddingBottom: isCurrent ? theme.spacing(2) : 0 }}>
+        <Typography>
+          <span
+            style={{
+              color: theme.palette.text.secondary,
+              fontWeight: "bold",
+            }}
+          >
+            {`#${evolution.id} `}
+          </span>
+          {evolution.name}
+        </Typography>
+      </div>
+      {isCurrent && (
+        <div style={{ textAlign: "center" }}>
+          <Button size="small" variant="contained" color="secondary">
+            <PokeballIcon />
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const interEvolutionPaddingFactor = 5; // % of remaining space to use as padding between each evolution
 const PADDING_SELECTED = 75; // 75 each side
@@ -123,6 +131,8 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
   const history = useHistory();
   const toNewView = (id) => history.push(`/view/?id=${id}`);
 
+  const tooltipClasses = useStylesBootstrap();
+
   const spreadDist =
     (listWidth * 0.9 - 75 * 2) * (interEvolutionPaddingFactor / 100);
 
@@ -144,32 +154,44 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
           0.75 - (evolutionsOnSide === 1 ? 0 : 0.4 * evolutionExtend);
 
         return (
-          <Avatar
+          <Tooltip
             key={evolution.id}
-            onClick={
-              iDiff === 0
-                ? () =>
-                    console.log("Clicking!!! iDiff: ", iDiff) ||
-                    toNewView(evolution.id)
-                : () =>
-                    console.log("Clicking!!! iDiff: ", iDiff) || setEvolution(i)
+            interactive={iDiff === 0}
+            leaveDelay={iDiff === 0 ? 5000 : 0}
+            title={
+              <EvolutionTooltip
+                evolution={evolution}
+                isCurrent={iDiff === 0}
+                onClick={
+                  iDiff === 0
+                    ? () => toNewView(evolution.id)
+                    : () => setEvolution(i)
+                }
+              />
             }
-            alt={evolution.name}
-            src={evolution.img}
-            className={clsx(
-              classes.evolutionEntry,
-              currentEvolution === i
-                ? classes.evolutionEntryActive
-                : classes.evolutionEntryInactive
-            )}
-            style={{
-              transform: `translateX(${evolutionPosition(
-                iDiff,
-                spreadDist
-              )}px) scale(${i === currentEvolution ? 1 : evolScale})`,
-              zIndex: i === currentEvolution ? 1 : Math.round(evolScale * 100),
-            }}
-          />
+            classes={tooltipClasses}
+            arrow
+          >
+            <Avatar
+              alt={evolution.name}
+              src={evolution.img}
+              component="div"
+              className={clsx(
+                classes.evolutionEntry,
+                currentEvolution === i
+                  ? classes.evolutionEntryActive
+                  : classes.evolutionEntryInactive
+              )}
+              style={{
+                transform: `translateX(${evolutionPosition(
+                  iDiff,
+                  spreadDist
+                )}px) scale(${i === currentEvolution ? 1 : evolScale})`,
+                zIndex:
+                  i === currentEvolution ? 1 : Math.round(evolScale * 100),
+              }}
+            />
+          </Tooltip>
         );
       })}
       {[
