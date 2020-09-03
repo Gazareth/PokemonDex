@@ -24,18 +24,18 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 
-import InboxIcon from "@material-ui/icons/Inbox";
-import MailIcon from "@material-ui/icons/Mail";
-
 import IconButton from "@material-ui/core/IconButton";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import Typography from "@material-ui/core/Typography";
 
 import PokedexSVG from "Icons/PokedexIconV2";
 
-import PokeballIcon from "Icons/PokeballIcon";
+import ChevronLeftRoundedIcon from "@material-ui/icons/ChevronLeftRounded";
 import SearchIcon from "@material-ui/icons/Search";
+import PokeballIcon from "Icons/PokeballIcon";
 import GradeTwoToneIcon from "@material-ui/icons/GradeTwoTone";
+import LiveHelpRoundedIcon from "@material-ui/icons/LiveHelpRounded";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -54,9 +54,11 @@ const styles = (theme) => ({
   },
   drawerList: {
     width: 250,
+    maxWidth: "100vh",
   },
   appBar: {
     position: "relative",
+    zIndex: theme.zIndex.drawer + 1,
   },
   logoTitle: {
     //flexGrow: 0.5,
@@ -182,144 +184,166 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
     setDrawerOpen(open);
   };
 
-  const list = () => (
-    <div
-      className={classes.drawerList}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+  const DrawerContent = () => (
+    <div>
+      <Toolbar />
+      <div
+        className={classes.drawerList}
+        role="presentation"
+        onClick={toggleDrawer(false)}
+        onKeyDown={toggleDrawer(false)}
+      >
+        <IconButton>
+          <ChevronLeftRoundedIcon />
+        </IconButton>
+
+        <Divider />
+        <List>
+          {[
+            ["Search", SearchIcon, "info"],
+            ["View", PokeballIcon, "secondary"],
+            ["Favourites", GradeTwoToneIcon, "warning"],
+          ].map(([text, IconComponent, colorType]) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                <IconComponent
+                  style={{ color: theme.palette[colorType].light }}
+                />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {[
+            ["How to use", LiveHelpRoundedIcon],
+            ["Credits", InfoOutlinedIcon],
+          ].map(([text, IconComponent]) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                <IconComponent />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </div>
     </div>
   );
 
   return (
-    <AppBar position="absolute" color="default" className={classes.appBar}>
-      <Toolbar>
-        <Grid container justify="space-between">
-          <Grid item>
-            <Grid item container className={classes.logoTitle}>
-              <IconButton
-                edge="start"
-                className={classes.logoButton}
-                onClick={toggleDrawer(true)}
-                color="inherit"
-                aria-label="menu"
-                size="small"
-              >
-                <SvgIcon
-                  component={PokedexSVG}
-                  colors={{
-                    main: Color(theme.palette.secondary.main).mix(
-                      Color(theme.palette.background.default),
-                      0.15
-                    ),
-                    detail: Color("rgba(0,0,0,0)"),
-                    detail2: Color(theme.palette.secondary.light)
-                      .desaturate(0.15)
-                      .mix(Color(theme.palette.text.primary), 0.75),
-                    detail3: Color(theme.palette.info.main)
-                      .mix(Color(theme.palette.background.primary), 0.15)
-                      .saturate(1),
-                    detail4: Color(theme.palette.secondary.dark)
-                      .desaturate(0.25)
-                      .mix(Color(theme.palette.background.default), 0.85)
-                      .toString(),
-                    //detail2: theme.palette.background.senary
+    <>
+      <AppBar position="absolute" color="default" className={classes.appBar}>
+        <Toolbar>
+          <Grid container justify="space-between">
+            <Grid item>
+              <Grid item container className={classes.logoTitle}>
+                <IconButton
+                  edge="start"
+                  className={classes.logoButton}
+                  onClick={toggleDrawer(!drawerOpen)}
+                  color="inherit"
+                  aria-label="menu"
+                  size="small"
+                >
+                  <SvgIcon
+                    component={PokedexSVG}
+                    colors={{
+                      main: Color(theme.palette.secondary.main).mix(
+                        Color(theme.palette.background.default),
+                        0.15
+                      ),
+                      detail: Color("rgba(0,0,0,0)"),
+                      detail2: Color(theme.palette.secondary.light)
+                        .desaturate(0.15)
+                        .mix(Color(theme.palette.text.primary), 0.75),
+                      detail3: Color(theme.palette.info.main)
+                        .mix(Color(theme.palette.background.primary), 0.15)
+                        .saturate(1),
+                      detail4: Color(theme.palette.secondary.dark)
+                        .desaturate(0.25)
+                        .mix(Color(theme.palette.background.default), 0.85)
+                        .toString(),
+                      //detail2: theme.palette.background.senary
+                    }}
+                    fontSize="large"
+                    //style={{ fill: "#c30d22" }}
+                    viewBox="0 0 640 650"
+                  />
+                </IconButton>
+                <Typography
+                  variant="subtitle2"
+                  color="textSecondary"
+                  className={classes.title}
+                  noWrap
+                >
+                  Pokémon Dex
+                </Typography>
+              </Grid>
+            </Grid>
+            {!drawerOpen && (
+              <Grid item>
+                <div
+                  style={{
+                    backgroundColor: theme.palette.background.quaternary,
+                    borderRadius: theme.spacing(3),
                   }}
-                  fontSize="large"
-                  //style={{ fill: "#c30d22" }}
-                  viewBox="0 0 640 650"
-                />
-              </IconButton>
-              <Drawer
-                anchor={"left"}
-                open={drawerOpen}
-                onClose={toggleDrawer(false)}
-              >
-                {list()}
-              </Drawer>
-              <Typography
-                variant="subtitle2"
-                color="textSecondary"
-                className={classes.title}
-                noWrap
-              >
-                Pokémon Dex
-              </Typography>
+                >
+                  {PokemonDexURLs.map((url, i) => (
+                    <NavIconButton
+                      key={i}
+                      navId={i}
+                      disabled={i === 1 && !(pokemonAvailable > 0)}
+                      classNameActive={classes.navIconActive}
+                      classNameInactive={classes.navIconInactive}
+                      classNameActiveSpecial={
+                        ["Search", "View", "Favourites"].map(
+                          (name) => classes[`navIcon${name}Active`]
+                        )[i]
+                      }
+                      navPath={`/${url}/${
+                        i === 1 ? `?id=${pokemonAvailable}` : ""
+                      }`}
+                      currentPath={pathname}
+                      navFunc={history.push}
+                      iconComponent={
+                        [SearchIcon, PokeballIcon, GradeTwoToneIcon][i]
+                      }
+                    />
+                  ))}
+                </div>
+              </Grid>
+            )}
+            <Grid item className={classes.switchContainer}>
+              <FormControlLabel
+                className={classes.switchForm}
+                value={themeMode}
+                control={
+                  <Switch
+                    checked={themeMode === "light"}
+                    onChange={handleThemeSwitch}
+                    classes={{
+                      ...pick(classes, ["switchBase", "checked", "track"]),
+                    }}
+                  />
+                }
+                label={<DarkLightIcon {...{ theme, themeMode }} />}
+                labelPlacement="start"
+              />
             </Grid>
           </Grid>
-          <Grid item>
-            <div
-              style={{
-                backgroundColor: theme.palette.background.quaternary,
-                borderRadius: theme.spacing(3),
-              }}
-            >
-              {PokemonDexURLs.map((url, i) => (
-                <NavIconButton
-                  key={i}
-                  navId={i}
-                  disabled={i === 1 && !(pokemonAvailable > 0)}
-                  classNameActive={classes.navIconActive}
-                  classNameInactive={classes.navIconInactive}
-                  classNameActiveSpecial={
-                    ["Search", "View", "Favourites"].map(
-                      (name) => classes[`navIcon${name}Active`]
-                    )[i]
-                  }
-                  navPath={`/${url}/${
-                    i === 1 ? `?id=${pokemonAvailable}` : ""
-                  }`}
-                  currentPath={pathname}
-                  navFunc={history.push}
-                  iconComponent={
-                    [SearchIcon, PokeballIcon, GradeTwoToneIcon][i]
-                  }
-                />
-              ))}
-            </div>
-          </Grid>
-          <Grid item className={classes.switchContainer}>
-            <FormControlLabel
-              className={classes.switchForm}
-              value={themeMode}
-              control={
-                <Switch
-                  checked={themeMode === "light"}
-                  onChange={handleThemeSwitch}
-                  classes={{
-                    ...pick(classes, ["switchBase", "checked", "track"]),
-                  }}
-                />
-              }
-              label={<DarkLightIcon {...{ theme, themeMode }} />}
-              labelPlacement="start"
-            />
-          </Grid>
-        </Grid>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        anchor={"left"}
+        variant="persistent"
+        open={drawerOpen}
+        onClose={toggleDrawer(false)}
+      >
+        <DrawerContent />
+      </Drawer>
+    </>
   );
 };
 
