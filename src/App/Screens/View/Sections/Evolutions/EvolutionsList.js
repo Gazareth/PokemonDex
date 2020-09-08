@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 
 import { useHistory } from "react-router-dom";
@@ -18,6 +18,8 @@ import IconButton from "@material-ui/core/IconButton";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 import Avatar from "@material-ui/core/Avatar";
+
+import pick from "Utils/pick";
 
 const useStyles = makeStyles((theme) => ({
   evolutionsListOuter: {
@@ -51,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     transition: `transform 475ms ${theme.transitions.easing.pokeEase}, border 375ms ${theme.transitions.easing.pokeEase}`,
   },
   evolutionEntryInactive: {
-    border: `5px solid ${Color(theme.palette.background.tertiary)
+    border: `2.85px solid ${Color(theme.palette.background.tertiary)
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
     "&:hover": {
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   evolutionEntryActive: {
-    border: `2.85px solid ${Color(theme.palette.background.tertiary)
+    border: `4px solid ${Color(theme.palette.background.tertiary)
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
     "&:hover": {
@@ -78,7 +80,7 @@ const useStylesBootstrap = makeStyles((theme) => ({
   },
 }));
 
-const EvolutionTooltip = ({ evolution, isCurrent }) => {
+const EvolutionTooltip = ({ id, name, isCurrent, toNewView, setSelected }) => {
   const theme = useTheme();
 
   return (
@@ -91,14 +93,19 @@ const EvolutionTooltip = ({ evolution, isCurrent }) => {
               fontWeight: "bold",
             }}
           >
-            {`#${evolution.id} `}
+            {`#${id} `}
           </span>
-          {evolution.name}
+          {name}
         </Typography>
       </div>
       {isCurrent && (
         <div style={{ textAlign: "center" }}>
-          <Button size="small" variant="contained" color="secondary">
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            onClick={toNewView}
+          >
             <PokeballIcon />
           </Button>
         </div>
@@ -123,18 +130,75 @@ const selectedPadding = (iDiff = 0) =>
 const evolutionPosition = (iDiff, spread) =>
   selectedPadding(iDiff) + iDiff * spread;
 
+const Evolution = ({
+  evolIndex,
+  id,
+  img,
+  name,
+  isView,
+  isSelect,
+  toNewView,
+  setSelected,
+  evolEntryClass,
+  evolActiveClass,
+  evolInactiveClass,
+  positionOffset,
+  evolScale,
+}) => {
+  const tooltipClasses = useStylesBootstrap();
+  return (
+    <Tooltip
+      key={id}
+      interactive={isSelect}
+      title={
+        <EvolutionTooltip
+          id={id}
+          name={name}
+          isCurrent={isSelect}
+          toNewView={() => toNewView(id)}
+        />
+      }
+      classes={tooltipClasses}
+      arrow
+    >
+      <Avatar
+        alt={name}
+        src={img}
+        component="div"
+        className={clsx(
+          evolEntryClass,
+          isView ? evolActiveClass : evolInactiveClass
+        )}
+        style={{
+          transform: `translateX(${positionOffset}px) scale(${
+            isSelect ? 1 : evolScale
+          })`,
+          zIndex: isSelect ? 1 : Math.round(evolScale * 100),
+        }}
+        onClick={() => setSelected(evolIndex)}
+      />
+    </Tooltip>
+  );
+};
+
 /*** EVOLUTIONS ****/
 const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
   const [currentEvolution, setEvolution] = useState(
     evolutions.findIndex((evol) => evol.id === viewingId)
   );
   const history = useHistory();
-  const toNewView = (id) => history.push(`/view/?id=${id}`);
-
-  const tooltipClasses = useStylesBootstrap();
+  const toNewView = useCallback((id) => history.push(`/view/?id=${id}`), [
+    history,
+  ]);
 
   const spreadDist =
     (listWidth * 0.9 - 75 * 2) * (interEvolutionPaddingFactor / 100);
+
+  const {
+    evolutionEntry: evolEntryClass,
+    evolutionEntryInactive: evolInactiveClass,
+    evolutionEntryActive: evolActiveClass,
+  } = classes;
 
   return (
     <>
@@ -153,45 +217,25 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
         const evolScale =
           0.75 - (evolutionsOnSide === 1 ? 0 : 0.4 * evolutionExtend);
 
+        const evolPosOffset = evolutionPosition(iDiff, spreadDist);
+
         return (
-          <Tooltip
+          <Evolution
             key={evolution.id}
-            interactive={iDiff === 0}
-            leaveDelay={iDiff === 0 ? 5000 : 0}
-            title={
-              <EvolutionTooltip
-                evolution={evolution}
-                isCurrent={iDiff === 0}
-                onClick={
-                  iDiff === 0
-                    ? () => toNewView(evolution.id)
-                    : () => setEvolution(i)
-                }
-              />
-            }
-            classes={tooltipClasses}
-            arrow
-          >
-            <Avatar
-              alt={evolution.name}
-              src={evolution.img}
-              component="div"
-              className={clsx(
-                classes.evolutionEntry,
-                currentEvolution === i
-                  ? classes.evolutionEntryActive
-                  : classes.evolutionEntryInactive
-              )}
-              style={{
-                transform: `translateX(${evolutionPosition(
-                  iDiff,
-                  spreadDist
-                )}px) scale(${i === currentEvolution ? 1 : evolScale})`,
-                zIndex:
-                  i === currentEvolution ? 1 : Math.round(evolScale * 100),
-              }}
-            />
-          </Tooltip>
+            evolIndex={i}
+            {...pick(evolution, ["id", "img", "name"])}
+            isView={iDiff === 0}
+            isSelect={i === currentEvolution}
+            setSelected={setEvolution}
+            toNewView={toNewView}
+            {...{
+              evolEntryClass,
+              evolActiveClass,
+              evolInactiveClass,
+            }}
+            positionOffset={evolPosOffset}
+            evolScale={evolScale}
+          />
         );
       })}
       {[
