@@ -17,10 +17,42 @@ const useStyles = makeStyles((theme) => ({
   evolutionsOuter: {
     margin: "0 auto",
     width: "80%",
-    minWidth: theme.breakpoints.values.sm * 0.8,
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
+    //minWidth: window.innerWidth * 0.8,
   },
   softBg: {
     backgroundColor: theme.palette.background.tertiary,
+  },
+  evolutionsHeading: {
+    display: "grid",
+    gridTemplateColumns: "1fr auto 1fr",
+    alignItems: "center",
+    gridGap: "1rem",
+    "&::before, &::after": {
+      content: '""',
+      display: "block",
+      borderTop: "2px solid currentColor",
+      borderImageSlice: "1",
+    },
+    "&::before": {
+      borderImageSource: `linear-gradient(to right, rgba(0,0,0,0), #743ad5, ${theme.palette.secondary.light})`,
+    },
+    "&::after": {
+      borderImageSource: `linear-gradient(to left, rgba(0,0,0,0), #743ad5, ${theme.palette.secondary.light})`,
+    },
+  },
+  evolutionsList: {
+    padding: `min(${theme.spacing(1)}px, 0.4vh) 0px`,
+  },
+  evolutionsFooter: {
+    margin: "0",
+    height: "5px",
+    border: "0",
+    borderTop: "2px solid",
+    borderImageSlice: "1",
+    borderImageSource: `linear-gradient(to right, rgba(0,0,0,0), #743ad5, ${theme.palette.secondary.light}, #743ad5, rgba(0,0,0,0))`,
   },
 }));
 
@@ -35,13 +67,11 @@ export default function PokemonDisplayEvolutions({
 
   return (
     <Box className={classes.evolutionsOuter}>
-      <OutlinedDiv
-        label="Evolutions"
-        {...{ show, delay }}
-        inputRootClasses={clsx(classes.defaultCursor, classes.softBg)}
-      >
+      <div className={classes.evolutionsHeading}>Evolutions</div>
+      <div className={classes.evolutionsList}>
         <Evolutions {...{ classes, pokemonId, pokemonEvolutions }}></Evolutions>
-      </OutlinedDiv>
+      </div>
+      <hr className={classes.evolutionsFooter}></hr>
     </Box>
   );
 }

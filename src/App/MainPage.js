@@ -50,13 +50,17 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexFlow: "column nowrap",
     flex: "auto",
-    overflow: "hidden",
+    overflow: "auto",
+    flexGrow: "0",
+    [theme.breakpoints.down("xs")]: {
+      height: "100%",
+    },
   },
 
   layout: {
-    //width: "95vw",
-    // marginLeft: theme.spacing(2),
-    // marginRight: theme.spacing(2),
+    [theme.breakpoints.down("xs")]: {
+      height: "100%",
+    },
     [theme.breakpoints.up("sm")]: {
       width: theme.breakpoints.values.sm,
       marginLeft: "auto",

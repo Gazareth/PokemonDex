@@ -47,10 +47,10 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     backgroundColor: theme.palette.background.secondary,
     padding: theme.spacing(1),
-    width: theme.spacing(6),
-    height: theme.spacing(6),
+    width: theme.spacing(8),
+    height: theme.spacing(8),
     transform: "translateX(0) scale(0.8)",
-    transition: `transform 475ms ${theme.transitions.easing.pokeEase}, border 375ms ${theme.transitions.easing.pokeEase}`,
+    transition: `transform 375ms ${theme.transitions.easing.pokeEase}, border 375ms ${theme.transitions.easing.pokeEase}`,
   },
   evolutionEntryInactive: {
     border: `2.85px solid ${Color(theme.palette.background.tertiary)
@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   evolutionEntryActive: {
+    padding: theme.spacing(0.5),
     border: `4px solid ${Color(theme.palette.background.tertiary)
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
@@ -164,6 +165,7 @@ const Evolution = ({
       <Avatar
         alt={name}
         src={img}
+        variant="rounded"
         component="div"
         className={clsx(
           evolEntryClass,

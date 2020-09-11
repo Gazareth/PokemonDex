@@ -13,11 +13,10 @@ import PokemonDisplayEvolutions from "./Sections/Evolutions";
 import PokemonDisplayIDNav from "./Sections/PokemonDisplayIDNav";
 
 const useStyles = makeStyles((theme) => ({
-  flexCol: {
-    display: "flex",
-    flexFlow: "column nowrap",
-    flex: "auto",
-    overflow: "hidden",
+  displayContainer: {
+    height: "100%",
+    flexWrap: "nowrap",
+    flexGrow: "1",
   },
   statsAndBio: {
     flexGrow: "0.1",
@@ -32,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "flex-start",
   },
   idNav: {
+    margin: "2vh 0",
     flexGrow: "0",
     alignContent: "center",
   },
@@ -54,50 +54,48 @@ const PokemonDisplay = ({
   const anim = useAnimEngine(6, displayContent && animateIn);
 
   return (
-    <>
-      <Grid container spacing={4} direction="column" style={{ height: "100%" }}>
-        <Grid item>
-          <PokemonDisplayMain
-            {...{ pokemonInfo, isFavourite, addToFavourites }}
+    <Grid container spacing={4} direction="column" style={{}}>
+      <Grid item>
+        <PokemonDisplayMain
+          {...{ pokemonInfo, isFavourite, addToFavourites }}
+          {...anim()}
+        />
+      </Grid>
+      <Grid item container spacing={4} className={classes.statsAndBio}>
+        <Grid item container xs={12} sm={5}>
+          <PokemonDisplayStats pokemonStats={pokemonInfo.stats} {...anim()} />
+        </Grid>
+        <Grid item container xs={12} sm={7}>
+          <PokemonDisplaySpecies
+            pokemonSpecies={pokemonInfo.species}
             {...anim()}
           />
-        </Grid>
-        <Grid item container spacing={4} className={classes.statsAndBio}>
-          <Grid item container xs={12} sm={5}>
-            <PokemonDisplayStats pokemonStats={pokemonInfo.stats} {...anim()} />
-          </Grid>
-          <Grid item container xs={12} sm={7}>
-            <PokemonDisplaySpecies
-              pokemonSpecies={pokemonInfo.species}
-              {...anim()}
-            />
-          </Grid>
-        </Grid>
-        <Grid item container className={classes.movesButton}>
-          <PokemonDisplayMoves
-            displayContent={displayContent && animateIn}
-            pokemonMoves={pokemonInfo.moves}
-            {...anim()}
-            doHeight
-          />
-        </Grid>
-        <Grid
-          item
-          container
-          className={classes.evolutions}
-          style={{ paddingTop: "10%" }}
-        >
-          <PokemonDisplayEvolutions
-            pokemonId={pokemonInfo.id}
-            pokemonEvolutions={pokemonInfo.evolutions}
-            {...anim()}
-          />
-        </Grid>
-        <Grid item container className={classes.idNav} direction="column">
-          <PokemonDisplayIDNav pokemonId={pokemonInfo.id} {...anim()} />
         </Grid>
       </Grid>
-    </>
+      <Grid item container className={classes.movesButton}>
+        <PokemonDisplayMoves
+          displayContent={displayContent && animateIn}
+          pokemonMoves={pokemonInfo.moves}
+          {...anim()}
+          doHeight
+        />
+      </Grid>
+      <Grid
+        item
+        container
+        className={classes.evolutions}
+        style={{ paddingTop: "2.5vh" }}
+      >
+        <PokemonDisplayEvolutions
+          pokemonId={pokemonInfo.id}
+          pokemonEvolutions={pokemonInfo.evolutions}
+          {...anim()}
+        />
+      </Grid>
+      <Grid item container className={classes.idNav}>
+        <PokemonDisplayIDNav pokemonId={pokemonInfo.id} {...anim()} />
+      </Grid>
+    </Grid>
   );
 };
 
