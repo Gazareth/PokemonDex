@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import Grid from "@material-ui/core/Grid";
-import OutlinedDiv from "Components/OutlinedDiv";
+import Typography from "@material-ui/core/Typography";
+
 import Box from "@material-ui/core/Box";
 
 import Evolutions from "./EvolutionsList";
@@ -67,7 +67,9 @@ export default function PokemonDisplayEvolutions({
 
   return (
     <Box className={classes.evolutionsOuter}>
-      <div className={classes.evolutionsHeading}>Evolutions</div>
+      <div className={classes.evolutionsHeading}>
+        <Typography>Evolutions</Typography>
+      </div>
       <div className={classes.evolutionsList}>
         <Evolutions {...{ classes, pokemonId, pokemonEvolutions }}></Evolutions>
       </div>
