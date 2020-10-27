@@ -308,6 +308,7 @@ const PokemonFavourite = ({
                     containerStyle={{ height: "100%" }}
                     slideStyle={{ ...swipeableStyle }}
                     index={isLoaded ? (isSelected ? 0 : 1) : 2}
+                    disabled
                   >
                     <Grid container className={classes.buttonGrid}>
                       <Grid item container xs={2} justify="flex-start">
