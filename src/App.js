@@ -19,7 +19,7 @@ import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) => ({
   rootBox: {
-    height: "100vh",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
   },

@@ -51,8 +51,9 @@ const useStyles = makeStyles((theme) => {
     },
     /* CARD */
     card: {
-      marginLeft: "23.5%",
-      marginRight: "23.5%",
+      margin: "0 auto",
+      minWidth: "264px",
+      maxWidth: "286px",
       ...trsn.build([
         [
           "background-color",
@@ -60,32 +61,27 @@ const useStyles = makeStyles((theme) => {
           trsn.duration.long * 1.25,
           ease.pokeEase,
         ],
-        ["margin-left", ...pokeBounceOut],
-        ["margin-right", ...pokeBounceOut],
+        ["max-width", ...pokeBounceOut],
       ]),
       backgroundColor: Color(theme.palette.secondary.main)
         .mix(Color(theme.palette.background.default), 0.15)
         .toString(),
     },
     "card-Open": {
+      maxWidth: "328px",
       ...trsn.build([
         ["background-color", 650, 0, ease.pokeEase],
-        ["margin-left", ...pokeBounceIn],
-        ["margin-right", ...pokeBounceIn],
+        ["max-width", ...pokeBounceIn],
       ]),
       backgroundColor: theme.palette.background.default,
-      marginLeft: "17%",
-      marginRight: "17%",
     },
     "card-Busy": {
+      maxWidth: "264px",
       ...trsn.build([
         ["background-color", 650, 0, ease.pokeEase],
-        ["margin-left", ...pokeBounceOut],
-        ["margin-right", ...pokeBounceOut],
+        ["max-width", ...pokeBounceOut],
       ]),
       backgroundColor: theme.palette.background.senary,
-      marginLeft: "20%",
-      marginRight: "20%",
     },
     /* CARD HEADER */
     cardHeader: {

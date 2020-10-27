@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     flexFlow: "column nowrap",
     flex: "auto",
     overflow: "auto",
-    flexGrow: "0",
     [theme.breakpoints.down("xs")]: {
       height: "100%",
     },
@@ -69,11 +68,11 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     background: theme.palette.background.secondary,
-    // marginTop: theme.spacing(3),
-    // marginBottom: theme.spacing(3),
-    // padding: theme.spacing(2),
-    padding: theme.spacing(3),
+    maxHeight: "min(100%, 860px)",
+    padding: `${theme.spacing(0.25)}px ${theme.spacing(1)}px`,
+    overflowX: "hidden",
     [theme.breakpoints.up("sm")]: {
+      flexGrow: "0.85",
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
       padding: theme.spacing(4),
