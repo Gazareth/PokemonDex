@@ -37,10 +37,10 @@ const useStyles = makeStyles((theme) => ({
       borderImageSlice: "1",
     },
     "&::before": {
-      borderImageSource: `linear-gradient(to right, rgba(0,0,0,0), #743ad5, ${theme.palette.secondary.light})`,
+      borderImageSource: `linear-gradient(to right, rgba(0,0,0,0), ${theme.palette.divider}, ${theme.palette.text.disabled})`,
     },
     "&::after": {
-      borderImageSource: `linear-gradient(to left, rgba(0,0,0,0), #743ad5, ${theme.palette.secondary.light})`,
+      borderImageSource: `linear-gradient(to left, rgba(0,0,0,0), ${theme.palette.divider}, ${theme.palette.text.disabled})`,
     },
   },
   evolutionsList: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     border: "0",
     borderTop: "2px solid",
     borderImageSlice: "1",
-    borderImageSource: `linear-gradient(to right, rgba(0,0,0,0), #743ad5, ${theme.palette.secondary.light}, #743ad5, rgba(0,0,0,0))`,
+    borderImageSource: `linear-gradient(to right, rgba(0,0,0,0), ${theme.palette.divider}, ${theme.palette.text.disabled}, ${theme.palette.divider}, rgba(0,0,0,0))`,
   },
 }));
 
