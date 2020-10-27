@@ -36,7 +36,7 @@ const Copyright = ({ theme }) => {
         Material UI
       </Link>
       {" • "}
-      <Link color="secondary" href="https://material-ui.com/">
+      <Link color="secondary" href="https://pokeapi.co/">
         PokeApi
       </Link>
       {/* {" • "}
