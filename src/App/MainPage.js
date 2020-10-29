@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     background: theme.palette.background.secondary,
-    maxHeight: "min(100%, 860px)",
+    maxHeight: "min(100%, 869px)",
     padding: `${theme.spacing(0.25)}px ${theme.spacing(1)}px`,
     overflowX: "hidden",
     [theme.breakpoints.up("sm")]: {

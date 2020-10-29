@@ -18,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "nowrap",
     flexGrow: "1",
   },
+  mainCard: {
+    [theme.breakpoints.down("xs")]: {
+      margin: "calc(7px + 1vh + 1vw) 0 0",
+    },
+  },
   statsAndBio: {
     flexGrow: "0.1",
     alignContent: "center",
@@ -54,8 +59,15 @@ const PokemonDisplay = ({
   const anim = useAnimEngine(6, displayContent && animateIn);
 
   return (
-    <Grid container spacing={4} direction="column" style={{}}>
-      <Grid item>
+    <Grid
+      container
+      spacing={4}
+      direction="column"
+      wrap="nowrap"
+      justify="space-between"
+      style={{ height: "100%" }}
+    >
+      <Grid item className={classes.mainCard}>
         <PokemonDisplayMain
           {...{ pokemonInfo, isFavourite, addToFavourites }}
           {...anim()}

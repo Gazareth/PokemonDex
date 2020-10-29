@@ -53,6 +53,11 @@ const useStyles = makeStyles((theme) => ({
       .darken(0.35)
       .toString(),
   },
+  scrollBarsContainer: {
+    "& > div": {
+      overflowX: "hidden !important", // Without this, chrome puts an empty scrollbar at the bottom. Negative margins... not even once.
+    },
+  },
   listContainer: {
     paddingRight: theme.spacing(0.65),
   },
@@ -133,6 +138,7 @@ const PokemonFavouritesList = ({
         onMouseLeave={() => setHovering(false)}
       >
         <Scrollbars
+          className={classes.scrollBarsContainer}
           onScrollFrame={() => {
             setScrolling(true);
           }}
