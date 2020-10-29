@@ -39,16 +39,16 @@ const PokemonRouter = () => {
     [history, location]
   );
 
-  if (screenIndex === -1) {
-    //redirect to search page if nothing found
+  // Pass pokemon ID if view/?id=<number>
+  const query = location.search && queryString.parse(location.search).id;
+  const pokemonToView = validateQuery(query) ? parseInt(query, 10) : 0;
+
+  // Redirect to search page if invalid path or invalid pokemon ID
+  if (screenIndex === -1 || (screenIndex === 1 && pokemonToView === 0)) {
     screenIndex = 0;
     const indexPath = getPathFromIndex(screenIndex);
     history.push(indexPath);
   }
-
-  // Pass pokemon ID if view/?id=<number>
-  const query = location.search && queryString.parse(location.search).id;
-  const pokemonToView = validateQuery(query) ? parseInt(query, 10) : 0;
 
   return (
     <PokemonDexScreens {...{ screenIndex }} searchingPokemon={pokemonToView} />
