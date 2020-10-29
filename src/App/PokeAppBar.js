@@ -155,7 +155,7 @@ const NavIconButton = ({
             : classNameInactive
         ),
       }}
-      onClick={() => navFunc(navPath)}
+      onClick={() => !isActive && navFunc(navPath)}
     >
       <IconComponent />
     </IconButton>
