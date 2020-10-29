@@ -89,6 +89,7 @@ const favouritesInitialState = {
 
 const favouritesReducer = (state = favouritesInitialState, action) => {
   if (!state.hydrated) {
+    state.favouritesOrder = state.favourites.map(({ id }) => id);
     state = { ...favouritesInitialState, ...state, hydrated: true };
   }
 
@@ -110,9 +111,9 @@ const favouritesReducer = (state = favouritesInitialState, action) => {
         favouritesOrder: order,
       };
     case FAVOURITES.COMMIT_REORDER: //also works for removals
-      const reorderedFavourites = state.favouritesOrder.map((favId) =>
-        state.favourites.find(({ id }) => id === favId)
-      );
+      const reorderedFavourites = state.favouritesOrder.map((favId) => ({
+        ...(state.favourites.find(({ id }) => id === favId) || {}),
+      }));
       return {
         ...state,
         favourites: reorderedFavourites,

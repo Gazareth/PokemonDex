@@ -5,11 +5,7 @@ import pick from "Utils/pick";
 const values = (obj) => Object.keys(obj).map((key) => obj[key]);
 
 const favouritesActions = values(
-  pick(FAVOURITES, [
-    "ADD_FAVOURITE",
-    "DELETE_FAVOURITE",
-    "COMMIT_REORDER_FAVOURITES",
-  ])
+  pick(FAVOURITES, ["ADD_FAVOURITE", "DELETE_FAVOURITE", "COMMIT_REORDER"])
 );
 
 const saveActions = [
@@ -27,7 +23,7 @@ const saveState = (store) => (next) => (action) => {
       // use current store state to set values
       let pickedState = {
         pokemon: { data: state.pokemon.data, haveData: state.pokemon.haveData },
-        favourites: { favouritesOrder: state.favourites.favouritesOrder },
+        favourites: { favourites: state.favourites.favourites },
         theme: { mode: state.theme.mode },
       };
 
