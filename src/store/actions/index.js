@@ -129,7 +129,7 @@ export const searchPokemon = (pokemonName) => {
             () => dispatch(setPokemonData(SEARCH_POKEMON.NONE)),
             sleepErrorTime
           );
-          throw error;
+          // throw error;
         })
     );
   };
