@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 
 import clsx from "clsx";
 import Color from "color";
@@ -41,12 +41,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const calcInputAdornState = (searching, isFocused, searchString) =>
-  isFocused
+  searching === true
+    ? 4
+    : isFocused
     ? searchString.length > 2
       ? 3
       : Math.max(searchString.length, 1)
-    : searching === true
-    ? 4
     : 0;
 
 const inputAdornOpacity = [0, 0.25, 0.35, 0.45];
@@ -93,10 +93,10 @@ const SearchInput = ({
   );
 
   const parseSearchString = (str) => setSearchString(str.toLowerCase());
-  const clearSearchString = () => {
+  const clearSearchString = useCallback(() => {
     searchTxtRef.current.value = "";
     setSearchString("");
-  };
+  }, [setSearchString, searchTxtRef]);
 
   const sendSearch = () => {
     searchPokemon(searchString);
