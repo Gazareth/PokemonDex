@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import clsx from "clsx";
 import Color from "color";
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputAdornState = (searching, isFocused, searchString) =>
+const calcInputAdornState = (searching, isFocused, searchString) =>
   isFocused
     ? searchString.length > 2
       ? 3
@@ -87,7 +87,10 @@ const SearchInput = ({
   const classes = useStyles(theme);
   const [searchString, setSearchString] = useState("");
 
-  const inputAdornState = InputAdornState(searching, isFocused, searchString);
+  const inputAdornState = useMemo(
+    () => calcInputAdornState(searching, isFocused, searchString),
+    [isFocused, searchString, searching]
+  );
 
   const parseSearchString = (str) => setSearchString(str.toLowerCase());
   const clearSearchString = () => {

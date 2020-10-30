@@ -319,6 +319,7 @@ const SearchPanel = ({
                 searchTxtRef,
                 searching,
                 panelOpen,
+                isFocused,
                 handleFocus,
                 handleUnfocus,
                 searchPokemon,
