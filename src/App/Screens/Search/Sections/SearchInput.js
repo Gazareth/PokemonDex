@@ -1,21 +1,13 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState } from "react";
 
 import clsx from "clsx";
-import Color from "color";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Input from "@material-ui/core/Input";
-import IconButton from "@material-ui/core/IconButton";
 import FormHelperText from "@material-ui/core/FormHelperText";
-
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import FiberManualRecordOutlinedIcon from "@material-ui/icons/FiberManualRecordOutlined";
-import FiberManualRecordTwoToneIcon from "@material-ui/icons/FiberManualRecordTwoTone";
-import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles((theme) => ({
   searchWidth: {
@@ -39,29 +31,6 @@ const useStyles = makeStyles((theme) => ({
     transitionDelay: "375ms",
   },
 }));
-
-const calcInputAdornState = (searching, isFocused, searchString) =>
-  searching === true
-    ? 4
-    : isFocused
-    ? searchString.length > 2
-      ? 3
-      : Math.max(searchString.length, 1)
-    : 0;
-
-const inputAdornOpacity = [0, 0.25, 0.35, 0.45];
-const inputAdornIcon = [
-  FiberManualRecordOutlinedIcon,
-  FiberManualRecordOutlinedIcon,
-  FiberManualRecordTwoToneIcon,
-  FiberManualRecordIcon,
-  CancelIcon,
-];
-
-const InputIcon = React.memo(({ inputAdornState: state }) => {
-  const Icon = inputAdornIcon[state];
-  return <Icon style={{ fontSize: "1.25rem" }} />;
-});
 
 const handleChange = (e, f) => {
   f(e.target.value);
@@ -87,16 +56,7 @@ const SearchInput = ({
   const classes = useStyles(theme);
   const [searchString, setSearchString] = useState("");
 
-  const inputAdornState = useMemo(
-    () => calcInputAdornState(searching, isFocused, searchString),
-    [isFocused, searchString, searching]
-  );
-
   const parseSearchString = (str) => setSearchString(str.toLowerCase());
-  const clearSearchString = useCallback(() => {
-    searchTxtRef.current.value = "";
-    setSearchString("");
-  }, [setSearchString, searchTxtRef]);
 
   const sendSearch = () => {
     searchPokemon(searchString);
@@ -132,31 +92,6 @@ const SearchInput = ({
         onChange={(e) => handleChange(e, parseSearchString)}
         onKeyDown={(e) => handleKeyDown(e, sendSearch)}
         inputProps={{ ref: searchTxtRef }}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              aria-label={searching ? "Cancel Search" : "Clear Search"}
-              onClick={clearSearchString}
-              disabled={searchString.length === 0}
-              className={clsx(
-                classes.inputAdornIcon,
-                [1, 2].includes(inputAdornState) && classes.inputAdornIconDelay
-              )}
-              style={{
-                color: Color(theme.palette.text.primary)
-                  .fade(1 - inputAdornOpacity[inputAdornState])
-                  .toString(),
-              }}
-              edge="end"
-            >
-              <InputIcon
-                {...{
-                  inputAdornState,
-                }}
-              />
-            </IconButton>
-          </InputAdornment>
-        }
       />
       <FormHelperText component="div" id="filled-adornment-search-helper-text">
         {helperText}
