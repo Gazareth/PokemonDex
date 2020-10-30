@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "70%",
     transition:
       "filter 275ms cubic-bezier(0.215, 0.61, 0.355, 1), max-width 275ms cubic-bezier(0.215, 0.61, 0.355, 1)",
-    //overflow: "hidden"
     filter: "none",
   },
   searchWidthInactive: {
@@ -70,7 +69,6 @@ const SearchInput = ({
           !isFocused && classes.searchWidthInactive
         ),
       }}
-      //variant="filled"
       disabled={searching}
     >
       <InputLabel
@@ -91,6 +89,15 @@ const SearchInput = ({
         onBlur={() => handleUnfocus()}
         onChange={(e) => handleChange(e, parseSearchString)}
         onKeyDown={(e) => handleKeyDown(e, sendSearch)}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+        onMouseUp={(e) => {
+          e.stopPropagation();
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         inputProps={{ ref: searchTxtRef }}
       />
       <FormHelperText component="div" id="filled-adornment-search-helper-text">

@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { SEARCH_POKEMON } from "Store/actions/types";
 import { LOADING_STRINGS as loadingStrings } from "Constants";
 
@@ -231,8 +237,10 @@ const SearchPanel = ({
 
   const focusTimer = useRef();
 
-  const handleClick = () =>
-    searchTxtRef.current && searchTxtRef.current.focus();
+  const handleClick = useCallback(
+    () => searchTxtRef.current && searchTxtRef.current.focus(),
+    [searchTxtRef]
+  );
 
   useEffect(() => {
     focusTimer.current = setTimeout(() => handleClick(), 1500);
@@ -241,11 +249,11 @@ const SearchPanel = ({
 
   const handleFocus = () => setIsFocused(true);
 
-  const handleUnfocus = () => {
+  const handleUnfocus = useCallback(() => {
     setIsFocused(false);
     clearTimeout(focusTimer.current);
     //focusTimer.current = setTimeout(() => handleClick(), 1500); //REPEATEDLY REASSIGN FOCUS
-  };
+  }, []);
 
   useEffect(() => setSearching(!searchReady), [searchReady]);
   const panelOpen = isFocused && searchReady;
