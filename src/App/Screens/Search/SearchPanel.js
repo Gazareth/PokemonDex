@@ -203,19 +203,20 @@ const ErrorProgress = ({ color }) => {
   );
 };
 
-const HelperText = ({ searching, loadingState, mainTheme: theme }) => (
+const HelperText = ({ isSearching, loadingState, mainTheme: theme }) => (
   <>
-    {searching && loadingState !== SEARCH_POKEMON.FAILED && (
-      <CircularProgress
-        size="0.8rem"
-        style={{
-          verticalAlign: "text-top",
-          marginRight: "0.375rem",
-          marginTop: "0.01rem",
-          color: theme.palette.text.disabled,
-        }}
-      />
-    )}
+    {isSearching &&
+      ![SEARCH_POKEMON.FAILED, SEARCH_POKEMON.DONE].includes(loadingState) && (
+        <CircularProgress
+          size="0.8rem"
+          style={{
+            verticalAlign: "text-top",
+            marginRight: "0.375rem",
+            marginTop: "0.01rem",
+            color: theme.palette.text.disabled,
+          }}
+        />
+      )}
     {loadingState === SEARCH_POKEMON.FAILED && (
       <ErrorProgress color={theme.palette.error.main} />
     )}
@@ -224,15 +225,16 @@ const HelperText = ({ searching, loadingState, mainTheme: theme }) => (
 );
 const SearchPanel = ({
   anim,
-  searchReady,
+  isBusy,
+  searchingPokemon,
   loadingState,
   searchPokemon,
+  currentPokemon,
   ...props
 }) => {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
   const searchTxtRef = useRef();
-  const [searching, setSearching] = useState(!searchReady);
   const [isFocused, setIsFocused] = useState(false);
 
   const focusTimer = useRef();
@@ -242,10 +244,27 @@ const SearchPanel = ({
     [searchTxtRef]
   );
 
-  useEffect(() => {
-    focusTimer.current = setTimeout(() => handleClick(), 1500);
-    return () => clearTimeout(focusTimer);
-  }, []);
+  const isSearching = (searchingPokemon && searchingPokemon > 0) || null;
+
+  // Handle search complete
+  const inputVal = useMemo(() => {
+    if (
+      isBusy &&
+      ((loadingState === SEARCH_POKEMON.SPECIES_FOUND &&
+        searchingPokemon === currentPokemon.id) ||
+        (!isSearching && loadingState !== SEARCH_POKEMON.FAILED))
+    ) {
+      return currentPokemon.name;
+    } else {
+      return null;
+    }
+  }, [currentPokemon, loadingState, isBusy, isSearching, searchingPokemon]);
+
+  // Auto focus on mount after delay
+  // useEffect(() => {
+  //   focusTimer.current = setTimeout(() => handleClick(), 1500);
+  //   return () => clearTimeout(focusTimer);
+  // }, [handleClick]);
 
   const handleFocus = () => setIsFocused(true);
 
@@ -255,18 +274,17 @@ const SearchPanel = ({
     //focusTimer.current = setTimeout(() => handleClick(), 1500); //REPEATEDLY REASSIGN FOCUS
   }, []);
 
-  useEffect(() => setSearching(!searchReady), [searchReady]);
-  const panelOpen = isFocused && searchReady;
+  const panelOpen = isFocused && !isBusy;
 
   const mainAnim = anim();
 
   const cardStates = ["Closed", "Open", "Busy"];
-  const cardState = Math.max(isFocused * 2 + searchReady * -1, 0);
+  const cardState = isBusy ? 2 : isFocused ? 1 : 0;
   const stateClass = (prefix) =>
     clsx(classes[prefix], classes[prefix + "-" + cardStates[cardState]]);
 
   const touchRippleClasses = useMemo(
-    () => clsx(!panelOpen && classes.touchRippleColor),
+    () => clsx({ [classes.touchRippleColor]: !panelOpen }),
     [panelOpen, classes]
   );
 
@@ -279,14 +297,14 @@ const SearchPanel = ({
               rippleVisible: touchRippleClasses,
             },
           }}
-          component="div"
+          //component="CardActionArea"
           onMouseDown={(e) => {
             e.stopPropagation();
             e.preventDefault();
             handleClick();
           }}
           classes={{
-            root: classes.cardActionArea,
+            root: clsx(classes.cardActionArea),
             focusHighlight: classes.cardActionAreaOverlay,
           }}
         >
@@ -325,16 +343,17 @@ const SearchPanel = ({
             <SearchInput
               {...{
                 searchTxtRef,
-                searching,
+                isBusy,
+                isSearching,
+                isError: loadingState === SEARCH_POKEMON.FAILED,
                 panelOpen,
                 isFocused,
                 handleFocus,
                 handleUnfocus,
                 searchPokemon,
-                error: loadingState === SEARCH_POKEMON.FAILED,
               }}
               helperText={
-                <HelperText {...{ searching, loadingState, mainTheme }} />
+                <HelperText {...{ isSearching, loadingState, mainTheme }} />
               }
             />
           </CardContent>

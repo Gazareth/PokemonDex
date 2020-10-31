@@ -11,10 +11,9 @@ import SearchPanel from "./SearchPanel";
 
 const mapStateToProps = (state) => {
   return {
-    pokemonData: state.pokemon.data,
-    pokemonSpeciesData: state.pokemon.species,
-    pokemonMovesData: state.pokemon.moves,
+    currentPokemon: state.pokemon.data,
     loadingPokemon: state.pokemon.loading,
+    searchingPokemon: state.pokemon.searching,
   };
 };
 
@@ -22,12 +21,21 @@ const mapDispatchToProps = {
   searchPokemon,
 };
 
-const SearchPage = ({ displayContent, loadingPokemon, searchPokemon }) => {
+const SearchPage = ({
+  displayContent,
+  loadingPokemon,
+  searchingPokemon,
+  currentPokemon,
+  searchPokemon,
+}) => {
   const [showContent, setShowContent] = useState(false);
 
   const searchReady = useMemo(
-    () => displayContent && loadingPokemon === SEARCH_POKEMON.NONE,
-    [displayContent, loadingPokemon]
+    () =>
+      displayContent &&
+      !(searchingPokemon > 0) &&
+      loadingPokemon === SEARCH_POKEMON.NONE,
+    [displayContent, loadingPokemon, searchingPokemon]
   );
 
   useEffect(() => {
@@ -50,7 +58,9 @@ const SearchPage = ({ displayContent, loadingPokemon, searchPokemon }) => {
             {...anim()}
             animMagnitude={100}
             loadingState={loadingPokemon}
-            {...{ anim, searchReady, searchPokemon }}
+            isBusy={!searchReady}
+            searchingPokemon
+            {...{ anim, searchingPokemon, currentPokemon, searchPokemon }}
           />
         </Grid>
       </Grid>

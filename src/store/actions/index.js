@@ -2,7 +2,7 @@ import axios from "axios";
 import axiosDelayed from "Utils/axios";
 import { SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
 
-import ParsePokemonData from "Utils/parseData_pokemon";
+import ParsePokemonData, { capitalise } from "Utils/parseData_pokemon";
 
 import { POKEMON_FAVOURITE_FIELDS } from "Constants";
 
@@ -55,7 +55,12 @@ export const searchPokemon = (pokemonName) => {
           pokemonId = pokemonData.id;
           speciesUrl = pokemonData.species.url;
           moves = pokemonData.moves;
-          dispatch(setPokemonData(SEARCH_POKEMON.FOUND, pokemonId));
+          dispatch(
+            setPokemonData(SEARCH_POKEMON.FOUND, {
+              name: capitalise(pokemonData.name),
+              id: pokemonId,
+            })
+          );
           /***** SPECIES *****/
           return axios.get(speciesUrl);
         })

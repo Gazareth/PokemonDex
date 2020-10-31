@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import clsx from "clsx";
 
@@ -43,12 +43,13 @@ const handleKeyDown = (e, f) => {
 
 const SearchInput = ({
   searchTxtRef,
-  searching,
+  isSearching,
+  isBusy,
   isFocused,
+  isError,
   handleFocus,
   handleUnfocus,
   searchPokemon,
-  error,
   helperText,
 }) => {
   const theme = useTheme();
@@ -58,8 +59,23 @@ const SearchInput = ({
   const parseSearchString = (str) => setSearchString(str.toLowerCase());
 
   const sendSearch = () => {
+    document.activeElement.blur();
     searchPokemon(searchString);
   };
+
+  const labelText = useMemo(
+    () =>
+      isSearching
+        ? "Searching for: "
+        : isBusy
+        ? isError
+          ? ""
+          : "Loading..."
+        : isFocused
+        ? "Name or ID #"
+        : "Enter Name or ID #",
+    [isBusy, isError, isFocused, isSearching]
+  );
 
   return (
     <FormControl
@@ -69,22 +85,18 @@ const SearchInput = ({
           !isFocused && classes.searchWidthInactive
         ),
       }}
-      disabled={searching}
+      disabled={isBusy}
     >
       <InputLabel
         htmlFor="filled-adornment-search"
         //disabled={!isFocused}
         classes={{ root: clsx(!isFocused && classes.searchInputLabelBold) }}
       >
-        {isFocused
-          ? "Name or ID #"
-          : searching
-          ? "Searching for: "
-          : "Enter Name or ID #"}
+        {labelText}
       </InputLabel>
       <Input
         id="filled-adornment-search"
-        error={error}
+        error={isError}
         onFocus={() => handleFocus()}
         onBlur={() => handleUnfocus()}
         onChange={(e) => handleChange(e, parseSearchString)}
@@ -98,7 +110,7 @@ const SearchInput = ({
         onClick={(e) => {
           e.stopPropagation();
         }}
-        inputProps={{ ref: searchTxtRef }}
+        inputProps={{ ref: searchTxtRef, type: "search", autoComplete: "off" }}
       />
       <FormHelperText component="div" id="filled-adornment-search-helper-text">
         {helperText}

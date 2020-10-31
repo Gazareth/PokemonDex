@@ -25,6 +25,7 @@ const pokemonReducer = (
 
   switch (action.type) {
     case SEARCH_POKEMON.NONE:
+      return { ...loadingUpdate(), searching: 0 };
     case SEARCH_POKEMON.INIT:
     case SEARCH_POKEMON.SPECIES_FOUND:
     case SEARCH_POKEMON.EVOLUTION_CHAIN_FOUND:
@@ -36,7 +37,8 @@ const pokemonReducer = (
       return {
         ...pokemonInitialState, // wipes data & ids
         loading: action.type,
-        searching: action.payload,
+        data: { name: action.payload.name, id: action.payload.id },
+        searching: action.payload.id,
       };
     case SEARCH_POKEMON.DONE:
       return {

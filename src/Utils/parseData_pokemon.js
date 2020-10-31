@@ -1,7 +1,10 @@
 import pick from "./pick";
 
-const capitalise = (string) => {
-  return string[0].toUpperCase() + string.substr(1);
+export const capitalise = (string, separators = [" ", "-"]) => {
+  var regex = new RegExp("(^|[" + separators.join("") + "])(\\w)", "g");
+  return string.toLowerCase().replace(regex, function (x) {
+    return x.toUpperCase();
+  });
 };
 
 const statNameMap = {

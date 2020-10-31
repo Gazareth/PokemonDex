@@ -85,6 +85,7 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
         // We have a pokemon but it doesn't match the search??
       }
     }
+    // Search complete! Navigate to view page!
     if (screenIndex === 0 && loadingPokemon === SEARCH_POKEMON.DONE)
       history.push(`/view/?id=${havePokemon}`);
 
