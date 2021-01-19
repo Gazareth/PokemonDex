@@ -1,12 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-
 import Typography from "@material-ui/core/Typography";
-
 import Box from "@material-ui/core/Box";
+
+import SmoothIn from "Utils/transitionSmoothIn";
 
 import Evolutions from "./EvolutionsList";
 
@@ -56,17 +55,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PokemonDisplayEvolutions({
+const PokemonDisplayEvolutions = function ({
   pokemonId,
   pokemonEvolutions,
-  show,
-  delay,
+  ...props
 }) {
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
 
   return (
-    <Box className={classes.evolutionsOuter}>
+    <Box className={classes.evolutionsOuter} style={props.style}>
       <div className={classes.evolutionsHeading}>
         <Typography>Evolutions</Typography>
       </div>
@@ -76,8 +74,10 @@ export default function PokemonDisplayEvolutions({
       <hr className={classes.evolutionsFooter}></hr>
     </Box>
   );
-}
+};
 
 PokemonDisplayEvolutions.propTypes = {
   post: PropTypes.object,
 };
+
+export default SmoothIn(PokemonDisplayEvolutions);
