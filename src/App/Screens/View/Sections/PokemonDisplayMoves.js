@@ -66,7 +66,6 @@ const typeColoursClasses = (
   );
 
 const makeTextShadow = (colour) => "0.07em 0.07em 0 " + colour;
-//"0.05em 0.04em 0 " + colour + ", 0.1em 0.08em 0em " + colour;
 
 const resolveLevelColor = (theme, level, mix = 0.5) =>
   MixColours(

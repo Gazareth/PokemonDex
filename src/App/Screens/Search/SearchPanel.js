@@ -5,8 +5,8 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { SEARCH_POKEMON } from "Store/actions/types";
-import { LOADING_STRINGS as loadingStrings } from "Constants";
+
+import AnimatedNumber from "react-animated-number";
 
 import clsx from "clsx";
 import Color from "color";
@@ -18,6 +18,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SplitText from "react-pose-text";
 import SmoothIn from "Utils/transitionSmoothIn";
 
+import Fade from "@material-ui/core/Fade";
 import Box from "@material-ui/core/Box";
 
 import Card from "@material-ui/core/Card";
@@ -27,6 +28,12 @@ import CardContent from "@material-ui/core/CardContent";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SearchIcon from "@material-ui/icons/Search";
+
+import { PRESEARCH_POKEMON, SEARCH_POKEMON } from "Store/actions/types";
+import {
+  LOADING_STRINGS as loadingStrings,
+  PRELOAD_STRINGS as preloadStrings,
+} from "Constants";
 
 const useStyles = makeStyles((theme) => {
   const trsn = theme.transitions;
@@ -203,7 +210,13 @@ const ErrorProgress = ({ color }) => {
   );
 };
 
-const HelperText = ({ isSearching, loadingState, mainTheme: theme }) => (
+const HelperText = ({
+  preSearchState,
+  totalPokemon,
+  isSearching,
+  loadingState,
+  mainTheme: theme,
+}) => (
   <>
     {isSearching &&
       ![SEARCH_POKEMON.FAILED, SEARCH_POKEMON.DONE].includes(loadingState) && (
@@ -220,12 +233,46 @@ const HelperText = ({ isSearching, loadingState, mainTheme: theme }) => (
     {loadingState === SEARCH_POKEMON.FAILED && (
       <ErrorProgress color={theme.palette.error.main} />
     )}
-    <span>{loadingStrings[loadingState]}</span>
+    <span>
+      {!isSearching ? (
+        preSearchState === PRESEARCH_POKEMON.DONE ? (
+          <>
+            <AnimatedNumber
+              component="text"
+              value={totalPokemon}
+              duration={totalPokemon * 1.5}
+              stepPrecision={0}
+              frameStyle={(perc) =>
+                perc === 100
+                  ? {}
+                  : {
+                      filter: `opacity(${perc}%)`,
+                    }
+              }
+              //formatValue={(n) => `${n}`}
+            />{" "}
+            <Fade
+              in={totalPokemon > 0}
+              timeout={totalPokemon * 1.5}
+              style={{ transitionDelay: `${totalPokemon * 1.5}ms` }}
+            >
+              <span>Available</span>
+            </Fade>
+          </>
+        ) : (
+          preloadStrings[preSearchState]
+        )
+      ) : (
+        loadingStrings[loadingState]
+      )}
+    </span>
   </>
 );
 const SearchPanel = ({
   anim,
   isBusy,
+  totalPokemon,
+  preSearchState,
   searchingPokemon,
   loadingState,
   searchPokemon,
@@ -250,7 +297,7 @@ const SearchPanel = ({
   const inputVal = useMemo(() => {
     if (
       isBusy &&
-      ((loadingState === SEARCH_POKEMON.SPECIES_FOUND &&
+      ((loadingState === SEARCH_POKEMON.VARIETY_FOUND &&
         searchingPokemon === currentPokemon.id) ||
         (!isSearching && loadingState !== SEARCH_POKEMON.FAILED))
     ) {
@@ -353,7 +400,15 @@ const SearchPanel = ({
                 searchPokemon,
               }}
               helperText={
-                <HelperText {...{ isSearching, loadingState, mainTheme }} />
+                <HelperText
+                  {...{
+                    totalPokemon,
+                    preSearchState,
+                    isSearching,
+                    loadingState,
+                    mainTheme,
+                  }}
+                />
               }
             />
           </CardContent>

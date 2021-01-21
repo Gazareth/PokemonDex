@@ -87,7 +87,7 @@ const EvolutionTooltip = ({ id, name, isCurrent, toNewView, setSelected }) => {
   return (
     <div style={{ padding: isCurrent ? theme.spacing(2) : 0 }}>
       <div style={{ paddingBottom: isCurrent ? theme.spacing(2) : 0 }}>
-        <Typography>
+        <Typography color="textPrimary">
           <span
             style={{
               color: theme.palette.text.secondary,

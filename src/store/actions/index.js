@@ -1,6 +1,6 @@
 import axios from "axios";
 import axiosDelayed from "Utils/axios";
-import { SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
+import { PRESEARCH_POKEMON, SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
 
 import ParsePokemonData, { capitalise } from "Utils/parseData_pokemon";
 
@@ -24,6 +24,30 @@ const sleep = (sleepms = sleepTime) => (response) =>
     setTimeout(() => resolve(response), sleepms)
   );
 
+export const preSearchPokemon = () => {
+  return (dispatch) => {
+    dispatch({
+      type: PRESEARCH_POKEMON.INIT,
+    });
+    return axiosDelayed
+      .get(`${apiUrl}pokemon-species/`, {
+        delay: preSearchDelay,
+      })
+      .then(({ data: RESP_presearch }) => {
+        dispatch({
+          type: PRESEARCH_POKEMON.DONE,
+          payload: RESP_presearch.count,
+        });
+      })
+      .catch((error) => {
+        console.log("Pre-search error - ", error);
+        dispatch({
+          type: PRESEARCH_POKEMON.FAILED,
+        });
+      });
+  };
+};
+
 export const searchPokemon = (pokemonName) => {
   if (!pokemonName)
     return (dispatch) => {
@@ -35,26 +59,34 @@ export const searchPokemon = (pokemonName) => {
     };
   let pokemonId = 0;
   let pokemonData = {};
-  let speciesUrl = "",
+  let varietyUrl = "",
     evolutionsUrl = "";
   let moves = [];
 
   let movesData = [],
     evolutionsData = [],
-    speciesData = {};
+    varietyData = {};
 
   return (dispatch) => {
     dispatch(setPokemonData(SEARCH_POKEMON.INIT));
     return (
       axiosDelayed
         /***** MAIN *****/
-        .get(apiUrl + "pokemon/" + pokemonName, { delay: preSearchDelay })
+        .get(`${apiUrl}pokemon-species/${pokemonName}`, {
+          delay: preSearchDelay,
+        })
         .then(sleep())
         .then(({ data: RESP_pokemon }) => {
           pokemonData = RESP_pokemon;
           pokemonId = pokemonData.id;
-          speciesUrl = pokemonData.species.url;
-          moves = pokemonData.moves;
+          varietyUrl = pokemonData.varieties.filter(
+            (variety) => variety.is_default
+          )[0].pokemon.url;
+          evolutionsUrl = pokemonData.evolution_chain.url;
+
+          pokemonData.name = pokemonData.names.filter(
+            ({ language }) => language.name === "en"
+          )[0].name;
           dispatch(
             setPokemonData(SEARCH_POKEMON.FOUND, {
               name: capitalise(pokemonData.name),
@@ -62,14 +94,14 @@ export const searchPokemon = (pokemonName) => {
             })
           );
           /***** SPECIES *****/
-          return axios.get(speciesUrl);
+          return axios.get(varietyUrl);
         })
         .then(sleep())
-        .then(({ data: RESP_species }) => {
-          speciesData = RESP_species;
-          dispatch(action(SEARCH_POKEMON.SPECIES_FOUND));
+        .then(({ data: RESP_variety }) => {
+          varietyData = RESP_variety;
+          moves = varietyData.moves;
+          dispatch(action(SEARCH_POKEMON.VARIETY_FOUND));
           /***** EVOLUTION CHAIN *****/
-          evolutionsUrl = speciesData.evolution_chain.url;
           return axios.get(evolutionsUrl);
         })
         .then(sleep())
@@ -119,7 +151,7 @@ export const searchPokemon = (pokemonName) => {
               SEARCH_POKEMON.DONE,
               ParsePokemonData(
                 pokemonData,
-                speciesData,
+                varietyData,
                 evolutionsData,
                 movesData
               )
@@ -129,6 +161,7 @@ export const searchPokemon = (pokemonName) => {
         .then(sleep(process.env.REACT_APP_SWITCHSCREENDELAY))
         .then(() => dispatch(action(SEARCH_POKEMON.NONE)))
         .catch((error) => {
+          console.log("Data fetch error - ", error);
           dispatch(setPokemonError());
           setTimeout(
             () => dispatch(setPokemonData(SEARCH_POKEMON.NONE)),

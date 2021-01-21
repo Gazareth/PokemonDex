@@ -18,20 +18,20 @@ const statNameMap = {
 
 const parseData_Pokemon = (
   pokemonData,
-  pokemonSpeciesData,
+  varietyData,
   pokemonEvolutionsData,
   pokemonMovesData
 ) => {
-  const SpeciesFlavorText = pokemonSpeciesData.flavor_text_entries.filter(
+  const SpeciesFlavorText = pokemonData.flavor_text_entries.filter(
     (entry) =>
       entry.language.name === "en" && entry.version.name === "alpha-sapphire"
   )[0].flavor_text;
 
-  const PikachuGenus = pokemonSpeciesData.genera.filter(
+  const PikachuGenus = pokemonData.genera.filter(
     (entry) => entry.language.name === "en"
   );
 
-  const pokemonMoves = pokemonData.moves
+  const pokemonMoves = varietyData.moves
     .filter((moveObj) =>
       moveObj.version_group_details.some(
         (versionObj) => versionObj.move_learn_method.name === "level-up"
@@ -46,10 +46,10 @@ const parseData_Pokemon = (
   return {
     name: capitalise(pokemonData.name),
     id: pokemonData.id,
-    image: pokemonData.sprites.front_default,
-    types: pokemonData.types.map((typeObj) => capitalise(typeObj.type.name)),
-    physique: pick(pokemonData, ["height", "weight"]),
-    stats: pokemonData.stats
+    image: varietyData.sprites.front_default,
+    types: varietyData.types.map((typeObj) => capitalise(typeObj.type.name)),
+    physique: pick(varietyData, ["height", "weight"]),
+    stats: varietyData.stats
       .map((statObj) => ({
         order: statNameMap[statObj.stat.name][0],
         name: statNameMap[statObj.stat.name][1],
@@ -57,7 +57,7 @@ const parseData_Pokemon = (
       }))
       .sort((a, b) => a.order - b.order),
     species: {
-      name: capitalise(pokemonSpeciesData.name),
+      name: capitalise(pokemonData.name),
       flavorText: SpeciesFlavorText,
       genus: PikachuGenus[0].genus,
     },
@@ -76,7 +76,7 @@ const parseData_Pokemon = (
         )[0].type.name
       ),
     })),
-    items: pokemonData.held_items.map((itemObj) =>
+    items: varietyData.held_items.map((itemObj) =>
       capitalise(itemObj.item.name)
     ),
   };

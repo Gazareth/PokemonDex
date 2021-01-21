@@ -86,6 +86,7 @@ const PokemonDisplay = ({
       </Grid>
       <Grid item container className={classes.movesButton}>
         <PokemonDisplayMoves
+          pokemonName={pokemonInfo.name}
           displayContent={displayContent && animateIn}
           pokemonMoves={pokemonInfo.moves}
           {...anim()}

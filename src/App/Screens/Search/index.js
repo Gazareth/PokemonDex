@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { connect } from "react-redux";
-import { searchPokemon } from "Store/actions";
+import { preSearchPokemon, searchPokemon } from "Store/actions";
 import { SEARCH_POKEMON } from "Store/actions/types";
 
 import useAnimEngine from "Hooks/AnimEngine";
@@ -11,6 +11,8 @@ import SearchPanel from "./SearchPanel";
 
 const mapStateToProps = (state) => {
   return {
+    totalPokemon: state.presearch.count,
+    preSearchState: state.presearch.loading,
     currentPokemon: state.pokemon.data,
     loadingPokemon: state.pokemon.loading,
     searchingPokemon: state.pokemon.searching,
@@ -18,11 +20,15 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
+  preSearchPokemon,
   searchPokemon,
 };
 
 const SearchPage = ({
   displayContent,
+  totalPokemon,
+  preSearchState,
+  preSearchPokemon,
   loadingPokemon,
   searchingPokemon,
   currentPokemon,
@@ -37,6 +43,12 @@ const SearchPage = ({
       loadingPokemon === SEARCH_POKEMON.NONE,
     [displayContent, loadingPokemon, searchingPokemon]
   );
+
+  // Presearch only once, when first mounted
+  useEffect(() => {
+    if (totalPokemon === 0) preSearchPokemon();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setShowContent(displayContent);
@@ -60,7 +72,14 @@ const SearchPage = ({
             loadingState={loadingPokemon}
             isBusy={!searchReady}
             searchingPokemon
-            {...{ anim, searchingPokemon, currentPokemon, searchPokemon }}
+            {...{
+              anim,
+              totalPokemon,
+              preSearchState,
+              searchingPokemon,
+              currentPokemon,
+              searchPokemon,
+            }}
           />
         </Grid>
       </Grid>
