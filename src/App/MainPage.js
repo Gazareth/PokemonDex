@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 
 import PokeAppBar from "App/PokeAppBar";
 import PokemonDexRouter from "./PokemonDexRouter";
+import Credits from "./Credits";
 
 const Copyright = ({ theme }) => {
   return (
@@ -88,7 +89,10 @@ const MainPage = () => {
     <Router>
       <PokeAppBar />
       <Switch>
-        <Route path="/">
+        <Route path="/Credits">
+          <Credits />
+        </Route>
+        <Route path={"/"}>
           <main className={clsx(classes.flexCol, classes.layout)}>
             <Paper className={clsx(classes.flexCol, classes.paper)}>
               <PokemonDexRouter />

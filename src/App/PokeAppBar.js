@@ -217,10 +217,10 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
         <Divider />
         <List>
           {[
-            ["How to use", LiveHelpRoundedIcon],
-            ["Credits", InfoOutlinedIcon],
-          ].map(([text, IconComponent]) => (
-            <ListItem button key={text}>
+            ["How to use", LiveHelpRoundedIcon, "/how-to"],
+            ["Credits", InfoOutlinedIcon, "/credits"],
+          ].map(([text, IconComponent, link]) => (
+            <ListItem button key={text} onClick={() => history.push(link)}>
               <ListItemIcon>
                 <IconComponent />
               </ListItemIcon>
