@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
 
 import AnimatedNumber from "react-animated-number";
 
@@ -238,7 +232,6 @@ const HelperText = ({
         preSearchState === PRESEARCH_POKEMON.DONE ? (
           <>
             <AnimatedNumber
-              component="text"
               value={totalPokemon}
               duration={totalPokemon * 1.5}
               stepPrecision={0}

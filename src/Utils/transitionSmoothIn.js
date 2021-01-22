@@ -11,7 +11,7 @@ const smoothBaseStyle = ({ delay, magnitude, doHeight }) => ({
   //     ? `, max-height ${delay.in}ms cubic-bezier(0.075, 0.82, 0.165, 1)`
   //     : ``),
   transitionProperty: `opacity, transform${doHeight ? `, max-height` : ``}`,
-  transitionDuration: `${delay.in}ms`,
+  transitionDuration: `${delay.inDuration}ms`,
   transitionTimingFunction: `linear, cubic-bezier(0.075, 0.82, 0.165, 1)${
     doHeight ? `, cubic-bezier(0.075, 0.82, 0.165, 1)` : ``
   }`,

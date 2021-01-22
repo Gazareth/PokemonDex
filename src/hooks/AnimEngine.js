@@ -10,7 +10,7 @@ const useAnimEngine = (
   participants,
   inOut,
   timing,
-  staggerAmount = 3000,
+  staggerAmount = 300,
   overflow = false,
   staggerOffset = 0,
   providedCallback = noop
@@ -23,7 +23,10 @@ const useAnimEngine = (
   if (typeof timing === "object") {
     baseDelay = timing.delay || baseDelay;
     duration = timing.duration || baseDelay;
-    totalTime = timing.total - baseDelay || totalTime;
+    totalTime =
+      timing.total - baseDelay ||
+      (duration + staggerAmount) * participants + baseDelay ||
+      totalTime;
   }
 
   return () => {

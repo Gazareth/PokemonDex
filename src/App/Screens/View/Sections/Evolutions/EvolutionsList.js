@@ -81,7 +81,7 @@ const useStylesBootstrap = makeStyles((theme) => ({
   },
 }));
 
-const EvolutionTooltip = ({ id, name, isCurrent, toNewView, setSelected }) => {
+const EvolutionTooltip = ({ id, name, isCurrent, toNewView }) => {
   const theme = useTheme();
 
   return (

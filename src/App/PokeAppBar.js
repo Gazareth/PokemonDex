@@ -162,6 +162,8 @@ const NavIconButton = ({
   );
 };
 
+const currentPage = (path, currentPath) => currentPath.includes(path);
+
 const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   const [classes, theme] = useThemedClasses(styles);
   const history = useHistory();
@@ -200,33 +202,52 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
         <Divider />
         <List>
           {[
-            ["Search", SearchIcon, "info"],
-            ["View", PokeballIcon, "secondary"],
-            ["Favourites", GradeTwoToneIcon, "warning"],
-          ].map(([text, IconComponent, colorType]) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                <IconComponent
-                  style={{ color: theme.palette[colorType].light }}
-                />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+            ["Search", SearchIcon, "info", "search"],
+            ["View", PokeballIcon, "secondary", "view"],
+            ["Favourites", GradeTwoToneIcon, "warning", "favourites"],
+          ].map(([text, IconComponent, colorType, link], i) => {
+            const isCurrentPath = currentPage(link, pathname);
+            const abridgedPath = `/${link}/${
+              i === 1 ? `?id=${pokemonAvailable}` : ""
+            }`;
+            return (
+              <ListItem
+                button
+                key={text}
+                disabled={isCurrentPath}
+                onClick={() => !isCurrentPath && history.push(abridgedPath)}
+              >
+                <ListItemIcon>
+                  <IconComponent
+                    style={{ color: theme.palette[colorType].light }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            );
+          })}
         </List>
         <Divider />
         <List>
           {[
-            ["How to use", LiveHelpRoundedIcon, "/how-to"],
-            ["Credits", InfoOutlinedIcon, "/credits"],
-          ].map(([text, IconComponent, link]) => (
-            <ListItem button key={text} onClick={() => history.push(link)}>
-              <ListItemIcon>
-                <IconComponent />
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+            ["How to use", LiveHelpRoundedIcon, "how-to"],
+            ["Credits", InfoOutlinedIcon, "credits"],
+          ].map(([text, IconComponent, link]) => {
+            const isCurrentPath = currentPage(link, pathname);
+            return (
+              <ListItem
+                button
+                key={text}
+                disabled={isCurrentPath}
+                onClick={() => !isCurrentPath && history.push(`/${link}`)}
+              >
+                <ListItemIcon>
+                  <IconComponent />
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            );
+          })}
         </List>
       </div>
     </div>
