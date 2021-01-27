@@ -102,6 +102,7 @@ const FavouritesPage = ({
     animateControlsIn,
     displayContent,
   ]);
+
   const displayList = useMemo(() => displayContent && animateIn, [
     animateIn,
     displayContent,
@@ -109,17 +110,18 @@ const FavouritesPage = ({
 
   const buttonsAnim = useAnimEngine(
     2,
-    displayContent && animateControlsIn,
-    225,
-    100
+    displayControls,
+    { delay: 275, duration: 225 },
+    100,
+    0.2
   );
 
   const favListAnim = useAnimEngine(
     favourites.length,
     displayList,
-    {},
-    3000,
-    false,
+    { delay: 375, duration: 350 },
+    90,
+    0.75,
     0,
     () => setAnimateControlsIn(true)
   );

@@ -125,10 +125,10 @@ const CreditsEntry = SmoothIn(
 
 const Credits = () => {
   const classes = useStyles();
-  const anim = useAnimEngine(6, true, { delay: 1200, duration: 750 }, 200);
+  const anim = useAnimEngine(6, true, { delay: 1200, duration: 775 }, 225);
 
   return (
-    <div className={classes.root} style={{ margin: "8% 0" }}>
+    <div className={classes.root} style={{ margin: "8vh 0" }}>
       <Typography
         align="center"
         variant="h5"
@@ -139,7 +139,7 @@ const Credits = () => {
           Credits
         </SplitText>
       </Typography>
-      <List style={{ marginTop: "8%" }}>
+      <List style={{ marginTop: "6vh" }}>
         {creditsInfo.map(([title, img, subtitle, text], i) => {
           const isEven = true || i % 2 === 0;
           return (

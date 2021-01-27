@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import PokemonDisplayMain from "./Sections/PokemonCard";
 import PokemonDisplayStats from "./Sections/PokemonDisplayStats";
 import PokemonDisplaySpecies from "./Sections/PokemonDisplaySpecies";
-import PokemonDisplayMoves from "./Sections/PokemonDisplayMovesModal";
+import PokemonDisplayMoves from "./Sections/PokemonDisplayMoves";
 import PokemonDisplayEvolutions from "./Sections/Evolutions";
 import PokemonDisplayIDNav from "./Sections/PokemonDisplayIDNav";
 
@@ -56,7 +56,13 @@ const PokemonDisplay = ({
     setTimeout(() => setAnimateIn(true), 250);
   }, []);
 
-  const anim = useAnimEngine(6, displayContent && animateIn);
+  const anim = useAnimEngine(
+    6,
+    displayContent && animateIn,
+    { duration: 275 },
+    65,
+    1.25
+  );
 
   return (
     <Grid

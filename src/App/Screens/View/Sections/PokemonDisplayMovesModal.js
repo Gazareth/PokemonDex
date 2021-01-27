@@ -1,112 +1,235 @@
 import React from "react";
+import PropTypes from "prop-types";
+import {
+  green,
+  lightGreen,
+  lime,
+  yellow,
+  orange,
+  indigo,
+  deepPurple,
+  purple,
+  pink,
+  red,
+} from "@material-ui/core/colors";
 
-import Button from "@material-ui/core/Button";
+import Color from "color";
+import clsx from "clsx";
 
-import SmoothIn from "Utils/transitionSmoothIn";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+import OutlinedDiv from "Components/OutlinedDiv";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Slide from "@material-ui/core/Slide";
+const levelColours = (darkLight = false) =>
+  [
+    green,
+    lightGreen,
+    lime,
+    yellow,
+    orange,
+    indigo,
+    deepPurple,
+    purple,
+    pink,
+    red,
+  ].map((colorObj) => colorObj["A700"]);
 
-import PokemonMoves from "./PokemonDisplayMoves";
+const MixColours = (col1, col2, ratio) =>
+  Color(col1).mix(Color(col2), ratio).hex();
 
-import useAnimEngine from "Hooks/AnimEngine";
+const typeColoursClasses = (
+  theme,
+  colorBlend,
+  classPrefix,
+  key,
+  muted = false
+) =>
+  Object.keys(theme.palette.pokemonTypes).reduce(
+    (classes, typesColorKey) => ({
+      ...classes,
+      [classPrefix + "-" + typesColorKey]: {
+        [key]: MixColours(
+          theme.palette.pokemonTypes[typesColorKey],
+          colorBlend,
+          muted || 0
+        ), //todo get half way between this color and default grey if "muted" argument provided
+      },
+    }),
+    {}
+  );
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+const makeTextShadow = (colour) => "0.07em 0.07em 0 " + colour;
 
-import ListAltIcon from "@material-ui/icons/ListAlt";
+const resolveLevelColor = (theme, level, mix = 0.5) =>
+  MixColours(
+    theme.palette.background.tertiary,
+    levelColours(theme.palette.type === "light")[
+      Math.floor(level / (100 / levelColours().length))
+    ],
+    mix
+  );
 
 const useStyles = makeStyles((theme) => ({
-  media: {
-    height: 140,
+  noCursor: {
+    cursor: "default !important",
   },
-  movesButtonOuter: {
-    margin: "0 15%",
-    flex: 1,
-  },
-  movesButton: {
-    borderRadius: theme.spacing(0.5),
+  softBg: {
     backgroundColor: theme.palette.background.tertiary,
-    filter: `drop-shadow(0px 2px 10px ${theme.palette.background.default})`,
   },
+  fullHeight: {
+    height: "100%",
+  },
+  overflowAuto: {
+    flex: "auto",
+    overflow: "auto",
+  },
+  listMargin: {
+    margin: "5%",
+  },
+  levelNumber: {
+    fontWeight: "800",
+    color: theme.palette.text.primary,
+  },
+  levelText: {
+    fontSize: "0.65rem",
+    fontWeight: "700",
+    fontVariant: "small-caps",
+    textShadow: "none",
+    //"-1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444, 1px 1px 0 #444",
+    color: theme.palette.text.secondary,
+  },
+  backgroundTestColour: {
+    backgroundColor: theme.palette.background.default,
+  },
+  ...typeColoursClasses(
+    theme,
+    theme.palette.text.secondary,
+    "typeTextColor",
+    "color"
+  ),
+  ...typeColoursClasses(
+    theme,
+    theme.palette.background.default,
+    "typeBackgroundColor",
+    "backgroundColor",
+    0.925
+  ),
+  ...typeColoursClasses(
+    theme,
+    theme.palette.background.default,
+    "typeLevelBackgroundColor",
+    "backgroundColor",
+    0.95
+  ),
 }));
 
-const MovesButton = SmoothIn(({ onClick, style }) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
+const PokemonMoves = ({ classes, pokemonMoves, theme }) => (
+  <List className={classes.listMargin}>
+    {pokemonMoves.map((move, i) => (
+      <div key={i}>
+        <ListItem
+          style={{
+            //borderRadiusLeft: "22px",
+            border: "1px solid " + theme.palette.background.senary,
+            ...(i === 0
+              ? {
+                  //borderTop: "",
+                  borderTopLeftRadius: "0.3em",
+                  borderTopRightRadius: "0.3em",
+                }
+              : i === pokemonMoves.length - 1
+              ? {
+                  borderTop: "",
+                  borderBottomLeftRadius: "0.3em",
+                  borderBottomRightRadius: "0.3em",
+                }
+              : { borderTop: "" }), //"0px solid #000"
+          }}
+          classes={{
+            root: classes["typeBackgroundColor-" + move.type],
+          }}
+          button
+        >
+          <ListItemAvatar>
+            <Avatar
+              style={{
+                border: "1px solid" + resolveLevelColor(theme, move.level),
+              }}
+              classes={{
+                root: classes.backgroundTestColour, //classes["typeLevelBackgroundColor-" + move.type]
+              }}
+            >
+              <Typography
+                className={classes.levelNumber}
+                style={{
+                  textShadow: makeTextShadow(
+                    "rgba(" +
+                      Color(
+                        MixColours(
+                          theme.palette.text.primary,
+                          resolveLevelColor(theme, move.level, 0.5),
+                          0.0
+                        )
+                      )
+                        .rgb()
+                        .array()
+                        .join(",") +
+                      "," +
+                      0.75 +
+                      ")"
+                  ),
+                  color: resolveLevelColor(theme, move.level, 0.5),
+                }}
+              >
+                <Typography component="span" className={classes.levelText}>
+                  {"Lv."}
+                </Typography>
+                {move.level}
+              </Typography>
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            classes={{ secondary: classes["typeTextColor-" + move.type] }}
+            primary={move.name}
+            secondary={move.type}
+          />
+        </ListItem>
+      </div>
+    ))}
+  </List>
+);
 
-  return (
-    <List className={classes.movesButtonOuter} {...{ style }}>
-      <ListItem
-        classes={{ root: classes.movesButton }}
-        button
-        onClick={onClick}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            <ListAltIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary={"Moves"} secondary={"(34)"} />
-      </ListItem>
-    </List>
-  );
-});
-
-const ModalTransition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const PokemonMovesModal = ({
-  displayContent,
-  pokemonName,
+export default function PokemonDisplayMoves({
   pokemonMoves,
   show,
   delay,
-}) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const anim = useAnimEngine(4, displayContent);
+  doHeight,
+}) {
+  const mainTheme = useTheme();
+  const classes = useStyles(mainTheme);
 
   return (
-    <>
-      <MovesButton {...{ show, delay }} onClick={handleClickOpen} />
-      <Dialog
-        open={open}
-        fullWidth
-        maxWidth={"sm"}
-        TransitionComponent={ModalTransition}
-        keepMounted
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">{pokemonName}</DialogTitle>
-        <DialogContent>
-          <PokemonMoves {...{ pokemonMoves, ...anim() }} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+    <OutlinedDiv
+      label={"Moves (" + pokemonMoves.length + ")"}
+      {...{ show, delay, doHeight }}
+      classes={{ root: classes.fullHeight }}
+      inputClassName={clsx(classes.fullHeight, classes.overflowAuto)}
+      inputRootClasses={clsx(
+        classes.softBg,
+        classes.noCursor,
+        classes.fullHeight
+      )}
+    >
+      <PokemonMoves {...{ classes, pokemonMoves, theme: mainTheme }} />
+    </OutlinedDiv>
   );
-};
+}
 
-export default PokemonMovesModal;
+PokemonDisplayMoves.propTypes = {};
