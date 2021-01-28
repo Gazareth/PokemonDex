@@ -216,7 +216,13 @@ const PokemonFavourite = ({
     pokemonInfo,
   ]);
 
-  const anim = useAnimEngine(3, displayContent && isSelected, 225, 75);
+  const anim = useAnimEngine(
+    3,
+    displayContent && isSelected,
+    { delay: 275, duration: 225 },
+    100,
+    0.2
+  );
 
   return (
     <div

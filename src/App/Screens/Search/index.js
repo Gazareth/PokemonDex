@@ -55,7 +55,7 @@ const SearchPage = ({
     return () => setShowContent(false);
   }, [displayContent, setShowContent]);
 
-  const anim = useAnimEngine(1, showContent);
+  const anim = useAnimEngine(1, showContent, { delay: 275, duration: 475 });
 
   return (
     <Grid
