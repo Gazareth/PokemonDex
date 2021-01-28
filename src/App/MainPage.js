@@ -38,9 +38,17 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     [theme.breakpoints.up("sm")]: {
       flexGrow: "0.85",
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
+      marginTop: "8vh",
       padding: theme.spacing(4),
+    },
+    animation: `$fadeIn 375ms ${theme.transitions.easing.easeInOut}`,
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+    },
+    "100%": {
+      opacity: 1,
     },
   },
 }));
