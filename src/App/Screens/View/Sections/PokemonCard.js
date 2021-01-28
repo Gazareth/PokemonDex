@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import clsx from "clsx";
 
+import Color from "color";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SmoothIn from "Utils/transitionSmoothIn";
 
@@ -65,7 +67,25 @@ const PokemonDisplayMain = ({
   const classes = useStyles(theme);
 
   return (
-    <Card className={classes.card} style={{ ...props.style }}>
+    <Card
+      className={classes.card}
+      style={{
+        ...props.style,
+        ...(isFavourite
+          ? {
+              backgroundColor: Color(theme.palette.background.quaternary).mix(
+                Color(theme.palette.warning.light),
+                0.1
+              ),
+              borderColor: Color(theme.palette.background.quaternary).mix(
+                Color(theme.palette.warning.dark),
+                0.5
+              ),
+            }
+          : {}),
+      }}
+      variant={isFavourite ? "outlined" : "elevation"}
+    >
       <Box display="flex" alignItems="center">
         <img
           src={pokemonInfo.image}
@@ -73,7 +93,19 @@ const PokemonDisplayMain = ({
           alt={pokemonInfo.name}
         />
       </Box>
-      <div className={classes.cardDetails}>
+      <div
+        className={classes.cardDetails}
+        style={{
+          ...(isFavourite
+            ? {
+                backgroundColor: Color(theme.palette.background.tertiary).mix(
+                  Color(theme.palette.warning.light),
+                  0.1
+                ),
+              }
+            : {}),
+        }}
+      >
         <CardContent>
           <Grid container>
             <Grid item xs={10} container direction="column">
