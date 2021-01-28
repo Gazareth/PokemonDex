@@ -5,46 +5,10 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import clsx from "clsx";
 
 import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
 
 import PokeAppBar from "App/PokeAppBar";
 import PokemonDexRouter from "./PokemonDexRouter";
 import Credits from "./Credits";
-
-const Copyright = ({ theme }) => {
-  return (
-    <Typography variant="caption" color="textSecondary" align="center">
-      {"Pokedex icon by "}
-      <Link
-        color="textPrimary"
-        href="https://www.flaticon.com/authors/those-icons"
-        title="Those Icons"
-      >
-        Those Icons
-      </Link>
-      {" at: "}
-      <Link
-        color="textPrimary"
-        href="https://www.flaticon.com/"
-        title="Flaticon"
-      >
-        {" "}
-        Flaticon
-      </Link>
-      {" • "}
-      <Link color="primary" href="https://material-ui.com/">
-        Material UI
-      </Link>
-      {" • "}
-      <Link color="secondary" href="https://pokeapi.co/">
-        PokeApi
-      </Link>
-      {/* {" • "}
-      {new Date().getFullYear()} {" • "} */}
-    </Typography>
-  );
-};
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {
@@ -97,7 +61,6 @@ const MainPage = () => {
             <Paper className={clsx(classes.flexCol, classes.paper)}>
               <PokemonDexRouter />
             </Paper>
-            <Copyright theme={mainTheme} className={classes.footer} />
           </main>
         </Route>
       </Switch>
