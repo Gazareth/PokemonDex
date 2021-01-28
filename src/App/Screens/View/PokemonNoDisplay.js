@@ -176,7 +176,7 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
             }}
             appear
           >
-            <Grid container direction="column" spacing={2}>
+            <Grid container direction="column" spacing={6}>
               <Grid item>
                 <PokeballLoader classes={classes} />
               </Grid>
