@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import { preSearchPokemon, searchPokemon } from "Store/actions";
 import { SEARCH_POKEMON } from "Store/actions/types";

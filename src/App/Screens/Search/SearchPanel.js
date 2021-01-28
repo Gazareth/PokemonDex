@@ -287,18 +287,18 @@ const SearchPanel = ({
   const isSearching = (searchingPokemon && searchingPokemon > 0) || null;
 
   // Handle search complete
-  const inputVal = useMemo(() => {
-    if (
-      isBusy &&
-      ((loadingState === SEARCH_POKEMON.VARIETY_FOUND &&
-        searchingPokemon === currentPokemon.id) ||
-        (!isSearching && loadingState !== SEARCH_POKEMON.FAILED))
-    ) {
-      return currentPokemon.name;
-    } else {
-      return null;
-    }
-  }, [currentPokemon, loadingState, isBusy, isSearching, searchingPokemon]);
+  // const inputVal = useMemo(() => {
+  //   if (
+  //     isBusy &&
+  //     ((loadingState === SEARCH_POKEMON.VARIETY_FOUND &&
+  //       searchingPokemon === currentPokemon.id) ||
+  //       (!isSearching && loadingState !== SEARCH_POKEMON.FAILED))
+  //   ) {
+  //     return currentPokemon.name;
+  //   } else {
+  //     return null;
+  //   }
+  // }, [currentPokemon, loadingState, isBusy, isSearching, searchingPokemon]);
 
   // Auto focus on mount after delay
   // useEffect(() => {

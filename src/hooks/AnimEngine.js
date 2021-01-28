@@ -18,6 +18,7 @@ const useAnimEngine = (
 ) => {
   let staggerId = staggerOffset;
   let baseDelay = defaultDelayTime();
+  // eslint-disable-next-line no-unused-vars
   let totalTime = defaultTotalTime() - baseDelay; // this is in use, just ESLint being rarted
   let baseDuration = defaultDelayTime() * 3;
 
@@ -28,20 +29,16 @@ const useAnimEngine = (
       ? timing.total - baseDelay ||
         (baseDuration + staggerAmount) * participants + baseDelay
       : totalTime;
-    console.log(
-      "baseDelay",
-      baseDelay,
-      "duration",
-      baseDuration,
-      timing.duration
-    );
+    // console.log(
+    //   "baseDelay",
+    //   baseDelay,
+    //   "duration",
+    //   baseDuration,
+    //   timing.duration
+    // );
   }
 
   return () => {
-    // const _staggerAmount = Math.min(
-    //   staggerAmount,
-    //   (totalTime - baseDelay) / participants
-    // );
     const newDuration =
       baseDuration + staggerAmount * Math.pow(staggerId, overflow);
     const invDuration =

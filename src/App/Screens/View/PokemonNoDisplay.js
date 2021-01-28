@@ -10,8 +10,6 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 
-import LinearProgress from "@material-ui/core/LinearProgress";
-
 import Fade from "@material-ui/core/Fade";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -72,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     right: "0",
     top: "0",
     width: "100px",
-    filter: "grayscale(50%) opacity(80%)",
+    //filter: "grayscale(50%) opacity(80%)",
     //marginBottom: theme.spacing(2),
   },
   loaderLineWrap: {
