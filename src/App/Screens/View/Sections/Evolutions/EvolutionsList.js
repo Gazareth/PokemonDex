@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
     "&:hover": {
-      filter: "brightness(1.35)",
+      filter:
+        theme.palette.type === "dark" ? "brightness(1.35)" : "brightness(0.85)",
     },
   },
   evolutionEntryActive: {
@@ -66,7 +67,8 @@ const useStyles = makeStyles((theme) => ({
       .mix(Color(theme.palette.text.primary), 0.25)
       .string()}`,
     "&:hover": {
-      filter: "brightness(1.15)",
+      filter:
+        theme.palette.type === "dark" ? "brightness(1.35)" : "brightness(0.9)",
     },
   },
 }));
