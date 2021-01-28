@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 
 import { SEARCH_POKEMON } from "Store/actions/types";
 
-import { addFavourite, removeFavourite } from "Store/actions";
+import {
+  addFavourite,
+  removeFavourite,
+  reorderFavourites,
+} from "Store/actions";
 
 import PokemonDisplay from "./PokemonDisplay";
 import PokemonNoDisplay from "./PokemonNoDisplay";
@@ -21,6 +25,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   addFavourite,
   removeFavourite,
+  reorderFavourites,
 };
 
 const getIsFavourite = (favourites, id) =>
@@ -35,6 +40,7 @@ const PokemonPage = ({
   favourites,
   addFavourite,
   removeFavourite,
+  reorderFavourites,
 }) => {
   //const dataArr = [pokemonData, pokemonSpeciesData, pokemonMovesData];
   const [isFavourite, setIsFavourite] = useState(false);
@@ -45,8 +51,19 @@ const PokemonPage = ({
 
   //const addRemoveFavourite = useMemo(()=>,[isFavourite]);
   const addRemoveFavourite = useCallback(() => {
-    isFavourite ? removeFavourite(pokemonData.id) : addFavourite(pokemonData);
-  }, [addFavourite, isFavourite, pokemonData, removeFavourite]);
+    if (isFavourite) {
+      removeFavourite(pokemonData.id);
+      reorderFavourites();
+    } else {
+      addFavourite(pokemonData);
+    }
+  }, [
+    addFavourite,
+    isFavourite,
+    pokemonData,
+    removeFavourite,
+    reorderFavourites,
+  ]);
 
   return havePokemon === 0 ||
     (searching > 0 && havePokemon !== searching) ||

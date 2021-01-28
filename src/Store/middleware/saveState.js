@@ -4,9 +4,7 @@ import pick from "Utils/pick";
 
 const values = (obj) => Object.keys(obj).map((key) => obj[key]);
 
-const favouritesActions = values(
-  pick(FAVOURITES, ["ADD_FAVOURITE", "DELETE_FAVOURITE", "COMMIT_REORDER"])
-);
+const favouritesActions = values(pick(FAVOURITES, ["ADD", "COMMIT_REORDER"]));
 
 const saveActions = [
   SEARCH_POKEMON.DONE,
@@ -26,12 +24,13 @@ const saveState = (store) => (next) => (action) => {
         favourites: { favourites: state.favourites.favourites },
         theme: { mode: state.theme.mode },
       };
-
       const serializedState = JSON.stringify(pickedState);
       localStorage.setItem("state", serializedState);
       return result;
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log("Failed to update cache -- ", err);
+  }
   return next(action);
 };
 
