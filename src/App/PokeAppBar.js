@@ -36,6 +36,7 @@ import PokeballIcon from "Icons/PokeballIcon";
 import GradeTwoToneIcon from "@material-ui/icons/GradeTwoTone";
 import LiveHelpRoundedIcon from "@material-ui/icons/LiveHelpRounded";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import SettingsIcon from "@material-ui/icons/Settings";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -230,8 +231,9 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
         <Divider />
         <List>
           {[
-            ["How to use", LiveHelpRoundedIcon, "how-to"],
-            ["Credits", InfoOutlinedIcon, "credits"],
+            ["How to use", LiveHelpRoundedIcon, "HowToUse"],
+            ["Credits", InfoOutlinedIcon, "Credits"],
+            ["Settings", SettingsIcon, "Settings"],
           ].map(([text, IconComponent, link]) => {
             const isCurrentPath = currentPage(link, pathname);
             return (
