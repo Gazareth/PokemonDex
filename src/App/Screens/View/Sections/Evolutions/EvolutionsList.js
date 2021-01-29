@@ -21,6 +21,8 @@ import Avatar from "@material-ui/core/Avatar";
 
 import pick from "Utils/pick";
 
+const TOOLTIP_COOLDOWN = 450;
+
 const useStyles = makeStyles((theme) => ({
   evolutionsListOuter: {
     height: "96px",
@@ -73,15 +75,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const useStylesBootstrap = makeStyles((theme) => ({
-  arrow: {
-    color: theme.palette.text.disabled,
-  },
-  tooltip: {
-    backgroundColor: theme.palette.background.default,
-    borderRadius: theme.spacing(1),
-  },
-}));
+const useStylesBootstrap = (shouldHide) =>
+  makeStyles((theme) => ({
+    arrow: {
+      color: theme.palette.text.disabled,
+    },
+    tooltip: {
+      backgroundColor: theme.palette.background.default,
+      borderRadius: theme.spacing(1),
+      ...(shouldHide ? { filter: "opacity(0)", pointerEvents: "none" } : {}),
+    },
+  }));
 
 const EvolutionTooltip = ({ id, name, isCurrent, toNewView }) => {
   const theme = useTheme();
@@ -142,27 +146,41 @@ const Evolution = ({
   isSelect,
   toNewView,
   setSelected,
+  canTooltip,
+  tooltipCooldown,
   evolEntryClass,
   evolActiveClass,
   evolInactiveClass,
   positionOffset,
   evolScale,
 }) => {
-  const tooltipClasses = useStylesBootstrap();
+  const tooltipClasses = useStylesBootstrap(!canTooltip)();
+
+  const setSelectedCB = useCallback(
+    (evolIndex) => {
+      tooltipCooldown();
+      setSelected(evolIndex);
+    },
+    [setSelected, tooltipCooldown]
+  );
+
   return (
     <Tooltip
       key={id}
       interactive={isSelect}
+      //{...(!canTooltip ? { open: false } : {})}
       title={
-        <EvolutionTooltip
-          id={id}
-          name={name}
-          isCurrent={isSelect}
-          toNewView={() => toNewView(id)}
-        />
+        canTooltip && (
+          <EvolutionTooltip
+            id={id}
+            name={name}
+            isCurrent={isSelect}
+            toNewView={() => toNewView(id)}
+          />
+        )
       }
       classes={tooltipClasses}
-      arrow
+      arrow={canTooltip}
     >
       <Avatar
         alt={name}
@@ -179,7 +197,7 @@ const Evolution = ({
           })`,
           zIndex: isSelect ? 1 : Math.round(evolScale * 100),
         }}
-        onClick={() => setSelected(evolIndex)}
+        onClick={() => setSelectedCB(evolIndex)}
       />
     </Tooltip>
   );
@@ -190,6 +208,14 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
   const [currentEvolution, setEvolution] = useState(
     evolutions.findIndex((evol) => evol.id === viewingId)
   );
+
+  const [canTooltip, setCanTooltip] = useState(true);
+
+  const tooltipCooldown = useCallback(() => {
+    setCanTooltip(false);
+    setTimeout(() => setCanTooltip(true), TOOLTIP_COOLDOWN);
+  }, []);
+
   const history = useHistory();
   const toNewView = useCallback((id) => history.push(`/view/?id=${id}`), [
     history,
@@ -232,6 +258,7 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
             isSelect={i === currentEvolution}
             setSelected={setEvolution}
             toNewView={toNewView}
+            {...{ canTooltip, tooltipCooldown }}
             {...{
               evolEntryClass,
               evolActiveClass,
