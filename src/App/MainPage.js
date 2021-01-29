@@ -9,6 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import PokeAppBar from "App/PokeAppBar";
 import PokemonDexRouter from "./PokemonDexRouter";
 import Credits from "./Credits";
+import HowToUse from "./HowToUse";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {
@@ -63,6 +64,9 @@ const MainPage = () => {
       <Switch>
         <Route path="/Credits">
           <Credits />
+        </Route>
+        <Route path="/HowToUse">
+          <HowToUse />
         </Route>
         <Route path={"/"}>
           <main className={clsx(classes.flexCol, classes.layout)}>
