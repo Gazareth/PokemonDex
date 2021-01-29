@@ -62,7 +62,7 @@ const creditsInfo = [
   ],
   [
     "React JS",
-    require("Icons/ReactIcon.png"),
+    require("Icons/React-icon.png"),
     `"A JavaScript library for building user interfaces"`,
     `The foundation of modern web development, react enables a declarative coding style with powerful and intuitive customisability which led 
     to its well deserved position as the top dog of modern JS frameworks. It is a joy to use and can take all the credit for my ever getting properly into web development!
@@ -112,7 +112,7 @@ const creditsInfo = [
   ],
 ];
 
-const CreditsAvatar = ({ title, img, isEven }) => (
+const CreditsAvatar = ({ title, img }) => (
   <ListItemAvatar>
     <img
       alt={title}
@@ -128,11 +128,10 @@ const CreditsEntry = SmoothIn(
   ({ title, img, subtitle, text, link, isEven, style }) => (
     <div style={style}>
       <ListItem style={{ margin: "2% 0", padding: "0 6%" }}>
-        {isEven && <CreditsAvatar {...{ title, img, isEven }} />}
+        <CreditsAvatar {...{ title, img }} />
         <ListItemText
           style={{
-            ...(isEven ? {} : { textAlign: "right" }),
-            [`margin${isEven ? "Left" : "Right"}`]: "8%",
+            marginLeft: "8%",
           }}
           primary={title}
           primaryTypographyProps={{ variant: "h6" }}
@@ -153,8 +152,8 @@ const CreditsEntry = SmoothIn(
                 <Button
                   variant="contained"
                   color="primary"
-                  href="#contained-buttons"
-                  // style={{marginTop: 5px}}
+                  href={link}
+                  target="_blank"
                 >
                   Link
                 </Button>
@@ -162,7 +161,6 @@ const CreditsEntry = SmoothIn(
             </>
           }
         />
-        {!isEven && <CreditsAvatar {...{ title, img, isEven }} />}
       </ListItem>
       <Button></Button>
       <Divider variant="middle" component="li" />
@@ -172,7 +170,7 @@ const CreditsEntry = SmoothIn(
 
 const Credits = () => {
   const classes = useStyles();
-  const anim = useAnimEngine(6, true, { delay: 1200, duration: 775 }, 225);
+  const anim = useAnimEngine(6, true, { delay: 850, duration: 775 }, 225);
 
   return (
     <div className={classes.root} style={{ margin: "8vh 0" }}>
@@ -190,7 +188,7 @@ const Credits = () => {
         <Typography>
           <List style={{ marginTop: "6vh" }}>
             {creditsInfo.map(([title, img, subtitle, text, link], i) => {
-              const isEven = true || i % 2 === 0;
+              const isEven = i % 2 === 0;
               return (
                 <CreditsEntry
                   key={i}
