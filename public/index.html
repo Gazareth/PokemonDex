@@ -29,8 +29,15 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <style>
-      body {
-        background-color: #121212;
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #121212;
+        }
+      }
+      @media (prefers-color-scheme: light) {
+        body {
+          background: #fff;
+        }
       }
     </style>
     <title>Pokémon Dex</title>
