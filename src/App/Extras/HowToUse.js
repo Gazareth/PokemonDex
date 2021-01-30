@@ -1,5 +1,8 @@
 import React from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
+
+import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
@@ -25,11 +28,19 @@ const useStyles = makeStyles((theme) => ({
   root: {
     alignSelf: "center",
     maxWidth: "70%",
-    margin: "5% 0",
-    backgroundColor: theme.palette.background.paper,
+    margin: "6vh 0",
+    padding: "4vh 4vw",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "0",
+      marginRight: "0",
+    },
+    border: "none",
+    boxShadow: "none",
   },
-  titleDot: {
-    color: theme.palette.primary.main,
+  avatar: {
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   headingText: {
     animation: `$fadeIn 750ms ${theme.transitions.easing.easeInOut}`,
@@ -46,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5rem",
     fontWeight: "600",
     textAlign: "center",
-    marginRight: "17%",
+    marginRight: "18.8%",
+    marginBottom: "3vh",
   },
   sectionHeadingRight: {
     paddingRight: "10%",
@@ -174,8 +186,8 @@ const howToInfo = [
   ],
 ];
 
-const HowToAvatar = ({ title, ImageComponent, isEven }) => (
-  <ListItemAvatar>
+const HowToAvatar = ({ title, classes, ImageComponent }) => (
+  <ListItemAvatar classes={classes}>
     <ImageComponent.component {...ImageComponent.props} />
   </ListItemAvatar>
 );
@@ -187,7 +199,7 @@ const HowToEntry = SmoothIn(
     subtitle,
     text,
     link,
-    isEven,
+    isLast,
     style,
     sectionHeadingClass,
   }) => {
@@ -196,22 +208,18 @@ const HowToEntry = SmoothIn(
     return (
       <div style={style}>
         <ListItem style={{ margin: "2% 0", padding: "0 6%" }}>
-          {isEven && <HowToAvatar {...{ title, ImageComponent, isEven }} />}
+          <HowToAvatar
+            {...{ title, ImageComponent }}
+            classes={{ root: classes.avatar }}
+          />
           <ListItemText
+            component="div"
             style={{
-              ...(isEven ? {} : { textAlign: "right" }),
-              [`margin${isEven ? "Left" : "Right"}`]: "8%",
+              marginLeft: "8%",
               fontSize: "5rem",
             }}
             classes={{
-              primary: clsx(
-                values(
-                  pick(classes, [
-                    "sectionHeading",
-                    //`sectionHeading${isEven ? "Left" : "Right"}`,
-                  ])
-                )
-              ),
+              primary: clsx(values(pick(classes, ["sectionHeading"]))),
             }}
             primary={title}
             primaryTypographyProps={{ variant: "h6" }}
@@ -226,7 +234,7 @@ const HowToEntry = SmoothIn(
                   {subtitle}
                   <br />
                 </Typography>
-                <p>{text}</p>
+                <div>{text}</div>
                 <br />
                 {link && (
                   <Button
@@ -241,10 +249,9 @@ const HowToEntry = SmoothIn(
               </>
             }
           />
-          {!isEven && <HowToAvatar {...{ title, ImageComponent, isEven }} />}
         </ListItem>
         <Button></Button>
-        <Divider variant="middle" component="li" />
+        {!isLast && <Divider variant="middle" component="li" />}
       </div>
     );
   }
@@ -255,22 +262,21 @@ const HowToUse = () => {
   const anim = useAnimEngine(6, true, { delay: 500, duration: 775 }, 225);
 
   return (
-    <div className={classes.root} style={{ margin: "8vh 0" }}>
-      <Typography
-        align="center"
-        variant="h5"
-        style={{ fontWeight: "bold" }}
-        color="secondary"
-        className={classes.headingText}
-      >
-        How To Use
-      </Typography>
-      <Container>
-        <Typography>
+    <>
+      <Paper className={classes.root}>
+        <Typography
+          align="center"
+          variant="h5"
+          style={{ fontWeight: "bold" }}
+          color="primary"
+          className={classes.headingText}
+        >
+          How To Use
+        </Typography>
+        <Container>
           <List style={{ marginTop: "6vh" }}>
             {howToInfo.map(
               ([title, ImageComponent, subtitle, text, link], i) => {
-                const isEven = true || i % 2 === 0;
                 return (
                   <HowToEntry
                     key={i}
@@ -280,7 +286,7 @@ const HowToUse = () => {
                       subtitle,
                       text,
                       link,
-                      isEven,
+                      isLast: i === howToInfo.length - 1,
                       ...anim(),
                     }}
                   />
@@ -288,9 +294,10 @@ const HowToUse = () => {
               }
             )}
           </List>
-        </Typography>
-      </Container>
-    </div>
+        </Container>
+      </Paper>
+      <div>&nbsp;</div>
+    </>
   );
 };
 

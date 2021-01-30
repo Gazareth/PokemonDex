@@ -23,6 +23,10 @@ export const THEME = Object.freeze({
   SET_LIGHT_MODE: "THEME_SET_LIGHT",
 });
 
+export const API_INTERVAL = Object.freeze({
+  SET: "SET_API_INTERVAL",
+});
+
 export const FAVOURITES = Object.freeze({
   ADD: "ADD_FAVOURITE",
   REMOVE: "DELETE_FAVOURITE",

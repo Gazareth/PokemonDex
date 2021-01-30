@@ -1,5 +1,8 @@
 import React from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
+
+import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
@@ -18,8 +21,14 @@ const useStyles = makeStyles((theme) => ({
   root: {
     alignSelf: "center",
     maxWidth: "70%",
-    margin: "5% 0",
-    backgroundColor: theme.palette.background.paper,
+    margin: "6vh 0",
+    padding: "4vh 4vw",
+    [theme.breakpoints.down("sm")]: {
+      marginLeft: "0",
+      marginRight: "0",
+    },
+    border: "none",
+    boxShadow: "none",
   },
   titleDot: {
     color: theme.palette.primary.main,
@@ -70,6 +79,13 @@ const creditsInfo = [
     "https://reactjs.org/",
   ],
   [
+    "Redux",
+    require("Icons/React-icon.png"),
+    `"A Predictable State Container for JS Apps"`,
+    `Redux must get a mention here too. An absolutely brilliant piece of software which handles so much of the legwork in managing a persistant data store in your apps. Free and open source!`,
+    "https://redux.js.org/",
+  ],
+  [
     "NPM - Node Package Manager",
     require("Icons/npm-logo.png"),
     `"build amazing things"`,
@@ -107,7 +123,7 @@ const creditsInfo = [
     "Pose JS",
     require("Icons/pose-js-icon.png"),
     `"A truly simple animation library for React, React Native, and Vue"`,
-    `This is how you animate text.`,
+    `This is how you animate text. Separate, and springy.`,
     "https://popmotion.io/pose/",
   ],
 ];
@@ -173,33 +189,40 @@ const Credits = () => {
   const anim = useAnimEngine(6, true, { delay: 850, duration: 775 }, 225);
 
   return (
-    <div className={classes.root} style={{ margin: "8vh 0" }}>
-      <Typography
-        align="center"
-        variant="h5"
-        style={{ fontWeight: "bold" }}
-        color="secondary"
-      >
-        <SplitText charPoses={headingCharPoses} initialPose="exit" pose="enter">
-          Credits
-        </SplitText>
-      </Typography>
-      <Container>
-        <Typography>
-          <List style={{ marginTop: "6vh" }}>
-            {creditsInfo.map(([title, img, subtitle, text, link], i) => {
-              const isEven = i % 2 === 0;
-              return (
-                <CreditsEntry
-                  key={i}
-                  {...{ title, img, subtitle, text, link, isEven, ...anim() }}
-                />
-              );
-            })}
-          </List>
+    <>
+      <Paper className={classes.root}>
+        <Typography
+          align="center"
+          variant="h5"
+          style={{ fontWeight: "bold" }}
+          color="secondary"
+        >
+          <SplitText
+            charPoses={headingCharPoses}
+            initialPose="exit"
+            pose="enter"
+          >
+            Credits
+          </SplitText>
         </Typography>
-      </Container>
-    </div>
+        <Container>
+          <Typography>
+            <List style={{ marginTop: "6vh" }}>
+              {creditsInfo.map(([title, img, subtitle, text, link], i) => {
+                const isEven = i % 2 === 0;
+                return (
+                  <CreditsEntry
+                    key={i}
+                    {...{ title, img, subtitle, text, link, isEven, ...anim() }}
+                  />
+                );
+              })}
+            </List>
+          </Typography>
+        </Container>
+      </Paper>
+      <div>&nbsp;</div>
+    </>
   );
 };
 

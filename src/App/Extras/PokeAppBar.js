@@ -6,6 +6,8 @@ import { useHistory, useLocation } from "react-router";
 import clsx from "clsx";
 import Color from "color";
 
+import isFunction from "lodash/isFunction";
+
 import { setThemeMode } from "Store/actions";
 
 import useThemedClasses from "Contexts/ThemedClasses";
@@ -43,6 +45,8 @@ import Switch from "@material-ui/core/Switch";
 
 import Brightness5Icon from "@material-ui/icons/Brightness5";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
+
+import SettingsDialog from "./Settings";
 
 import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
@@ -187,9 +191,21 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
     setDrawerOpen(open);
   };
 
+  // Settings dialog
+  const [settingsOpen, setSettingsOpen] = useState(true);
+
+  const handleSettingsOpen = () => {
+    setSettingsOpen(true);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+  };
+
   const DrawerContent = () => (
     <div>
       <Toolbar />
+      <SettingsDialog open={settingsOpen} handleClose={handleSettingsClose} />
       <div
         className={classes.drawerList}
         role="presentation"
@@ -233,15 +249,19 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
           {[
             ["How to use", LiveHelpRoundedIcon, "HowToUse"],
             ["Credits", InfoOutlinedIcon, "Credits"],
-            ["Settings", SettingsIcon, "Settings"],
+            ["Settings", SettingsIcon, handleSettingsOpen],
           ].map(([text, IconComponent, link]) => {
             const isCurrentPath = currentPage(link, pathname);
+
+            const gotoLink = () => !isCurrentPath && history.push(`/${link}`);
+            const onClick = isFunction(link) ? link : gotoLink;
+
             return (
               <ListItem
                 button
                 key={text}
                 disabled={isCurrentPath}
-                onClick={() => !isCurrentPath && history.push(`/${link}`)}
+                onClick={onClick}
               >
                 <ListItemIcon>
                   <IconComponent />

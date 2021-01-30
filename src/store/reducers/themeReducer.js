@@ -1,4 +1,4 @@
-import { THEME } from "../actions/types";
+import { THEME, API_INTERVAL } from "../actions/types";
 
 const defaultTheme = Object.freeze({
   mode: "dark",
@@ -10,6 +10,8 @@ const themeReducer = (state = defaultTheme, action) => {
       return { ...state, mode: "dark" };
     case THEME.SET_LIGHT_MODE:
       return { ...state, mode: "light" };
+    case API_INTERVAL.SET:
+      return { ...state, interval: action.payload };
     default:
       return state;
   }

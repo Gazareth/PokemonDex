@@ -1,6 +1,12 @@
 import axios from "axios";
 import axiosDelayed from "Utils/axios";
-import { PRESEARCH_POKEMON, SEARCH_POKEMON, FAVOURITES, THEME } from "./types";
+import {
+  PRESEARCH_POKEMON,
+  SEARCH_POKEMON,
+  FAVOURITES,
+  THEME,
+  API_INTERVAL,
+} from "./types";
 
 import ParsePokemonData, { capitalise } from "Utils/parseData_pokemon";
 
@@ -19,7 +25,7 @@ const preSearchDelay = process.env.REACT_APP_SEARCHINITDELAY;
 const sleepTime = process.env.REACT_APP_APIINTERVAL;
 const sleepErrorTime = process.env.REACT_APP_APIERRORCOOLDOWN;
 
-const sleep = (sleepms = sleepTime) => (response) =>
+const genericSleep = (sleepms = sleepTime) => (response) =>
   new Promise((resolve, reject) =>
     setTimeout(() => resolve(response), sleepms)
   );
@@ -48,7 +54,9 @@ export const preSearchPokemon = () => {
   };
 };
 
-export const searchPokemon = (pokemonName) => {
+export const searchPokemon = (pokemonName, interval = sleepTime) => {
+  const sleep = genericSleep(interval);
+
   if (!pokemonName)
     return (dispatch) => {
       dispatch(setPokemonError());
@@ -267,3 +275,8 @@ const ThemeMap = {
 
 //THEME
 export const setThemeMode = (mode) => ({ type: ThemeMap[mode] });
+
+export const setApiInterval = (value) => ({
+  type: API_INTERVAL.SET,
+  payload: value,
+});

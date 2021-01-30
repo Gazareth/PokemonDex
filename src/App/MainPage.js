@@ -6,10 +6,10 @@ import clsx from "clsx";
 
 import Paper from "@material-ui/core/Paper";
 
-import PokeAppBar from "App/PokeAppBar";
+import PokeAppBar from "App/Extras/PokeAppBar";
 import PokemonDexRouter from "./PokemonDexRouter";
-import Credits from "./Credits";
-import HowToUse from "./HowToUse";
+import Credits from "./Extras/Credits";
+import HowToUse from "./Extras/HowToUse";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {
