@@ -26,7 +26,7 @@ export const LOADING_STRINGS = {
   [SEARCH_POKEMON.EVOLUTIONS_FOUND]: "Compiling moves list...",
   [SEARCH_POKEMON.MOVES_FOUND]: "Finalising...",
   [SEARCH_POKEMON.DONE]: "Search complete!",
-  [SEARCH_POKEMON.FAILED]: "Error. Pokemon not found.",
+  [SEARCH_POKEMON.FAILED]: "Pokemon not found.",
 };
 
 export const PRELOAD_STRINGS = {

@@ -12,7 +12,7 @@ import ParsePokemonData, { capitalise } from "Utils/parseData_pokemon";
 
 import { POKEMON_FAVOURITE_FIELDS } from "Constants";
 
-import pick from "Utils/pick";
+import pick from "lodash/pick";
 
 /***********
  *
@@ -55,7 +55,9 @@ export const preSearchPokemon = () => {
 };
 
 export const searchPokemon = (pokemonName, interval = sleepTime) => {
-  const sleep = genericSleep(interval);
+  const sleep = () => genericSleep(interval);
+
+  console.log("Searching pokemon, interval: ", interval);
 
   if (!pokemonName)
     return (dispatch) => {
@@ -166,7 +168,7 @@ export const searchPokemon = (pokemonName, interval = sleepTime) => {
             )
           )
         )
-        .then(sleep(process.env.REACT_APP_SWITCHSCREENDELAY))
+        .then(genericSleep(process.env.REACT_APP_SWITCHSCREENDELAY))
         .then(() => dispatch(action(SEARCH_POKEMON.NONE)))
         .catch((error) => {
           console.log("Data fetch error - ", error);

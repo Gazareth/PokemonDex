@@ -2,6 +2,8 @@ import React, { useState, useMemo } from "react";
 
 import clsx from "clsx";
 
+import { useSelector } from "react-redux";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import FormControl from "@material-ui/core/FormControl";
@@ -55,12 +57,15 @@ const SearchInput = ({
   const theme = useTheme();
   const classes = useStyles(theme);
   const [searchString, setSearchString] = useState("");
+  const apiInterval =
+    useSelector((state) => state.theme.interval) ||
+    process.env.REACT_APP_APIINTERVAL;
 
   const parseSearchString = (str) => setSearchString(str.toLowerCase());
 
   const sendSearch = () => {
     document.activeElement.blur();
-    searchPokemon(searchString);
+    searchPokemon(searchString, apiInterval);
   };
 
   const labelText = useMemo(

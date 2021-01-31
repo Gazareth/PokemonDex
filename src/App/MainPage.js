@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     [theme.breakpoints.up("sm")]: {
       flexGrow: "0.85",
-      marginTop: "8vh",
+      margin: "8vh 0 6vh",
       padding: theme.spacing(4),
     },
     animation: `$fadeIn 375ms ${theme.transitions.easing.easeInOut}`,
@@ -73,6 +73,7 @@ const MainPage = () => {
             <Paper className={clsx(classes.flexCol, classes.paper)}>
               <PokemonDexRouter />
             </Paper>
+            <div>&nbsp;</div>
           </main>
         </Route>
       </Switch>

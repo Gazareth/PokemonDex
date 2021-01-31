@@ -1,8 +1,12 @@
-import { SEARCH_POKEMON, THEME, FAVOURITES } from "../actions/types";
+import {
+  SEARCH_POKEMON,
+  FAVOURITES,
+  THEME,
+  API_INTERVAL,
+} from "../actions/types";
 
-import pick from "Utils/pick";
-
-const values = (obj) => Object.keys(obj).map((key) => obj[key]);
+import pick from "lodash/pick";
+import values from "lodash/values";
 
 const favouritesActions = values(pick(FAVOURITES, ["ADD", "COMMIT_REORDER"]));
 
@@ -10,6 +14,7 @@ const saveActions = [
   SEARCH_POKEMON.DONE,
   ...values(THEME),
   ...favouritesActions,
+  ...values(API_INTERVAL),
 ];
 
 const saveState = (store) => (next) => (action) => {
@@ -22,7 +27,7 @@ const saveState = (store) => (next) => (action) => {
       let pickedState = {
         pokemon: { data: state.pokemon.data, haveData: state.pokemon.haveData },
         favourites: { favourites: state.favourites.favourites },
-        theme: { mode: state.theme.mode },
+        theme: { mode: state.theme.mode, interval: state.theme.interval },
       };
       const serializedState = JSON.stringify(pickedState);
       localStorage.setItem("state", serializedState);

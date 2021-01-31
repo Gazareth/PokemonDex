@@ -1,4 +1,4 @@
-import pick from "./pick";
+import pick from "lodash/pick";
 
 export const capitalise = (string, separators = [" ", "-"]) => {
   var regex = new RegExp("(^|[" + separators.join("") + "])(\\w)", "g");

@@ -79,7 +79,7 @@ const backgrounds = (darkLight) =>
       octonary: "#757575",
       nonary: "#9e9e9e",
       denary: "#bdbdbd",
-      eleven: "#000",
+      eleven: "#fff",
     },
   ][darkLight === "light" ? 0 : 1];
 

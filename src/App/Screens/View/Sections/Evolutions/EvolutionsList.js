@@ -19,7 +19,7 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 import Avatar from "@material-ui/core/Avatar";
 
-import pick from "Utils/pick";
+import pick from "lodash/pick";
 
 const TOOLTIP_COOLDOWN = 450;
 

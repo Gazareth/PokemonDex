@@ -12,7 +12,7 @@ import { setThemeMode } from "Store/actions";
 
 import useThemedClasses from "Contexts/ThemedClasses";
 
-import pick from "Utils/pick";
+import pick from "lodash/pick";
 
 import Grid from "@material-ui/core/Grid";
 

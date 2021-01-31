@@ -2,7 +2,7 @@
 import React from "react";
 
 import SmoothIn from "Utils/transitionSmoothIn";
-import pick from "Utils/pick";
+import pick from "lodash/pick";
 
 import TextField from "@material-ui/core/TextField";
 

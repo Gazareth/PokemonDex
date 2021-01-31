@@ -31,6 +31,9 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
   const dispatch = useDispatch();
   const loadingPokemon = useSelector((state) => state.pokemon.loading);
   const havePokemon = useSelector((state) => state.pokemon.haveData);
+  const apiInterval =
+    useSelector((state) => state.theme.interval) ||
+    process.env.REACT_APP_APIINTERVAL;
 
   const [apparentScreen, setApparentScreen] = useState(-1);
   const [pendingScreen, setPendingScreen] = useState(screenIndex);
@@ -80,7 +83,7 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
         loadingPokemon === SEARCH_POKEMON.NONE
       ) {
         // Search for the pokemon in question
-        dispatch(searchPokemon(searchingPokemon));
+        dispatch(searchPokemon(searchingPokemon, apiInterval));
       } else {
         // We have a pokemon but it doesn't match the search??
       }
@@ -98,6 +101,7 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
     screenIndex,
     searchingPokemon,
     dispatch,
+    apiInterval,
   ]);
 
   //Handle key down

@@ -193,7 +193,7 @@ const ErrorProgress = ({ color }) => {
       size="0.8rem"
       variant="static"
       value={errorCooldown}
-      thickness={18}
+      thickness={24}
       style={{
         verticalAlign: "text-top",
         marginRight: "0.375rem",
@@ -204,6 +204,9 @@ const ErrorProgress = ({ color }) => {
   );
 };
 
+const searchIdle = (loadingState) =>
+  ![SEARCH_POKEMON.FAILED, SEARCH_POKEMON.DONE].includes(loadingState);
+
 const HelperText = ({
   preSearchState,
   totalPokemon,
@@ -212,23 +215,22 @@ const HelperText = ({
   mainTheme: theme,
 }) => (
   <>
-    {isSearching &&
-      ![SEARCH_POKEMON.FAILED, SEARCH_POKEMON.DONE].includes(loadingState) && (
-        <CircularProgress
-          size="0.8rem"
-          style={{
-            verticalAlign: "text-top",
-            marginRight: "0.375rem",
-            marginTop: "0.01rem",
-            color: theme.palette.text.disabled,
-          }}
-        />
-      )}
+    {isSearching && searchIdle(loadingState) && (
+      <CircularProgress
+        size="0.8rem"
+        style={{
+          verticalAlign: "text-top",
+          marginRight: "0.375rem",
+          marginTop: "0.01rem",
+          color: theme.palette.text.disabled,
+        }}
+      />
+    )}
     {loadingState === SEARCH_POKEMON.FAILED && (
       <ErrorProgress color={theme.palette.error.main} />
     )}
     <span>
-      {!isSearching ? (
+      {!isSearching && searchIdle(loadingState) ? (
         preSearchState === PRESEARCH_POKEMON.DONE ? (
           <>
             <AnimatedNumber
