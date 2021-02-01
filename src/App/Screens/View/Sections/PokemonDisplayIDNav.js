@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 
 import { useHistory } from "react-router-dom";
 
-import clsx from "clsx";
-
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/core/styles";
 import SmoothIn from "Utils/transitionSmoothIn";
 
 import Grid from "@material-ui/core/Grid";
@@ -16,22 +14,10 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
-const useStyles = makeStyles((theme) => ({
-  paginationList: {
-    margin: 0,
-    display: "flex",
-    padding: 0,
-    flexWrap: "wrap",
-    listStyle: "none",
-    alignItems: 2,
-  },
-}));
-
 const getNewUrl = (pokemonId) => `/view/?id=${pokemonId}`;
 
 const PokemonDisplayIDNav = ({ pokemonId, ...props }) => {
   const theme = useTheme();
-  const classes = useStyles(theme);
 
   const history = useHistory();
 

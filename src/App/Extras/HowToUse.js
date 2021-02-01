@@ -223,6 +223,7 @@ const HowToEntry = SmoothIn(
             }}
             primary={title}
             primaryTypographyProps={{ variant: "h6" }}
+            secondaryTypographyProps={{ component: "div" }}
             secondary={
               <>
                 <Typography

@@ -34,3 +34,8 @@ export const FAVOURITES = Object.freeze({
   COMMIT_REORDER: "COMMIT_REORDER_FAVOURITES",
   CANCEL_REORDER: "CANCEL_REORDER_FAVOURITES",
 });
+
+export const META = Object.freeze({
+  IMPORT: "IMPORT_DATA",
+  RESET: "RESET_DATA",
+});

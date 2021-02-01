@@ -1,8 +1,9 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useRef } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
-import { Base64 } from "js-base64";
+//import { Base64 } from "js-base64";
+import LZString from "lz-string";
 
 import SwipeableViews from "react-swipeable-views";
 
@@ -18,12 +19,16 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 
 import IconButton from "@material-ui/core/IconButton";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 
@@ -35,9 +40,15 @@ import RestoreSharpIcon from "@material-ui/icons/RestoreSharp";
 import AssignmentReturnedIcon from "@material-ui/icons/AssignmentReturned";
 
 import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
 import pick from "lodash/pick";
 
-import { setThemeMode, setApiInterval } from "Store/actions";
+import {
+  importData,
+  setThemeMode,
+  setApiInterval,
+  clearData,
+} from "Store/actions";
 
 const useStyles = makeStyles((theme) => {
   const lightMode = theme.palette.type === "light";
@@ -53,6 +64,15 @@ const useStyles = makeStyles((theme) => {
     },
     impExpGrid: {
       height: "100%",
+    },
+    exportTitle: {
+      color: theme.palette.info.main,
+    },
+    copySuccess: {
+      color: theme.palette.success.main,
+    },
+    importTitle: {
+      color: theme.palette.secondary.main,
     },
     form: {
       display: "flex",
@@ -180,23 +200,77 @@ const SettingsDialog = ({
   setThemeMode: stateSetThemeMode,
   setApiInterval: stateSetApiInterval,
   pokemonData,
-  clearData,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
   const initialInterval =
     stateApiInterval || parseInt(process.env.REACT_APP_APIINTERVAL);
+  const dispatch = useDispatch();
+
+  const importStringRef = useRef(null);
+  const [noImportText, setNoImportText] = useState(true);
 
   const [themeMode, setThemeMode] = useState(stateThemeMode);
   const [apiInterval, setApiInterval] = useState(initialInterval);
   const [clearingCache, setClearingCache] = useState(false);
   const [impExpMode, setImpExpMode] = useState(true);
 
-  const lightMode = useMemo(() => themeMode === "light", [themeMode]);
+  const [clipCopyShow, setClipCopyShow] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackError, setSnackError] = useState(false);
+
+  //IMPORT/EXPORT
+  const handleSnackClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackOpen(false);
+  };
+
   const encodedPokemon = useMemo(
-    () => Base64.encode(JSON.stringify(pokemonData)),
+    () => LZString.compressToUTF16(JSON.stringify(pokemonData)),
     [pokemonData]
   );
+
+  const handleExpCopied = () => {
+    document.getElementById("exportStringField").select();
+    document.execCommand("copy");
+    setTimeout(() => setClipCopyShow(false), 6000);
+    setClipCopyShow(true);
+  };
+
+  const handleImportData = () => {
+    const stringVal = get(importStringRef, "current.value");
+    const resetError = () => setInterval(() => setSnackError(false), 6000);
+    try {
+      const decoded = LZString.decompressFromUTF16(stringVal);
+      const storeData = JSON.parse(decoded);
+      const pokemonData = get(storeData, "pokemon");
+      const favouritesData = get(storeData, "favourites");
+      if (
+        pokemonData &&
+        !isEmpty(pokemonData) &&
+        favouritesData &&
+        !isEmpty(favouritesData)
+      ) {
+        dispatch(importData(storeData));
+      } else {
+        setSnackError(true);
+        resetError();
+        console.log(
+          "Error importing! - decode successful, but no data inside!"
+        );
+      }
+    } catch (err) {
+      console.log("Error importing! - ", err);
+      setSnackError(true);
+      resetError();
+    }
+  };
+
+  // MAIN SETTINGS
+  const lightMode = useMemo(() => themeMode === "light", [themeMode]);
 
   const handleDialogClose = (...args) => {
     setClearingCache(false);
@@ -220,7 +294,7 @@ const SettingsDialog = ({
   };
 
   const handleClearData = () => {
-    clearData();
+    dispatch(clearData());
     setClearingCache(false);
   };
 
@@ -242,6 +316,20 @@ const SettingsDialog = ({
           disabled
         >
           <div className={classes.impExpWrap}>
+            <Snackbar
+              open={snackOpen}
+              autoHideDuration={4000}
+              onClose={handleSnackClose}
+            >
+              <Alert
+                elevation={6}
+                variant="filled"
+                onClose={handleSnackClose}
+                severity="success"
+              >
+                Export string copied!
+              </Alert>
+            </Snackbar>
             <Grid
               container
               direction="column"
@@ -253,15 +341,28 @@ const SettingsDialog = ({
             >
               <Grid item>
                 <Typography
+                  component="div"
                   variant="h6"
-                  color="secondary"
                   gutterBottom
                   align="left"
+                  className={classes.exportTitle}
                 >
                   Export{" "}
-                  <IconButton>
-                    <FileCopyOutlinedIcon />
+                  <IconButton onClick={handleExpCopied}>
+                    {clipCopyShow ? <FileCopyIcon /> : <FileCopyOutlinedIcon />}
                   </IconButton>
+                  {clipCopyShow && (
+                    <span className={classes.copySuccess}>
+                      <CheckCircleOutlineIcon
+                        style={{ verticalAlign: "-6px" }}
+                        fontSize="small"
+                      />
+                      <Typography component="span" variant="caption">
+                        {" "}
+                        Copied to clipboard!
+                      </Typography>
+                    </span>
+                  )}
                 </Typography>
                 <TextField
                   multiline
@@ -272,33 +373,47 @@ const SettingsDialog = ({
                   aria-label="Export string field"
                   defaultValue={encodedPokemon}
                   inputProps={{
+                    id: "exportStringField",
                     readOnly: true,
                     onClick: (e) => e.target.select(),
                     style: {
                       color: theme.palette.text.disabled,
+                      fontSize: "0.75rem",
+                      lineHeight: "0.85rem",
+                      letterSpacing: "0.01px",
                     },
                   }}
                 />
               </Grid>
               <Grid item>
-                <Typography variant="h6" color="primary" gutterBottom>
+                <Typography
+                  variant="h6"
+                  className={classes.importTitle}
+                  gutterBottom
+                >
                   Import
                 </Typography>
                 <TextField
                   multiline={true}
                   fullWidth
+                  color="secondary"
                   variant="outlined"
                   rowsMax={6}
                   rows={6}
                   aria-label="import string input"
                   placeholder="Enter import string..."
+                  onChange={({ target: { value } }) =>
+                    setNoImportText(isEmpty(value.trim()))
+                  }
+                  inputRef={importStringRef}
                 />
-                <div>
+                <div style={{ textAlign: "center" }}>
                   <Button
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     style={{ margin: "1rem" }}
-                    onClick={handleClearData}
+                    disabled={noImportText}
+                    onClick={handleImportData}
                   >
                     Import data
                   </Button>

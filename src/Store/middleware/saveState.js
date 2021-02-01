@@ -3,6 +3,7 @@ import {
   FAVOURITES,
   THEME,
   API_INTERVAL,
+  META,
 } from "../actions/types";
 
 import pick from "lodash/pick";
@@ -15,6 +16,7 @@ const saveActions = [
   ...values(THEME),
   ...favouritesActions,
   ...values(API_INTERVAL),
+  ...values(META),
 ];
 
 const saveState = (store) => (next) => (action) => {

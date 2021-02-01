@@ -1,6 +1,6 @@
-// postReducer.js
+import pick from "lodash/pick";
 
-import { SEARCH_POKEMON } from "../actions/types";
+import { SEARCH_POKEMON, META } from "../actions/types";
 
 //Default store
 const pokemonInitialState = {
@@ -46,6 +46,15 @@ const pokemonReducer = (
         loading: SEARCH_POKEMON.DONE,
         data: action.payload,
         haveData: action.payload.id,
+      };
+    case META.IMPORT:
+      return {
+        ...state,
+        ...pick(action.payload.pokemon, ["data", "haveData"]),
+      };
+    case META.RESET:
+      return {
+        ...pokemonInitialState,
       };
     default:
       return state;

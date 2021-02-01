@@ -6,6 +6,7 @@ import {
   FAVOURITES,
   THEME,
   API_INTERVAL,
+  META,
 } from "./types";
 
 import ParsePokemonData, { capitalise } from "Utils/parseData_pokemon";
@@ -282,3 +283,12 @@ export const setApiInterval = (value) => ({
   type: API_INTERVAL.SET,
   payload: value,
 });
+
+/***********
+ *
+ * META ACTIONS
+ *
+ *************/
+export const importData = (data) => ({ type: META.IMPORT, payload: data });
+
+export const clearData = () => ({ type: META.RESET });

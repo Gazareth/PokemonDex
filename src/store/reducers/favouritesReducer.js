@@ -1,6 +1,8 @@
-import { FAVOURITES } from "../actions/types";
+import pick from "lodash/pick";
 
-const initialFavourites = [
+import { FAVOURITES, META } from "../actions/types";
+
+const DEBUG_initialFavourites = [
   {
     image:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/44.png",
@@ -80,11 +82,11 @@ const initialFavourites = [
   },
 ];
 
-const initialOrder = initialFavourites.map(({ id }) => id);
+const DEBUG_initialOrder = DEBUG_initialFavourites.map(({ id }) => id);
 
 const favouritesInitialState = {
-  favourites: initialFavourites,
-  favouritesOrder: initialOrder,
+  favourites: [],
+  favouritesOrder: [],
 };
 
 const favouritesReducer = (state = favouritesInitialState, action) => {
@@ -129,6 +131,15 @@ const favouritesReducer = (state = favouritesInitialState, action) => {
       return {
         ...state,
         favouritesOrder: order,
+      };
+    case META.IMPORT:
+      return {
+        ...state,
+        ...pick(action.payload.favourites, ["favourites", "favouritesOrder"]),
+      };
+    case META.RESET:
+      return {
+        ...favouritesInitialState,
       };
     default:
       return state;
