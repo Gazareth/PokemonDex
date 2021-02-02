@@ -9,11 +9,12 @@ import {
   META,
 } from "./types";
 
-import ParsePokemonData, { capitalise } from "Utils/parseData_pokemon";
+import startCase from "lodash/startCase";
+import pick from "lodash/pick";
+
+import ParsePokemonData from "Utils/parseData_pokemon";
 
 import { POKEMON_FAVOURITE_FIELDS } from "Constants";
-
-import pick from "lodash/pick";
 
 /***********
  *
@@ -58,8 +59,6 @@ export const preSearchPokemon = () => {
 export const searchPokemon = (pokemonName, interval = sleepTime) => {
   const sleep = () => genericSleep(interval);
 
-  console.log("Searching pokemon, interval: ", interval);
-
   if (!pokemonName)
     return (dispatch) => {
       dispatch(setPokemonError());
@@ -100,7 +99,7 @@ export const searchPokemon = (pokemonName, interval = sleepTime) => {
           )[0].name;
           dispatch(
             setPokemonData(SEARCH_POKEMON.FOUND, {
-              name: capitalise(pokemonData.name),
+              name: startCase(pokemonData.name),
               id: pokemonId,
             })
           );

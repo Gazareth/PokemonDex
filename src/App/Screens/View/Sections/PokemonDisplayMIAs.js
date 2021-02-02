@@ -1,8 +1,8 @@
+/* MIA - Moves, Items, Abilities */
+
 import React from "react";
 
 import Button from "@material-ui/core/Button";
-
-import SmoothIn from "Utils/transitionSmoothIn";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -16,46 +16,62 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 
-import PokemonMoves from "./PokemonDisplayMovesModal";
-
-import useAnimEngine from "Hooks/AnimEngine";
-
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import startCase from "lodash/startCase";
+
+import PokemonMIAModal from "./PokemonDisplayMIAModal";
+
 import ListAltIcon from "@material-ui/icons/ListAlt";
+import BeachAccessIcon from "@material-ui/icons/BeachAccess";
+import FlareIcon from "@material-ui/icons/Flare";
+
+import get from "lodash/get";
+
+import SmoothIn from "Utils/transitionSmoothIn";
 
 const useStyles = makeStyles((theme) => ({
   media: {
     height: 140,
   },
-  movesButtonOuter: {
-    margin: "0 15%",
+  miaButtonOuter: {
+    //margin: "0 15%",
     flex: 1,
   },
-  movesButton: {
+  miaButton: {
     borderRadius: theme.spacing(0.5),
-    backgroundColor: theme.palette.background.tertiary,
-    filter: `drop-shadow(0px 2px 10px ${theme.palette.background.default})`,
+    ...theme.panelStyles,
+    "&:hover": {
+      backgroundColor: theme.palette.background.quaternary,
+    },
   },
 }));
 
-const MovesButton = SmoothIn(({ onClick, style }) => {
+const MiaIcons = {
+  moves: ListAltIcon,
+  items: BeachAccessIcon,
+  abilities: FlareIcon,
+};
+
+const MiaIcon = ({ variant }) => {
+  const Icon = get(MiaIcons, variant);
+
+  return <Icon />;
+};
+
+const MiaButton = SmoothIn(({ onClick, variant, style }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   return (
-    <List className={classes.movesButtonOuter} {...{ style }}>
-      <ListItem
-        classes={{ root: classes.movesButton }}
-        button
-        onClick={onClick}
-      >
+    <List className={classes.miaButtonOuter} {...{ style }}>
+      <ListItem classes={{ root: classes.miaButton }} button onClick={onClick}>
         <ListItemAvatar>
           <Avatar>
-            <ListAltIcon />
+            <MiaIcon {...{ variant }} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={"Moves"} secondary={"(34)"} />
+        <ListItemText primary={startCase(variant)} secondary={"(34)"} />
       </ListItem>
     </List>
   );
@@ -65,13 +81,7 @@ const ModalTransition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const PokemonMovesModal = ({
-  displayContent,
-  pokemonName,
-  pokemonMoves,
-  show,
-  delay,
-}) => {
+const PokemonMIA = ({ pokemonName, variant, pokemonMIAData, show, delay }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -82,11 +92,9 @@ const PokemonMovesModal = ({
     setOpen(false);
   };
 
-  const anim = useAnimEngine(4, displayContent);
-
   return (
     <>
-      <MovesButton {...{ show, delay }} onClick={handleClickOpen} />
+      <MiaButton {...{ show, delay, variant }} onClick={handleClickOpen} />
       <Dialog
         open={open}
         fullWidth
@@ -99,7 +107,7 @@ const PokemonMovesModal = ({
       >
         <DialogTitle id="alert-dialog-slide-title">{pokemonName}</DialogTitle>
         <DialogContent>
-          <PokemonMoves {...{ pokemonMoves, ...anim() }} />
+          <PokemonMIAModal {...{ variant, pokemonMIAData }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
@@ -109,4 +117,4 @@ const PokemonMovesModal = ({
   );
 };
 
-export default PokemonMovesModal;
+export default PokemonMIA;

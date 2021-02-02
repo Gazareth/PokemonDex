@@ -15,7 +15,7 @@ const OutlinedDiv = ({
   ...props
 }) => (
   <TextField
-    {...pick(props, ["label", "style", "className", "classes"])}
+    {...pick(props, ["label", "style", "className", "classes", "color"])}
     variant="outlined"
     fullWidth
     multiline

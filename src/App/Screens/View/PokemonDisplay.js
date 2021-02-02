@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import PokemonDisplayMain from "./Sections/PokemonCard";
 import PokemonDisplayStats from "./Sections/PokemonDisplayStats";
 import PokemonDisplaySpecies from "./Sections/PokemonDisplaySpecies";
-import PokemonDisplayMoves from "./Sections/PokemonDisplayMoves";
+import PokemonDisplayMIA from "./Sections/PokemonDisplayMIAs";
 import PokemonDisplayEvolutions from "./Sections/Evolutions";
 import PokemonDisplayIDNav from "./Sections/PokemonDisplayIDNav";
 
@@ -27,9 +27,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: "0.1",
     alignContent: "center",
   },
-  movesButton: {
-    flexGrow: "0",
+  miaButtons: {
+    //flexGrow: "0",
+    //padding: "0 1vw",
     alignContent: "center",
+    "&>div": {
+      flexGrow: "0.2",
+    },
   },
   evolutions: {
     flexGrow: "1",
@@ -57,7 +61,7 @@ const PokemonDisplay = ({
   }, []);
 
   const anim = useAnimEngine(
-    6,
+    7,
     displayContent && animateIn,
     { duration: 275 },
     65,
@@ -90,14 +94,42 @@ const PokemonDisplay = ({
           />
         </Grid>
       </Grid>
-      <Grid item container className={classes.movesButton}>
-        <PokemonDisplayMoves
-          pokemonName={pokemonInfo.name}
-          displayContent={displayContent && animateIn}
-          pokemonMoves={pokemonInfo.moves}
-          {...anim()}
-          doHeight
-        />
+      <Grid
+        item
+        container
+        justify="space-evenly"
+        className={classes.miaButtons}
+      >
+        <Grid item>
+          <PokemonDisplayMIA
+            pokemonName={pokemonInfo.name}
+            variant="moves"
+            displayContent={displayContent && animateIn}
+            pokemonMIAData={pokemonInfo.moves}
+            {...anim()}
+            doHeight
+          />
+        </Grid>
+        <Grid item>
+          <PokemonDisplayMIA
+            pokemonName={pokemonInfo.name}
+            variant="items"
+            displayContent={displayContent && animateIn}
+            pokemonMIAData={pokemonInfo.moves}
+            {...anim()}
+            doHeight
+          />
+        </Grid>
+        <Grid item>
+          <PokemonDisplayMIA
+            pokemonName={pokemonInfo.name}
+            variant="abilities"
+            displayContent={displayContent && animateIn}
+            pokemonMIAData={pokemonInfo.moves}
+            {...anim()}
+            doHeight
+          />
+        </Grid>
       </Grid>
       <Grid
         item

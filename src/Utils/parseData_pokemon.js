@@ -1,11 +1,5 @@
 import pick from "lodash/pick";
-
-export const capitalise = (string, separators = [" ", "-"]) => {
-  var regex = new RegExp("(^|[" + separators.join("") + "])(\\w)", "g");
-  return string.toLowerCase().replace(regex, function (x) {
-    return x.toUpperCase();
-  });
-};
+import startCase from "lodash/startCase";
 
 const statNameMap = {
   hp: [0, "HP"],
@@ -44,10 +38,10 @@ const parseData_Pokemon = (
     );
 
   return {
-    name: capitalise(pokemonData.name),
+    name: startCase(pokemonData.name),
     id: pokemonData.id,
     image: varietyData.sprites.front_default,
-    types: varietyData.types.map((typeObj) => capitalise(typeObj.type.name)),
+    types: varietyData.types.map((typeObj) => startCase(typeObj.type.name)),
     physique: pick(varietyData, ["height", "weight"]),
     stats: varietyData.stats
       .map((statObj) => ({
@@ -57,19 +51,19 @@ const parseData_Pokemon = (
       }))
       .sort((a, b) => a.order - b.order),
     species: {
-      name: capitalise(pokemonData.name),
+      name: startCase(pokemonData.name),
       flavorText: SpeciesFlavorText,
       genus: PikachuGenus[0].genus,
     },
     evolutions: pokemonEvolutionsData.map((evolPkmn) => ({
       id: evolPkmn.id,
-      name: capitalise(evolPkmn.name),
+      name: startCase(evolPkmn.name),
       img: evolPkmn.sprites.front_default,
     })),
     moves: pokemonMoves.map((moveObj) => ({
-      name: capitalise(moveObj.move.name),
+      name: startCase(moveObj.move.name),
       level: moveObj.version_group_details[0].level_learned_at,
-      type: capitalise(
+      type: startCase(
         pokemonMovesData.filter(
           (moveDataObj) =>
             moveDataObj.id === Number(moveObj.move.url.split("/").slice(-2)[0])
@@ -77,7 +71,7 @@ const parseData_Pokemon = (
       ),
     })),
     items: varietyData.held_items.map((itemObj) =>
-      capitalise(itemObj.item.name)
+      startCase(itemObj.item.name)
     ),
   };
 };

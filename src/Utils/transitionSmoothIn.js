@@ -129,31 +129,34 @@ const SmoothIn = (ComponentToTransition) => ({
   unmountOnExit,
   providedCallback,
   ...otherProps
-}) => (
-  <CSSTransition
-    in={show && auxShow}
-    appear={true}
-    timeout={show ? delay.inDuration : delay.outDuration}
-    onEntered={providedCallback}
-    {...{ unmountOnExit, onEnter: (node) => node.offsetHeight }}
-  >
-    {(state) => (
-      <ComponentToTransition
-        {...otherProps}
-        style={{
-          ...otherProps.style,
-          ...transitionStyles(
-            state,
-            delay,
-            transitionType,
-            animMagnitude,
-            doHeight,
-            theme
-          ),
-        }}
-      />
-    )}
-  </CSSTransition>
-);
+}) =>
+  !!delay ? (
+    <CSSTransition
+      in={show && auxShow}
+      appear={true}
+      timeout={show ? delay.inDuration : delay.outDuration}
+      onEntered={providedCallback}
+      {...{ unmountOnExit, onEnter: (node) => node.offsetHeight }}
+    >
+      {(state) => (
+        <ComponentToTransition
+          {...otherProps}
+          style={{
+            ...otherProps.style,
+            ...transitionStyles(
+              state,
+              delay,
+              transitionType,
+              animMagnitude,
+              doHeight,
+              theme
+            ),
+          }}
+        />
+      )}
+    </CSSTransition>
+  ) : (
+    <ComponentToTransition {...otherProps} />
+  );
 
 export default SmoothIn;

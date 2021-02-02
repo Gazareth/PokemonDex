@@ -192,7 +192,7 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   };
 
   // Settings dialog
-  const [settingsOpen, setSettingsOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleSettingsOpen = () => {
     setSettingsOpen(true);

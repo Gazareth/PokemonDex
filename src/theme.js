@@ -1,3 +1,7 @@
+import get from "lodash/get";
+
+import Color from "color";
+
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import {
   grey,
@@ -117,6 +121,16 @@ export const theme = (mode = "dark") => {
       //secondary: pink,
       background: { ...backgrounds(mode) },
       pokemonTypes: pokemonTypeColours(mode),
+    },
+    panelStyles: {
+      backgroundColor: backgrounds(mode)["tertiary"],
+      filter: `drop-shadow(0px 1px 1px ${
+        mode === "default"
+          ? get(backgrounds(mode), "default")
+          : Color(get(backgrounds(mode), "quaternary"))
+              .mix(Color(get(backgrounds(mode), "quinary")), 0.1)
+              .toString()
+      })`,
     },
     transitions: {
       easing: {

@@ -192,6 +192,14 @@ const APISlider = ({ interVal, onChange }) => {
   );
 };
 
+const ImpSnackbar = ({ open, duration, onClose, severity, message }) => (
+  <Snackbar open={open} autoHideDuration={duration} onClose={onClose}>
+    <Alert elevation={6} variant="filled" onClose={onClose} severity={severity}>
+      {message}
+    </Alert>
+  </Snackbar>
+);
+
 const SettingsDialog = ({
   open,
   handleClose,
@@ -213,7 +221,7 @@ const SettingsDialog = ({
   const [themeMode, setThemeMode] = useState(stateThemeMode);
   const [apiInterval, setApiInterval] = useState(initialInterval);
   const [clearingCache, setClearingCache] = useState(false);
-  const [impExpMode, setImpExpMode] = useState(true);
+  const [impExpMode, setImpExpMode] = useState(false);
 
   const [clipCopyShow, setClipCopyShow] = useState(false);
   const [snackOpen, setSnackOpen] = useState(false);
@@ -224,8 +232,14 @@ const SettingsDialog = ({
     if (reason === "clickaway") {
       return;
     }
-
     setSnackOpen(false);
+  };
+
+  const handleSnackErrorClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackError(false);
   };
 
   const encodedPokemon = useMemo(
@@ -255,6 +269,9 @@ const SettingsDialog = ({
         !isEmpty(favouritesData)
       ) {
         dispatch(importData(storeData));
+        setSnackError(false);
+        setSnackOpen(true);
+        importStringRef.current.value = "";
       } else {
         setSnackError(true);
         resetError();
@@ -316,20 +333,20 @@ const SettingsDialog = ({
           disabled
         >
           <div className={classes.impExpWrap}>
-            <Snackbar
-              open={snackOpen}
-              autoHideDuration={4000}
+            <ImpSnackbar
+              open={snackOpen && !snackError}
+              duration={3500}
               onClose={handleSnackClose}
-            >
-              <Alert
-                elevation={6}
-                variant="filled"
-                onClose={handleSnackClose}
-                severity="success"
-              >
-                Export string copied!
-              </Alert>
-            </Snackbar>
+              severity="success"
+              message="Data imported successfully!"
+            />
+            <ImpSnackbar
+              open={snackError}
+              duration={6000}
+              onClose={handleSnackErrorClose}
+              severity="error"
+              message="Data import string not valid!"
+            />
             <Grid
               container
               direction="column"

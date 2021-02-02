@@ -11,7 +11,14 @@ const useStyles = makeStyles((theme) => ({
     cursor: "default !important",
   },
   softBg: {
-    backgroundColor: theme.palette.background.tertiary,
+    ...theme.panelStyles,
+  },
+  noBorder: {
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        border: "none",
+      },
+    },
   },
   genus: {
     fontStyle: "italic !important",
@@ -49,6 +56,7 @@ export default function PokemonDisplaySpecies({ pokemonSpecies, show, delay }) {
     <OutlinedDiv
       label="Species Info"
       {...{ show, delay }}
+      classes={{ root: classes.noBorder }}
       inputRootClasses={clsx(classes.defaultCursor, classes.softBg)}
     >
       <SpeciesInfo {...{ classes, pokemonSpecies }}></SpeciesInfo>

@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
+import get from "lodash/get";
+
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import OutlinedDiv from "Components/OutlinedDiv";
@@ -22,7 +24,14 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
   },
   softBg: {
-    backgroundColor: theme.palette.background.tertiary,
+    ...theme.panelStyles,
+  },
+  noBorder: {
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        border: "none",
+      },
+    },
   },
 }));
 
@@ -63,6 +72,7 @@ export default function PokemonDisplayStats({ pokemonStats, show, delay }) {
     <OutlinedDiv
       label="Stats"
       {...{ show, delay }}
+      classes={{ root: classes.noBorder }}
       inputRootClasses={clsx(classes.defaultCursor, classes.softBg)}
     >
       <StatsGroup {...{ classes, pokemonStats }}></StatsGroup>
