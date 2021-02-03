@@ -45,8 +45,8 @@ const smoothStateStyles = ({ delay, doHeight }) => ({
     transitionDuration: `${delay.outDuration}ms, ${delay.outDuration}ms${
       doHeight ? `, ${delay.outDuration}ms` : ``
     }`,
-    transitionTimingFunction: `linear${
-      doHeight ? `, cubic-bezier(0.075, 0.82, 0.165, 1)` : ``
+    transitionTimingFunction: `cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.22, 1, 0.36, 1)${
+      doHeight ? `, cubic-bezier(0.11, 0, 0.5, 0)` : ``
     }`,
     transitionDelay: `${delay.out}ms,
       ${delay.out * 0.75}ms,

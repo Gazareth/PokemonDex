@@ -58,7 +58,6 @@ export default function PokemonDisplayMoves({ variant, pokemonMIAData }) {
 
   return (
     <OutlinedDiv
-      color="default"
       label={`${title} (${pokemonMIAData.length})`}
       classes={{ root: clsx(classes.fullHeight, classes.noBorder) }}
       inputClassName={clsx(classes.fullHeight, classes.overflowAuto)}

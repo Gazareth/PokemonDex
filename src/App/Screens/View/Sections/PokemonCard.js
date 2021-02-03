@@ -20,8 +20,11 @@ import GradeIcon from "@material-ui/icons/Grade";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    background: theme.palette.background.quaternary,
+    ...theme.panelStyles,
+    ...theme.panelBorder,
+    backgroundColor: theme.palette.background.quaternary,
     display: "flex",
+    boxShadow: "none",
   },
   cardDetails: {
     background: theme.palette.background.tertiary,
@@ -77,14 +80,13 @@ const PokemonDisplayMain = ({
                 Color(theme.palette.warning.light),
                 0.1
               ),
-              borderColor: Color(theme.palette.background.quaternary).mix(
-                Color(theme.palette.warning.dark),
-                0.5
-              ),
+              borderColor: Color(theme.palette.background.tertiary)
+                .mix(Color(theme.palette.background.quaternary), 0.2)
+                .mix(Color(theme.palette.warning.main), 0.3),
             }
           : {}),
       }}
-      variant={isFavourite ? "outlined" : "elevation"}
+      //variant={isFavourite ? "outlined" : "elevation"}
     >
       <Box display="flex" alignItems="center">
         <img

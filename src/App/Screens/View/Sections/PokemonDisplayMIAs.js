@@ -14,7 +14,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Slide from "@material-ui/core/Slide";
+import Grow from "@material-ui/core/Grow";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   miaButton: {
     borderRadius: theme.spacing(0.5),
     ...theme.panelStyles,
+    ...theme.panelBorder,
     "&:hover": {
       backgroundColor: theme.palette.background.quaternary,
     },
@@ -78,7 +79,7 @@ const MiaButton = SmoothIn(({ onClick, variant, style }) => {
 });
 
 const ModalTransition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Grow ref={ref} {...props} />;
 });
 
 const PokemonMIA = ({ pokemonName, variant, pokemonMIAData, show, delay }) => {

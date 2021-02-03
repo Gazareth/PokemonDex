@@ -52,7 +52,7 @@ const PokemonItemsList = ({ pokemonItems }) => {
                     borderBottomLeftRadius: "0.3em",
                     borderBottomRightRadius: "0.3em",
                   }
-                : { borderTop: "" }), //"0px solid #000"
+                : { borderTop: "0px" }), //"0px solid #000"
             }}
             button
           >

@@ -38,10 +38,9 @@ const SearchPage = ({
 
   const searchReady = useMemo(
     () =>
-      displayContent &&
-      !(searchingPokemon > 0) &&
-      loadingPokemon === SEARCH_POKEMON.NONE,
-    [displayContent, loadingPokemon, searchingPokemon]
+      //displayContent &&
+      !(searchingPokemon > 0) && loadingPokemon === SEARCH_POKEMON.NONE,
+    [loadingPokemon, searchingPokemon]
   );
 
   // Presearch only once, when first mounted
@@ -74,6 +73,7 @@ const SearchPage = ({
             searchingPokemon
             {...{
               anim,
+              showContent,
               totalPokemon,
               preSearchState,
               searchingPokemon,

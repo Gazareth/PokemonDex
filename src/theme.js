@@ -122,15 +122,35 @@ export const theme = (mode = "dark") => {
       background: { ...backgrounds(mode) },
       pokemonTypes: pokemonTypeColours(mode),
     },
-    panelStyles: {
-      backgroundColor: backgrounds(mode)["tertiary"],
+    panelStylesWeak: {
+      backgroundColor: Color(get(backgrounds(mode), "secondary"))
+        .mix(Color(get(backgrounds(mode), "tertiary")), 0.75)
+        .toString(),
       filter: `drop-shadow(0px 1px 1px ${
-        mode === "default"
+        mode === "dark"
           ? get(backgrounds(mode), "default")
           : Color(get(backgrounds(mode), "quaternary"))
               .mix(Color(get(backgrounds(mode), "quinary")), 0.1)
               .toString()
       })`,
+    },
+    panelStyles: {
+      backgroundColor: backgrounds(mode)["tertiary"],
+      filter: `drop-shadow(0px 1px 1px ${
+        mode === "dark"
+          ? get(backgrounds(mode), "default")
+          : Color(get(backgrounds(mode), "quaternary"))
+              .mix(Color(get(backgrounds(mode), "quinary")), 0.1)
+              .toString()
+      })`,
+    },
+    panelBorderWeak: {
+      border: `1px solid ${Color(get(backgrounds(mode), "tertiary"))
+        .mix(Color(get(backgrounds(mode), "quaternary")), 0.2)
+        .toString()}`,
+    },
+    panelBorder: {
+      border: `1px solid ${backgrounds(mode)["quaternary"]}`,
     },
     transitions: {
       easing: {

@@ -1,4 +1,10 @@
-import React, { useRef, useState, useMemo, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 
 import AnimatedNumber from "react-animated-number";
 
@@ -263,6 +269,9 @@ const HelperText = ({
     </span>
   </>
 );
+
+const cardStates = ["Closed", "Open", "Busy"];
+
 const SearchPanel = ({
   anim,
   isBusy,
@@ -277,7 +286,9 @@ const SearchPanel = ({
   const mainTheme = useTheme();
   const classes = useStyles(mainTheme);
   const searchTxtRef = useRef();
+  const [cardState, setCardState] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
+  // const [changeFreeze, setChangeFreeze] = useState(false);
 
   const focusTimer = useRef();
 
@@ -288,25 +299,17 @@ const SearchPanel = ({
 
   const isSearching = (searchingPokemon && searchingPokemon > 0) || null;
 
-  // Handle search complete
-  // const inputVal = useMemo(() => {
-  //   if (
-  //     isBusy &&
-  //     ((loadingState === SEARCH_POKEMON.VARIETY_FOUND &&
-  //       searchingPokemon === currentPokemon.id) ||
-  //       (!isSearching && loadingState !== SEARCH_POKEMON.FAILED))
-  //   ) {
-  //     return currentPokemon.name;
-  //   } else {
-  //     return null;
-  //   }
-  // }, [currentPokemon, loadingState, isBusy, isSearching, searchingPokemon]);
-
-  // Auto focus on mount after delay
-  // useEffect(() => {
-  //   focusTimer.current = setTimeout(() => handleClick(), 1500);
-  //   return () => clearTimeout(focusTimer);
-  // }, [handleClick]);
+  useEffect(() => {
+    if (isBusy) {
+      setCardState(2);
+    } else {
+      if (isFocused) {
+        setCardState(1);
+      } else {
+        setCardState(0);
+      }
+    }
+  }, [cardState, isBusy, isFocused]);
 
   const handleFocus = () => setIsFocused(true);
 
@@ -320,8 +323,18 @@ const SearchPanel = ({
 
   const mainAnim = anim();
 
-  const cardStates = ["Closed", "Open", "Busy"];
-  const cardState = isBusy ? 2 : isFocused ? 1 : 0;
+  // useEffect(() => {
+  //   console.log("showcontent or cardstate changed - ", showContent, cardState);
+  //   if (!showContent && cardState > 0) {
+  //     console.log("CHANGE FREEZE!");
+  //     setChangeFreeze(true);
+  //     setTimeout(
+  //       () => setChangeFreeze(false),
+  //       process.env.REACT_APP_SWITCHSCREENDELAY
+  //     );
+  //   }
+  // }, [cardState, showContent]);
+
   const stateClass = (prefix) =>
     clsx(classes[prefix], classes[prefix + "-" + cardStates[cardState]]);
 
@@ -339,7 +352,6 @@ const SearchPanel = ({
               rippleVisible: touchRippleClasses,
             },
           }}
-          //component="CardActionArea"
           onMouseDown={(e) => {
             e.stopPropagation();
             e.preventDefault();

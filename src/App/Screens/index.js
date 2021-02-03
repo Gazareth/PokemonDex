@@ -58,6 +58,8 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
         },
         apparentScreen === -1
           ? process.env.REACT_APP_INITIALSCREENDELAY
+          : apparentScreen === 2
+          ? process.env.REACT_APP_SWITCHSCREENDELAY_FAVOURITES
           : process.env.REACT_APP_SWITCHSCREENDELAY
       );
     },
