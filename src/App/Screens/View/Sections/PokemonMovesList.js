@@ -124,20 +124,21 @@ const PokemonMovesList = ({ pokemonMoves }) => {
           <ListItem
             style={{
               //borderRadiusLeft: "22px",
-              border: "1px solid " + theme.palette.background.senary,
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: theme.palette.background.senary,
               ...(i === 0
                 ? {
-                    //borderTop: "",
                     borderTopLeftRadius: "0.3em",
                     borderTopRightRadius: "0.3em",
                   }
                 : i === pokemonMoves.length - 1
                 ? {
-                    borderTop: "",
+                    borderWidth: "0 1px 1px",
                     borderBottomLeftRadius: "0.3em",
                     borderBottomRightRadius: "0.3em",
                   }
-                : { borderTop: "" }), //"0px solid #000"
+                : { borderWidth: "0 1px 1px" }), //"0px solid #000"
             }}
             classes={{
               root: classes["typeBackgroundColor-" + move.type],

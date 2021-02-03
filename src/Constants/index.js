@@ -21,7 +21,7 @@ export const LOADING_STRINGS = {
   [SEARCH_POKEMON.INIT]: "Starting search...",
   [SEARCH_POKEMON.FOUND]: "Retrieving species...",
   [SEARCH_POKEMON.VARIETY_FOUND]: "Querying evolutions...",
-  [SEARCH_POKEMON.EVOLUTION_CHAIN_FOUND]: "Evolutions found...",
+  [SEARCH_POKEMON.EVOLUTION_CHAIN_FOUND]: "Evolutions resolved...",
   [SEARCH_POKEMON.EVOLUTIONS_SPECIES_FOUND]: "Mapping evolutions...",
   [SEARCH_POKEMON.EVOLUTIONS_FOUND]: "Compiling moves list...",
   [SEARCH_POKEMON.MOVES_FOUND]: "Finalising...",

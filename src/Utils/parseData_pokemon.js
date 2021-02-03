@@ -73,6 +73,9 @@ const parseData_Pokemon = (
     items: varietyData.held_items.map((itemObj) =>
       startCase(itemObj.item.name)
     ),
+    abilities: varietyData.abilities.map(({ ability }) =>
+      startCase(ability.name)
+    ),
   };
 };
 

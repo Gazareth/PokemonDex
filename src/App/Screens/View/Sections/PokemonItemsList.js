@@ -39,24 +39,25 @@ const PokemonItemsList = ({ pokemonItems }) => {
             className={classes.backgroundTestColour}
             style={{
               //borderRadiusLeft: "22px",
-              border: "1px solid " + theme.palette.background.senary,
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: theme.palette.background.septenary,
               ...(i === 0
                 ? {
-                    //borderTop: "",
                     borderTopLeftRadius: "0.3em",
                     borderTopRightRadius: "0.3em",
                   }
                 : i === pokemonItems.length - 1
                 ? {
-                    borderTop: "",
+                    borderWidth: "0 1px 1px",
                     borderBottomLeftRadius: "0.3em",
                     borderBottomRightRadius: "0.3em",
                   }
-                : { borderTop: "0px" }), //"0px solid #000"
+                : { borderWidth: "0 1px 1px" }), //"0px solid #000"
             }}
             button
           >
-            <ListItemText primary={item.name} secondary={item.type} />
+            <ListItemText primary={item} />
           </ListItem>
         </div>
       ))}

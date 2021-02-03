@@ -27,6 +27,7 @@ import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import FlareIcon from "@material-ui/icons/Flare";
 
 import get from "lodash/get";
+import isEmpty from "lodash/isEmpty";
 
 import SmoothIn from "Utils/transitionSmoothIn";
 
@@ -60,19 +61,27 @@ const MiaIcon = ({ variant }) => {
   return <Icon />;
 };
 
-const MiaButton = SmoothIn(({ onClick, variant, style }) => {
+const MiaButton = SmoothIn(({ onClick, variant, style, pokemonMIAData }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
   return (
     <List className={classes.miaButtonOuter} {...{ style }}>
-      <ListItem classes={{ root: classes.miaButton }} button onClick={onClick}>
+      <ListItem
+        classes={{ root: classes.miaButton }}
+        button
+        disabled={isEmpty(pokemonMIAData)}
+        onClick={onClick}
+      >
         <ListItemAvatar>
           <Avatar>
             <MiaIcon {...{ variant }} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={startCase(variant)} secondary={"(34)"} />
+        <ListItemText
+          primary={startCase(variant)}
+          secondary={`(${pokemonMIAData.length})`}
+        />
       </ListItem>
     </List>
   );
@@ -95,7 +104,10 @@ const PokemonMIA = ({ pokemonName, variant, pokemonMIAData, show, delay }) => {
 
   return (
     <>
-      <MiaButton {...{ show, delay, variant }} onClick={handleClickOpen} />
+      <MiaButton
+        {...{ show, delay, variant, pokemonMIAData }}
+        onClick={handleClickOpen}
+      />
       <Dialog
         open={open}
         fullWidth

@@ -115,7 +115,7 @@ const PokemonDisplay = ({
             pokemonName={pokemonInfo.name}
             variant="items"
             displayContent={displayContent && animateIn}
-            pokemonMIAData={pokemonInfo.moves}
+            pokemonMIAData={pokemonInfo.items}
             {...anim()}
             doHeight
           />
@@ -125,7 +125,7 @@ const PokemonDisplay = ({
             pokemonName={pokemonInfo.name}
             variant="abilities"
             displayContent={displayContent && animateIn}
-            pokemonMIAData={pokemonInfo.moves}
+            pokemonMIAData={pokemonInfo.abilities}
             {...anim()}
             doHeight
           />

@@ -66,7 +66,7 @@ const PokemonDisplayEvolutions = function ({
   return (
     <Box className={classes.evolutionsOuter} style={props.style}>
       <div className={classes.evolutionsHeading}>
-        <Typography>Evolutions</Typography>
+        <Typography color="textSecondary">Evolutions</Typography>
       </div>
       <div className={classes.evolutionsList}>
         <Evolutions {...{ classes, pokemonId, pokemonEvolutions }}></Evolutions>
