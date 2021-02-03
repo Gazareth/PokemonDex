@@ -87,11 +87,15 @@ const useStylesBootstrap = (shouldHide) =>
     },
   }));
 
-const EvolutionTooltip = ({ id, name, isCurrent, toNewView }) => {
+const EvolutionTooltip = ({ id, name, isCurrent, isView, toNewView }) => {
   const theme = useTheme();
 
   return (
-    <div style={{ padding: isCurrent ? theme.spacing(2) : 0 }}>
+    <div
+      style={{
+        padding: isCurrent ? theme.spacing(2) : 0,
+      }}
+    >
       <div style={{ paddingBottom: isCurrent ? theme.spacing(2) : 0 }}>
         <Typography color="textPrimary">
           <span
@@ -112,6 +116,7 @@ const EvolutionTooltip = ({ id, name, isCurrent, toNewView }) => {
             variant="contained"
             color="secondary"
             onClick={toNewView}
+            disabled={isView}
           >
             <PokeballIcon />
           </Button>
@@ -175,6 +180,7 @@ const Evolution = ({
             id={id}
             name={name}
             isCurrent={isSelect}
+            isView={isView}
             toNewView={() => toNewView(id)}
           />
         )
@@ -189,7 +195,7 @@ const Evolution = ({
         component="div"
         className={clsx(
           evolEntryClass,
-          isView ? evolActiveClass : evolInactiveClass
+          isSelect ? evolActiveClass : evolInactiveClass
         )}
         style={{
           transform: `translateX(${positionOffset}px) scale(${
@@ -254,7 +260,7 @@ const Evolutions = ({ viewingId, evolutions, classes, listWidth }) => {
             key={evolution.id}
             evolIndex={i}
             {...pick(evolution, ["id", "img", "name"])}
-            isView={iDiff === 0}
+            isView={evolution.id === viewingId}
             isSelect={i === currentEvolution}
             setSelected={setEvolution}
             toNewView={toNewView}

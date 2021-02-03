@@ -1,6 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import Color from "color";
 
 import useAnimEngine from "Hooks/AnimEngine";
@@ -27,6 +29,7 @@ import PokeballIcon from "Icons/PokeballIcon";
 
 import ReorderIcon from "@material-ui/icons/Reorder";
 import DeleteTwoToneIcon from "@material-ui/icons/DeleteTwoTone";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -69,6 +72,21 @@ const useStyles = makeStyles((theme) => ({
     transition: "padding 245ms ease-out",
     height: "100%",
     padding: `${theme.spacing(1.5)}px`,
+    [theme.breakpoints.down("sm")]: {
+      padding: `${theme.spacing(0.5)}px`,
+      "& h2": {
+        fontSize: "1.35rem",
+      },
+    },
+    [theme.breakpoints.down("xs")]: {
+      padding: `${theme.spacing(0.25)}px`,
+      "& h2": {
+        fontSize: "1.1rem",
+      },
+      "& h6": {
+        fontSize: "0.65rem",
+      },
+    },
   },
 
   cardContentMutable: {
@@ -143,6 +161,29 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     "&:hover": {},
   },
+  moveMenu: {
+    //filter: `drop-shadow(8px 8px 4px ${theme.palette.background.octonary})`,
+    "& ul": {
+      paddingTop: "0",
+      paddingBottom: "0",
+    },
+  },
+  menuItemMove: {
+    color: "white",
+    fontWeight: "Bold",
+    backgroundColor: theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.primary.light,
+    },
+  },
+  menuItemView: {
+    color: "white",
+    fontWeight: "Bold",
+    backgroundColor: theme.palette.secondary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.dark,
+    },
+  },
   viewBackIcon: {
     transform: "scaleX(-1)",
   },
@@ -169,21 +210,80 @@ const ViewButton = SmoothIn(({ classes, viewPokemon, ...props }) => (
 ));
 
 const MoveButtons = SmoothIn(
-  ({ classes, viewPokemon, moveSwapFavourite, ...props }) => (
-    <ButtonGroup
-      style={props.style}
-      variant="contained"
-      color="primary"
-      size="small"
-    >
-      <Button>
-        <ArrowUpward onClick={() => moveSwapFavourite(true)} />
-      </Button>
-      <Button>
-        <ArrowDownward onClick={() => moveSwapFavourite(false)} />
-      </Button>
-    </ButtonGroup>
-  )
+  ({ classes, viewPokemon, moveSwapFavourite, ...props }) => {
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = ({ currentTarget }) => {
+      setAnchorEl(currentTarget);
+    };
+
+    const handleClose = (callback) => () => {
+      if (callback) callback();
+      setAnchorEl(null);
+    };
+
+    return matches ? (
+      <ButtonGroup
+        style={props.style}
+        variant="contained"
+        color="primary"
+        size="small"
+      >
+        <Button>
+          <ArrowUpward onClick={() => moveSwapFavourite(true)} />
+        </Button>
+        <Button>
+          <ArrowDownward onClick={() => moveSwapFavourite(false)} />
+        </Button>
+      </ButtonGroup>
+    ) : (
+      <>
+        <Button
+          variant="contained"
+          color="primary"
+          aria-controls="move-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </Button>
+        <Menu
+          id="move-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          className={classes.moveMenu}
+        >
+          <MenuItem
+            classes={{ root: classes.menuItemMove }}
+            onClick={handleClose(() => moveSwapFavourite(true))}
+          >
+            <ArrowUpward />
+            &nbsp;Move Up
+          </MenuItem>
+          <MenuItem
+            classes={{ root: classes.menuItemMove }}
+            onClick={handleClose(() => moveSwapFavourite(false))}
+          >
+            <ArrowDownward />
+            &nbsp;Move Down
+          </MenuItem>
+          <MenuItem
+            classes={{ root: classes.menuItemView }}
+            color="secondary"
+            onClick={handleClose(() => viewPokemon())}
+          >
+            <PokeballIcon />
+            &nbsp;View
+          </MenuItem>
+        </Menu>
+      </>
+    );
+  }
 );
 
 const CloseButton = SmoothIn(({ classes, hideOptions, ...props }) => (
@@ -211,6 +311,7 @@ const PokemonFavourite = ({
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
   const isLoaded = useMemo(() => typeof pokemonInfo.image !== undefined, [
     pokemonInfo,
@@ -329,7 +430,7 @@ const PokemonFavourite = ({
                           theme={theme}
                         />
                       </Grid>
-                      <Grid item container xs={6} sm={7} justify="flex-end">
+                      <Grid item container xs={10} sm={7} justify="flex-end">
                         <MoveButtons
                           {...{ ...anim(), viewPokemon, moveSwapFavourite }}
                           classes={classes}
@@ -337,15 +438,17 @@ const PokemonFavourite = ({
                           theme={theme}
                         />
                       </Grid>
-                      <Grid item container xs={4} sm={3}>
-                        <ViewButton
-                          {...anim()}
-                          classes={classes}
-                          viewPokemon={viewPokemon}
-                          transitionType="Bounce"
-                          theme={theme}
-                        />
-                      </Grid>
+                      {matches && (
+                        <Grid item container sm={3}>
+                          <ViewButton
+                            {...anim()}
+                            classes={classes}
+                            viewPokemon={viewPokemon}
+                            transitionType="Bounce"
+                            theme={theme}
+                          />
+                        </Grid>
+                      )}
                     </Grid>
                     <Grid
                       item
