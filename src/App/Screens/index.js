@@ -7,10 +7,6 @@ import { useHistory } from "react-router";
 import { searchPokemon } from "Store/actions";
 import { SEARCH_POKEMON } from "Store/actions/types";
 
-import useKeyDown from "Hooks/KeyDown";
-
-import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
-
 import Search from "./Search";
 import View from "./View";
 import Favourites from "./Favourites";
@@ -105,38 +101,6 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
     dispatch,
     apiInterval,
   ]);
-
-  //Handle key down
-  const handleLeftRight = useCallback(
-    (event) => {
-      if (havePokemon <= 0) return false;
-      let newScreen = apparentScreen;
-      switch (event.keyCode) {
-        case 37:
-          console.log("Pressed left! Pending screen? ", pendingScreen);
-          if (pendingScreen > 0) newScreen--;
-          break;
-        case 39:
-          console.log("Pressed right! Pending screen? ", pendingScreen);
-          if (pendingScreen < 2) newScreen++;
-          break;
-        default:
-          break;
-      }
-      if (newScreen !== apparentScreen && newScreen !== pendingScreen) {
-        const havePokemonPath =
-          newScreen === 1 && havePokemon > 0 ? `/?id=${havePokemon}` : "";
-        history.push(`/${PokemonDexURLs[newScreen]}${havePokemonPath}`);
-      }
-      if (event.keyCode === 27) {
-        //Do whatever when esc is pressed
-      }
-    },
-    [apparentScreen, havePokemon, pendingScreen, history]
-  );
-
-  // //Detect KeyDown
-  useKeyDown(handleLeftRight);
 
   return (
     <Screen displayContent={!isScreenPending} screenIndex={apparentScreen} />
