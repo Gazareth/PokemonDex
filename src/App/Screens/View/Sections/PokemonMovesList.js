@@ -92,6 +92,9 @@ const useStyles = makeStyles((theme) => ({
   backgroundTestColour: {
     backgroundColor: theme.palette.background.default,
   },
+  moveNameText: {
+    fontWeight: "500",
+  },
   ...typeColoursClasses(
     theme,
     theme.palette.text.secondary,
@@ -184,7 +187,10 @@ const PokemonMovesList = ({ pokemonMoves }) => {
               </Avatar>
             </ListItemAvatar>
             <ListItemText
-              classes={{ secondary: classes["typeTextColor-" + move.type] }}
+              classes={{
+                primary: classes.moveNameText,
+                secondary: classes["typeTextColor-" + move.type],
+              }}
               primary={move.name}
               secondary={move.type}
             />

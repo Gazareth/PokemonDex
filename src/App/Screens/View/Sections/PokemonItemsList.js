@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
     //"-1px -1px 0 #444, 1px -1px 0 #444, -1px 1px 0 #444, 1px 1px 0 #444",
     color: theme.palette.text.secondary,
   },
+  moveNameText: {
+    fontWeight: "500",
+  },
   backgroundTestColour: {
     backgroundColor: theme.palette.background.default,
   },
@@ -57,7 +60,10 @@ const PokemonItemsList = ({ pokemonItems }) => {
             }}
             button
           >
-            <ListItemText primary={item} />
+            <ListItemText
+              primary={item}
+              classes={{ primary: classes.moveNameText }}
+            />
           </ListItem>
         </div>
       ))}

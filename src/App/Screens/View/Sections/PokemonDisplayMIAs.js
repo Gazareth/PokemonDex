@@ -19,6 +19,7 @@ import Grow from "@material-ui/core/Grow";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import startCase from "lodash/startCase";
+import Color from "color";
 
 import PokemonMIAModal from "./PokemonDisplayMIAModal";
 
@@ -43,8 +44,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.spacing(0.5),
     ...theme.panelStyles,
     ...theme.panelBorder,
+    backgroundColor: `75ms cubic-bezier(0.4, 0, 0.2, 1) 0ms`,
     "&:hover": {
-      backgroundColor: theme.palette.background.quaternary,
+      backgroundColor: Color(theme.palette.background.secondary)
+        .mix(Color(theme.palette.background.quaternary), 0.7)
+        .toString(),
     },
   },
 }));

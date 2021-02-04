@@ -20,6 +20,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Drawer from "@material-ui/core/Drawer";
 
+import Button from "@material-ui/core/Button";
+
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -65,18 +67,21 @@ const styles = (theme) => ({
     position: "relative",
     zIndex: theme.zIndex.drawer + 1,
   },
+  appBarGrid: {
+    "& > div.MuiGrid-item": {
+      flex: "1",
+      display: "flex",
+      justifyContent: "center",
+    },
+  },
+  navPill: {
+    flex: "2.5 !important",
+  },
   logoTitle: {
-    //flexGrow: 0.5,
     height: "100%",
   },
-  logoButton: {
-    [theme.breakpoints.down("xs")]: {
-      position: "absolute",
-      margin: "3px",
-    },
-    //marginRight: theme.spacing(1.5),
-  },
   title: {
+    textTransform: "capitalize",
     display: "flex",
     alignSelf: "center",
     paddingLeft: theme.spacing(1.5),
@@ -110,6 +115,7 @@ const styles = (theme) => ({
     justifyContent: "flex-end",
   },
   switchForm: {
+    marginLeft: "auto",
     [theme.breakpoints.down("xs")]: {
       display: "none",
     },
@@ -279,17 +285,14 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
     <>
       <AppBar position="absolute" color="default" className={classes.appBar}>
         <Toolbar>
-          <Grid container justify="space-between">
+          <Grid
+            container
+            justify="space-between"
+            className={classes.appBarGrid}
+          >
             <Grid item>
               <Grid item container className={classes.logoTitle}>
-                <IconButton
-                  edge="start"
-                  className={classes.logoButton}
-                  onClick={toggleDrawer(!drawerOpen)}
-                  color="inherit"
-                  aria-label="menu"
-                  size="small"
-                >
+                <Button color="default" onClick={toggleDrawer(!drawerOpen)}>
                   <SvgIcon
                     component={PokedexSVG}
                     colors={{
@@ -314,19 +317,19 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
                     //style={{ fill: "#c30d22" }}
                     viewBox="0 0 640 650"
                   />
-                </IconButton>
-                <Typography
-                  variant="subtitle2"
-                  color="textSecondary"
-                  className={classes.title}
-                  noWrap
-                >
-                  Pokémon Dex
-                </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    className={classes.title}
+                    noWrap
+                  >
+                    Pokémon Dex
+                  </Typography>
+                </Button>
               </Grid>
             </Grid>
             {!drawerOpen && (
-              <Grid item>
+              <Grid item className={classes.navPill}>
                 <div
                   style={{
                     backgroundColor: theme.palette.background.quaternary,
