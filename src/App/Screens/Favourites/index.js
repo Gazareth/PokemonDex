@@ -119,7 +119,7 @@ const FavouritesPage = ({
   const favListAnim = useAnimEngine(
     favourites.length,
     displayList,
-    { delay: 375, duration: 350 },
+    { delay: 375, duration: 350, syncInv: true },
     90,
     0.75,
     0,

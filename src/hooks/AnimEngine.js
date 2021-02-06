@@ -41,11 +41,12 @@ const useAnimEngine = (
   return () => {
     const newDuration =
       baseDuration + staggerAmount * Math.pow(staggerId, overflow);
-    const invDuration =
-      staggerAmount * Math.pow(participants - staggerId, overflow);
+    const invDuration = timing.syncInv
+      ? baseDuration
+      : staggerAmount * Math.pow(participants - staggerId, overflow);
     const newDelay = baseDelay + (staggerAmount + staggerOffset) * staggerId++;
     const maxDelay = baseDelay + staggerAmount * participants;
-    const invDelay = maxDelay - newDelay;
+    const invDelay = timing.syncInv ? 0 : maxDelay - newDelay;
 
     return {
       delay: {
