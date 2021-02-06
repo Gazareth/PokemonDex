@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   headingText: {
+    color: theme.palette.info.main,
     animation: `$fadeIn 750ms ${theme.transitions.easing.easeInOut}`,
   },
   "@keyframes fadeIn": {
@@ -269,7 +270,6 @@ const HowToUse = () => {
           align="center"
           variant="h5"
           style={{ fontWeight: "bold" }}
-          color="primary"
           className={classes.headingText}
         >
           How To Use

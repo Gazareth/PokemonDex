@@ -6,8 +6,6 @@ import { useHistory, useLocation } from "react-router";
 import clsx from "clsx";
 import Color from "color";
 
-import isFunction from "lodash/isFunction";
-
 import { setThemeMode } from "Store/actions";
 
 import useThemedClasses from "Contexts/ThemedClasses";
@@ -217,25 +215,9 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
     setDrawerOpen(open);
   };
 
-  // Settings dialog
-  const [settingsOpen, setSettingsOpen] = useState(false);
-
-  const handleSettingsOpen = () => {
-    setSettingsOpen(true);
-  };
-
-  const handleSettingsClose = () => {
-    setSettingsOpen(false);
-  };
-
   const DrawerContent = () => (
     <div>
       <Toolbar />
-      <SettingsDialog
-        open={settingsOpen}
-        handleClose={handleSettingsClose}
-        {...{ playLightsOn, playLightsOff }}
-      />
       <div
         className={classes.drawerList}
         role="presentation"
@@ -279,19 +261,18 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
           {[
             ["How to use", LiveHelpRoundedIcon, "HowToUse"],
             ["Credits", InfoOutlinedIcon, "Credits"],
-            ["Settings", SettingsIcon, handleSettingsOpen],
+            ["Settings", SettingsIcon, "Settings"],
           ].map(([text, IconComponent, link]) => {
             const isCurrentPath = currentPage(link, pathname);
 
             const gotoLink = () => !isCurrentPath && history.push(`/${link}`);
-            const onClick = isFunction(link) ? link : gotoLink;
 
             return (
               <ListItem
                 button
                 key={text}
                 disabled={isCurrentPath}
-                onClick={onClick}
+                onClick={gotoLink}
               >
                 <ListItemIcon>
                   <IconComponent />

@@ -10,6 +10,7 @@ import PokeAppBar from "App/Extras/PokeAppBar";
 import PokemonDexRouter from "./PokemonDexRouter";
 import Credits from "./Extras/Credits";
 import HowToUse from "./Extras/HowToUse";
+import Settings from "./Extras/Settings";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {
@@ -67,6 +68,9 @@ const MainPage = () => {
         </Route>
         <Route path="/HowToUse">
           <HowToUse />
+        </Route>
+        <Route path="/Settings">
+          <Settings />
         </Route>
         <Route path={"/"}>
           <main className={clsx(classes.flexCol, classes.layout)}>

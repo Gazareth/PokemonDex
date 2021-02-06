@@ -2,8 +2,10 @@ import React, { useState, useMemo, useCallback, useRef } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect, useDispatch } from "react-redux";
 
-//import { Base64 } from "js-base64";
 import LZString from "lz-string";
+
+import { useHistory } from "react-router-dom";
+import usePlaySound from "Hooks/usePlaySound";
 
 import SwipeableViews from "react-swipeable-views";
 
@@ -42,8 +44,6 @@ import AssignmentReturnedIcon from "@material-ui/icons/AssignmentReturned";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import pick from "lodash/pick";
-
-import usePlaySound from "Hooks/usePlaySound";
 
 import {
   importData,
@@ -598,4 +598,25 @@ const mapDispatchToProps = {
   setApiInterval,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsDialog);
+const SettingsPopup = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsDialog);
+
+const SettingsPage = () => {
+  const history = useHistory();
+
+  const { playLightsOn, playLightsOff } = usePlaySound();
+
+  const handleSettingsClose = () => history.goBack();
+
+  return (
+    <SettingsPopup
+      open={true}
+      handleClose={handleSettingsClose}
+      {...{ playLightsOn, playLightsOff }}
+    />
+  );
+};
+
+export default SettingsPage;
