@@ -162,7 +162,11 @@ const useStyles = makeStyles((theme) => {
 });
 
 const subheadingCharPoses = {
-  exit: { opacity: 0, y: 10, delay: 625 },
+  exit: {
+    opacity: 0,
+    y: 10,
+    delay: 625,
+  },
   enter: {
     y: 0,
     opacity: 1,
@@ -288,14 +292,12 @@ const SearchPanel = ({
   const searchTxtRef = useRef();
   const [cardState, setCardState] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
-  // const [changeFreeze, setChangeFreeze] = useState(false);
 
   const focusTimer = useRef();
 
-  const handleClick = useCallback(
-    () => searchTxtRef.current && searchTxtRef.current.focus(),
-    [searchTxtRef]
-  );
+  const handleClick = useCallback(() => {
+    searchTxtRef.current && searchTxtRef.current.focus();
+  }, [searchTxtRef]);
 
   const isSearching = (searchingPokemon && searchingPokemon > 0) || null;
 

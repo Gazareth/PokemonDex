@@ -48,6 +48,8 @@ import Switch from "@material-ui/core/Switch";
 import Brightness5Icon from "@material-ui/icons/Brightness5";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 
+import usePlaySound from "Hooks/usePlaySound";
+
 import SettingsDialog from "./Settings";
 
 import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
@@ -179,11 +181,23 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   const [classes, theme] = useThemedClasses(styles);
   const history = useHistory();
   const { pathname } = useLocation();
+  const {
+    playDrawerOpen,
+    playDrawerClose,
+    playLightsOn,
+    playLightsOff,
+  } = usePlaySound();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleThemeSwitch = () => {
-    setThemeMode(themeMode === "dark" ? "light" : "dark");
+    const isDark = themeMode === "dark";
+    if (isDark) {
+      playLightsOn();
+    } else {
+      playLightsOff();
+    }
+    setThemeMode(isDark ? "light" : "dark");
   };
 
   const toggleDrawer = (open) => (event) => {
@@ -192,6 +206,12 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
       (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
+    }
+
+    if (open) {
+      playDrawerOpen();
+    } else {
+      playDrawerClose();
     }
 
     setDrawerOpen(open);
@@ -211,7 +231,11 @@ const PokeAppBar = ({ setThemeMode, themeMode, pokemonAvailable }) => {
   const DrawerContent = () => (
     <div>
       <Toolbar />
-      <SettingsDialog open={settingsOpen} handleClose={handleSettingsClose} />
+      <SettingsDialog
+        open={settingsOpen}
+        handleClose={handleSettingsClose}
+        {...{ playLightsOn, playLightsOff }}
+      />
       <div
         className={classes.drawerList}
         role="presentation"

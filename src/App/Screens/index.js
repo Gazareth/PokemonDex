@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
+import usePlaySound from "Hooks/usePlaySound";
+
 import { searchPokemon } from "Store/actions";
 import { SEARCH_POKEMON } from "Store/actions/types";
 
@@ -31,6 +33,8 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
     useSelector((state) => state.theme.interval) ||
     process.env.REACT_APP_APIINTERVAL;
 
+  const { playSearchMode, playViewMode, playFavMode } = usePlaySound();
+
   const [apparentScreen, setApparentScreen] = useState(-1);
   const [pendingScreen, setPendingScreen] = useState(screenIndex);
 
@@ -47,9 +51,23 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
   const queueScreen = useCallback(
     (newScreen) => {
       setPendingScreen(newScreen);
+      switch (newScreen) {
+        case 0:
+          playSearchMode();
+          break;
+        case 1:
+          playViewMode();
+          break;
+        case 2:
+          playFavMode();
+          break;
+        default:
+          break;
+      }
       switchScreenTimer = setTimeout(
         () => {
           switchScreen(newScreen);
+          // PLAY SOUND
           switchScreenTimer = null;
         },
         apparentScreen === -1
@@ -59,7 +77,7 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
           : process.env.REACT_APP_SWITCHSCREENDELAY
       );
     },
-    [apparentScreen, switchScreen]
+    [apparentScreen, playFavMode, playSearchMode, playViewMode, switchScreen]
   );
 
   // If we're not on the right screen, update

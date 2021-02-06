@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 
 import clsx from "clsx";
@@ -17,6 +17,9 @@ import Box from "@material-ui/core/Box";
 import IconButton from "@material-ui/core/IconButton";
 import StarBorderOutlinedIcon from "@material-ui/icons/StarBorderOutlined";
 import GradeIcon from "@material-ui/icons/Grade";
+
+import usePlaySound from "Hooks/usePlaySound";
+import noop from "lodash/noop";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -51,6 +54,23 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     color: theme.palette.text.disabled,
   },
+  pkmnImg: {
+    position: "absolute",
+    filter: "opacity(0)",
+  },
+  pkmnImgPower: {
+    animation: `$specialPower 375ms ${theme.transitions.easing.easeInOut}`,
+  },
+  "@keyframes specialPower": {
+    "0%": {
+      filter: "opacity(1)",
+      transform: "scale(1)",
+    },
+    "100%": {
+      filter: "opacity(0)",
+      transform: "scale(1.65)",
+    },
+  },
 }));
 
 const FavouritesIcon = ({ isFavourite, ...otherProps }) => {
@@ -68,6 +88,44 @@ const PokemonDisplayMain = ({
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const {
+    playFaveAdded,
+    playFaveRemoved,
+    playGhostSound,
+    playPikachuSound,
+  } = usePlaySound();
+  const [playingSound, setPlayingSound] = useState(false);
+  const secretImg = useRef(null);
+
+  const isGhost = pokemonInfo.types.includes("Ghost");
+  const isPika = pokemonInfo.name === "Pikachu";
+  const isSpecial = isGhost || isPika;
+
+  const handleImgClick = (e) => {
+    if (playingSound) {
+      return;
+    }
+    if (isGhost) {
+      playGhostSound();
+    } else if (isPika) {
+      playPikachuSound();
+    }
+    setPlayingSound(true);
+    secretImg.current.classList.add(classes.pkmnImgPower);
+    setTimeout(() => {
+      setPlayingSound(false);
+      secretImg.current.classList.remove(classes.pkmnImgPower);
+    }, 1000);
+  };
+
+  const handleFavClick = () => {
+    if (isFavourite) {
+      playFaveRemoved();
+    } else {
+      playFaveAdded();
+    }
+    addToFavourites();
+  };
 
   return (
     <Card
@@ -94,6 +152,15 @@ const PokemonDisplayMain = ({
           className={classes.image}
           alt={pokemonInfo.name}
         />
+        {isSpecial && (
+          <img
+            ref={secretImg}
+            src={pokemonInfo.image}
+            className={clsx(classes.image, classes.pkmnImg)}
+            alt={pokemonInfo.name}
+            onClick={handleImgClick}
+          />
+        )}
       </Box>
       <div
         className={classes.cardDetails}
@@ -158,7 +225,7 @@ const PokemonDisplayMain = ({
             </Grid>
             <Grid item xs={2} container>
               <IconButton
-                onClick={addToFavourites}
+                onClick={handleFavClick}
                 className={classes.favouriteIconButton}
               >
                 <FavouritesIcon

@@ -43,6 +43,8 @@ import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import pick from "lodash/pick";
 
+import usePlaySound from "Hooks/usePlaySound";
+
 import {
   importData,
   setThemeMode,
@@ -208,6 +210,8 @@ const SettingsDialog = ({
   setThemeMode: stateSetThemeMode,
   setApiInterval: stateSetApiInterval,
   pokemonData,
+  playLightsOn,
+  playLightsOff,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -306,6 +310,12 @@ const SettingsDialog = ({
 
   const handleThemeSwitch = (val) => {
     const modeVal = val.target.checked ? "light" : "dark";
+    const isDark = themeMode === "dark";
+    if (isDark) {
+      playLightsOn();
+    } else {
+      playLightsOff();
+    }
     setThemeMode(modeVal);
     stateSetThemeMode(modeVal);
   };
