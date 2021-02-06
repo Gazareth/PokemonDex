@@ -59,7 +59,7 @@ const MainPage = () => {
   const classes = useStyles(mainTheme);
 
   return (
-    <Router>
+    <Router basename="/PokemonDex">
       <PokeAppBar />
       <Switch>
         <Route path="/Credits">
