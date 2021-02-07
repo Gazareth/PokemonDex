@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import { connect, useDispatch } from "react-redux";
 
 import LZString from "lz-string";
@@ -55,6 +57,11 @@ import {
 const useStyles = makeStyles((theme) => {
   const lightMode = theme.palette.type === "light";
   return {
+    dialogContent: {
+      [theme.breakpoints.down("sm")]: {
+        padding: "0 1vw",
+      },
+    },
     impExpWrap: {
       margin: "2vh 2vw",
       [theme.breakpoints.down("lg")]: {
@@ -215,6 +222,8 @@ const SettingsDialog = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const largeScreen = useMediaQuery(theme.breakpoints.up("sm"));
+
   const initialInterval =
     stateApiInterval || parseInt(process.env.REACT_APP_APIINTERVAL);
   const dispatch = useDispatch();
@@ -327,6 +336,7 @@ const SettingsDialog = ({
 
   return (
     <Dialog
+      fullScreen={!largeScreen}
       fullWidth={true}
       maxWidth={"md"}
       open={open}
@@ -334,7 +344,7 @@ const SettingsDialog = ({
       aria-labelledby="max-width-dialog-title"
     >
       <DialogTitle id="max-width-dialog-title">Settings</DialogTitle>
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
         <SwipeableViews
           style={{ ...swipeableStyle }}
           containerStyle={{ height: "100%" }}
@@ -528,7 +538,7 @@ const SettingsDialog = ({
                   Remove all cached Pokémon
                 </Button>
               </FormControl>
-              <Divider className={classes.divider2} />
+              {largeScreen && <Divider className={classes.divider2} />}
             </form>
           </div>
           <Grid

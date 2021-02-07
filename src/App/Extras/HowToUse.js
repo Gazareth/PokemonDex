@@ -1,6 +1,7 @@
 import React from "react";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import Paper from "@material-ui/core/Paper";
 import List from "@material-ui/core/List";
@@ -26,16 +27,32 @@ import values from "lodash/values";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    alignSelf: "center",
-    maxWidth: "70%",
-    margin: "6vh 0",
-    padding: "4vh 4vw",
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "0",
-      marginRight: "0",
+    background: theme.palette.background.secondary,
+    padding: `4vh ${theme.spacing(1)}px`,
+    overflowX: "hidden",
+    margin: "0",
+    height: "100%",
+    [theme.breakpoints.up("sm")]: {
+      flexGrow: "1",
+      height: "auto",
+      margin: "8vh 10vw 6vh",
+      padding: theme.spacing(4),
     },
-    border: "none",
-    boxShadow: "none",
+    animation: `$fadeIn 375ms ${theme.transitions.easing.easeInOut}`,
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+    },
+    "100%": {
+      opacity: 1,
+    },
+  },
+  listItem: {
+    [theme.breakpoints.up("sm")]: {
+      margin: "2% 0",
+      padding: "0 6%",
+    },
   },
   avatar: {
     [theme.breakpoints.down("sm")]: {
@@ -46,14 +63,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.info.main,
     animation: `$fadeIn 750ms ${theme.transitions.easing.easeInOut}`,
   },
-  "@keyframes fadeIn": {
-    "0%": {
-      opacity: 0,
-    },
-    "100%": {
-      opacity: 1,
-    },
-  },
+
   sectionHeading: {
     fontSize: "1.5rem",
     fontWeight: "600",
@@ -202,13 +212,13 @@ const HowToEntry = SmoothIn(
     link,
     isLast,
     style,
-    sectionHeadingClass,
+    disableGutters,
   }) => {
     const classes = useStyles();
 
     return (
       <div style={style}>
-        <ListItem style={{ margin: "2% 0", padding: "0 6%" }}>
+        <ListItem className={classes.listItem} {...{ disableGutters }}>
           <HowToAvatar
             {...{ title, ImageComponent }}
             classes={{ root: classes.avatar }}
@@ -243,7 +253,6 @@ const HowToEntry = SmoothIn(
                     variant="contained"
                     color="primary"
                     href="#contained-buttons"
-                    // style={{marginTop: 5px}}
                   >
                     Link
                   </Button>
@@ -261,6 +270,9 @@ const HowToEntry = SmoothIn(
 
 const HowToUse = () => {
   const classes = useStyles();
+  const theme = useTheme();
+  const largeScreen = useMediaQuery(theme.breakpoints.up("sm"));
+
   const anim = useAnimEngine(6, true, { delay: 500, duration: 775 }, 225);
 
   return (
@@ -274,7 +286,7 @@ const HowToUse = () => {
         >
           How To Use
         </Typography>
-        <Container>
+        <Container disableGutters={!largeScreen}>
           <List style={{ marginTop: "6vh" }}>
             {howToInfo.map(
               ([title, ImageComponent, subtitle, text, link], i) => {
@@ -290,6 +302,7 @@ const HowToUse = () => {
                       isLast: i === howToInfo.length - 1,
                       ...anim(),
                     }}
+                    disableGutters={!largeScreen}
                   />
                 );
               }
