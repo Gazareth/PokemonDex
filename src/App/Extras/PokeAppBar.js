@@ -48,8 +48,6 @@ import Brightness4Icon from "@material-ui/icons/Brightness4";
 
 import usePlaySound from "Hooks/usePlaySound";
 
-import SettingsDialog from "./Settings";
-
 import { POKEMON_DEX_PATHS as PokemonDexURLs } from "Constants";
 
 const pathIdMatch = (path, id) =>

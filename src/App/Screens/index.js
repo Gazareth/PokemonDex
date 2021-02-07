@@ -123,4 +123,9 @@ const PokemonDexScreens = ({ screenIndex, searchingPokemon }) => {
   );
 };
 
+PokemonDexScreens.propTypes = {
+  screenIndex: PropTypes.number,
+  searchingPokemon: PropTypes.number,
+};
+
 export default PokemonDexScreens;

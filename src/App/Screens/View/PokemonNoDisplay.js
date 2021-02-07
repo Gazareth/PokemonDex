@@ -180,19 +180,6 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
               <Grid item>
                 <PokeballLoader classes={classes} />
               </Grid>
-              {/* <Grid item style={{ flex: 1 }}>
-                <LinearProgress
-                  classes={{
-                    root: classes.loadingBar,
-                    dashed: classes.noDisplay,
-                  }}
-                  color="secondary"
-                  style={{ flex: "1" }}
-                  variant="buffer"
-                  value={progress}
-                  valueBuffer={100}
-                />
-              </Grid> */}
               <Grid item container justify="center">
                 <Grid item>
                   <Typography
@@ -212,6 +199,9 @@ const PokemonNoDisplay = ({ displayContent, loading }) => {
   );
 };
 
-PokemonNoDisplay.propTypes = {};
+PokemonNoDisplay.propTypes = {
+  displayContent: PropTypes.bool,
+  loading: PropTypes.string,
+};
 
 export default connect(mapStateToProps)(PokemonNoDisplay);

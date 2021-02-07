@@ -71,4 +71,8 @@ const PokemonItemsList = ({ pokemonItems }) => {
   );
 };
 
+PokemonItemsList.propTypes = {
+  pokemonItems: PropTypes.array,
+};
+
 export default PokemonItemsList;

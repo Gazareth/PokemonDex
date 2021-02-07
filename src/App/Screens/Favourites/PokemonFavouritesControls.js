@@ -61,7 +61,6 @@ const MakeControlButton = (
 
 function PokemonFavouritesControls({
   anim,
-  displayContent,
   toggleSwitchMode,
   toggleDeleteMode,
   reorderFavourites,
@@ -156,7 +155,16 @@ function PokemonFavouritesControls({
   );
 }
 
-PokemonFavouritesControls.propTypes = {};
+PokemonFavouritesControls.propTypes = {
+  anim: PropTypes.func,
+  toggleSwitchMode: PropTypes.func,
+  toggleDeleteMode: PropTypes.func,
+  reorderFavourites: PropTypes.func,
+  cancelReorderFavourites: PropTypes.func,
+  inDefaultMode: PropTypes.bool,
+  inSwitchMode: PropTypes.bool,
+  inDeleteMode: PropTypes.bool,
+};
 
 const areEqual = (prevProps, nextProps) =>
   prevProps.displayContent === nextProps.displayContent &&

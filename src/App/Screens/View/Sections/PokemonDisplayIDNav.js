@@ -67,4 +67,8 @@ const PokemonDisplayIDNav = ({ pokemonId, ...props }) => {
   );
 };
 
+PokemonDisplayIDNav.propTypes = {
+  pokemonId: PropTypes.number,
+};
+
 export default SmoothIn(PokemonDisplayIDNav);

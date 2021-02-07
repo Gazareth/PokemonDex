@@ -19,7 +19,6 @@ import StarBorderOutlinedIcon from "@material-ui/icons/StarBorderOutlined";
 import GradeIcon from "@material-ui/icons/Grade";
 
 import usePlaySound from "Hooks/usePlaySound";
-import noop from "lodash/noop";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -80,7 +79,6 @@ const FavouritesIcon = ({ isFavourite, ...otherProps }) => {
 };
 
 const PokemonDisplayMain = ({
-  variant,
   pokemonInfo,
   isFavourite,
   addToFavourites,
@@ -144,7 +142,6 @@ const PokemonDisplayMain = ({
             }
           : {}),
       }}
-      //variant={isFavourite ? "outlined" : "elevation"}
     >
       <Box display="flex" alignItems="center">
         <img
@@ -243,6 +240,12 @@ const PokemonDisplayMain = ({
       </div>
     </Card>
   );
+};
+
+PokemonDisplayMain.propTypes = {
+  pokemonInfo: PropTypes.object,
+  isFavourite: PropTypes.bool,
+  addToFavourites: PropTypes.func,
 };
 
 export default SmoothIn(PokemonDisplayMain);

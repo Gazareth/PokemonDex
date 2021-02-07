@@ -72,4 +72,7 @@ export default function PokemonDisplayMoves({ variant, pokemonMIAData }) {
   );
 }
 
-PokemonDisplayMoves.propTypes = {};
+PokemonDisplayMoves.propTypes = {
+  variant: PropTypes.string,
+  data: PropTypes.object,
+};

@@ -201,4 +201,8 @@ const PokemonMovesList = ({ pokemonMoves }) => {
   );
 };
 
+PokemonMovesList.propTypes = {
+  pokemonMoves: PropTypes.array,
+};
+
 export default PokemonMovesList;
