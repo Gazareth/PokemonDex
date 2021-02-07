@@ -28,7 +28,7 @@ import values from "lodash/values";
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.secondary,
-    padding: `4vh ${theme.spacing(1)}px`,
+    padding: `4vh 4vw 4vh ${theme.spacing(1)}px`,
     overflowX: "hidden",
     margin: "0",
     height: "100%",
@@ -310,7 +310,6 @@ const HowToUse = () => {
           </List>
         </Container>
       </Paper>
-      <div>&nbsp;</div>
     </>
   );
 };

@@ -77,7 +77,6 @@ const MainPage = () => {
             <Paper className={clsx(classes.flexCol, classes.paper)}>
               <PokemonDexRouter />
             </Paper>
-            <div>&nbsp;</div>
           </main>
         </Route>
       </Switch>

@@ -21,7 +21,7 @@ import useAnimEngine from "Hooks/AnimEngine";
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.secondary,
-    padding: `4vh ${theme.spacing(1)}px`,
+    padding: `4vh 6vw`,
     overflowX: "hidden",
     margin: "0",
     height: "100%",
@@ -158,7 +158,7 @@ const CreditsAvatar = ({ title, img }) => (
 );
 
 const CreditsEntry = SmoothIn(
-  ({ title, img, subtitle, text, link, style, disableGutters }) => {
+  ({ title, img, subtitle, text, link, style, isLast, disableGutters }) => {
     const classes = useStyles();
     return (
       <div style={style}>
@@ -198,7 +198,7 @@ const CreditsEntry = SmoothIn(
           />
         </ListItem>
         <Button></Button>
-        <Divider variant="middle" component="li" />
+        {!isLast && <Divider variant="middle" component="li" />}
       </div>
     );
   }
@@ -236,7 +236,16 @@ const Credits = () => {
                 return (
                   <CreditsEntry
                     key={i}
-                    {...{ title, img, subtitle, text, link, isEven, ...anim() }}
+                    {...{
+                      title,
+                      img,
+                      subtitle,
+                      text,
+                      link,
+                      isEven,
+                      isLast: i === creditsInfo.length - 1,
+                      ...anim(),
+                    }}
                     disableGutters={!largeScreen}
                   />
                 );
@@ -245,7 +254,6 @@ const Credits = () => {
           </Typography>
         </Container>
       </Paper>
-      <div>&nbsp;</div>
     </>
   );
 };
