@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { connect } from "react-redux";
 
+import { useTheme } from "@material-ui/styles";
+
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 import useAnimEngine from "Hooks/AnimEngine";
 
@@ -57,6 +60,7 @@ const FavouritesPage = ({
   removeFavourite,
 }) => {
   const history = useHistory();
+  const theme = useTheme();
 
   const [favouritesMode, setFavouritesMode] = React.useState(
     favouritesControlModes.DEFAULT
@@ -128,35 +132,55 @@ const FavouritesPage = ({
 
   return (
     <Grid container style={{ height: "100%" }} direction="column">
-      <PokemonFavouritesControls
-        toggleSwitchMode={() => setFavouritesMode(toggleSwitchMode)}
-        toggleDeleteMode={() => setFavouritesMode(toggleDeleteMode)}
-        {...{
-          anim: buttonsAnim,
-          displayContent: displayControls,
-          inDefaultMode,
-          inSwitchMode,
-          inDeleteMode,
-          reorderFavourites,
-          cancelReorderFavourites,
-        }}
-      />
-      <PokemonFavouritesList
-        {...{
-          favourites,
-          moveFavourite,
-          removeFavourite,
-          reorderFavourites,
-          anim: favListAnim,
-          displayContent: displayList,
-          inDefaultMode,
-          inSwitchMode,
-          isFavouriteSelected,
-          handleSelectFavourite,
-          handleSelectNone,
-          handleViewFavourite,
-        }}
-      />
+      {storedFavourites.length > 0 ? (
+        <>
+          <PokemonFavouritesControls
+            toggleSwitchMode={() => setFavouritesMode(toggleSwitchMode)}
+            toggleDeleteMode={() => setFavouritesMode(toggleDeleteMode)}
+            {...{
+              anim: buttonsAnim,
+              displayContent: displayControls,
+              inDefaultMode,
+              inSwitchMode,
+              inDeleteMode,
+              reorderFavourites,
+              cancelReorderFavourites,
+            }}
+          />
+
+          <PokemonFavouritesList
+            {...{
+              favourites,
+              moveFavourite,
+              removeFavourite,
+              reorderFavourites,
+              anim: favListAnim,
+              displayContent: displayList,
+              inDefaultMode,
+              inSwitchMode,
+              isFavouriteSelected,
+              handleSelectFavourite,
+              handleSelectNone,
+              handleViewFavourite,
+            }}
+          />
+        </>
+      ) : (
+        <div
+          style={{
+            textAlign: "center",
+            color: theme.palette.text.disabled,
+            marginTop: "5vh",
+          }}
+        >
+          <Typography color="textSecondary" variant="h5" gutterBottom>
+            No favourites
+          </Typography>
+          <Typography variant="caption">
+            Set searched Pokémon as your favourites to see them here!
+          </Typography>
+        </div>
+      )}
     </Grid>
   );
 };
