@@ -1,21 +1,21 @@
 {
   "files": {
     "main.css": "/PokemonDex/static/css/main.661e80df.chunk.css",
-    "main.js": "/PokemonDex/static/js/main.6a28ea24.chunk.js",
-    "main.js.map": "/PokemonDex/static/js/main.6a28ea24.chunk.js.map",
+    "main.js": "/PokemonDex/static/js/main.c42eecb0.chunk.js",
+    "main.js.map": "/PokemonDex/static/js/main.c42eecb0.chunk.js.map",
     "runtime-main.js": "/PokemonDex/static/js/runtime-main.fb4119e0.js",
     "runtime-main.js.map": "/PokemonDex/static/js/runtime-main.fb4119e0.js.map",
     "static/css/2.f0f7dc4d.chunk.css": "/PokemonDex/static/css/2.f0f7dc4d.chunk.css",
-    "static/js/2.ca5c48d6.chunk.js": "/PokemonDex/static/js/2.ca5c48d6.chunk.js",
-    "static/js/2.ca5c48d6.chunk.js.map": "/PokemonDex/static/js/2.ca5c48d6.chunk.js.map",
+    "static/js/2.f00ac5df.chunk.js": "/PokemonDex/static/js/2.f00ac5df.chunk.js",
+    "static/js/2.f00ac5df.chunk.js.map": "/PokemonDex/static/js/2.f00ac5df.chunk.js.map",
     "static/js/3.25fc664f.chunk.js": "/PokemonDex/static/js/3.25fc664f.chunk.js",
     "static/js/3.25fc664f.chunk.js.map": "/PokemonDex/static/js/3.25fc664f.chunk.js.map",
     "index.html": "/PokemonDex/index.html",
-    "precache-manifest.382acb64e696d42a5e4b8dcc94bb1e7b.js": "/PokemonDex/precache-manifest.382acb64e696d42a5e4b8dcc94bb1e7b.js",
+    "precache-manifest.93380433c18e8ddba4740865a4959205.js": "/PokemonDex/precache-manifest.93380433c18e8ddba4740865a4959205.js",
     "service-worker.js": "/PokemonDex/service-worker.js",
     "static/css/2.f0f7dc4d.chunk.css.map": "/PokemonDex/static/css/2.f0f7dc4d.chunk.css.map",
     "static/css/main.661e80df.chunk.css.map": "/PokemonDex/static/css/main.661e80df.chunk.css.map",
-    "static/js/2.ca5c48d6.chunk.js.LICENSE.txt": "/PokemonDex/static/js/2.ca5c48d6.chunk.js.LICENSE.txt",
+    "static/js/2.f00ac5df.chunk.js.LICENSE.txt": "/PokemonDex/static/js/2.f00ac5df.chunk.js.LICENSE.txt",
     "static/js/3.25fc664f.chunk.js.LICENSE.txt": "/PokemonDex/static/js/3.25fc664f.chunk.js.LICENSE.txt",
     "static/media/PokeApi.png": "/PokemonDex/static/media/PokeApi.16319b89.png",
     "static/media/React-icon.png": "/PokemonDex/static/media/React-icon.37fe8322.png",
@@ -40,8 +40,8 @@
   "entrypoints": [
     "static/js/runtime-main.fb4119e0.js",
     "static/css/2.f0f7dc4d.chunk.css",
-    "static/js/2.ca5c48d6.chunk.js",
+    "static/js/2.f00ac5df.chunk.js",
     "static/css/main.661e80df.chunk.css",
-    "static/js/main.6a28ea24.chunk.js"
+    "static/js/main.c42eecb0.chunk.js"
   ]
 }
