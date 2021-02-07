@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/PokemonDex/static/css/main.661e80df.chunk.css",
-    "main.js": "/PokemonDex/static/js/main.0313700b.chunk.js",
-    "main.js.map": "/PokemonDex/static/js/main.0313700b.chunk.js.map",
-    "runtime-main.js": "/PokemonDex/static/js/runtime-main.f494d80d.js",
-    "runtime-main.js.map": "/PokemonDex/static/js/runtime-main.f494d80d.js.map",
+    "main.js": "/PokemonDex/static/js/main.bd7dc886.chunk.js",
+    "main.js.map": "/PokemonDex/static/js/main.bd7dc886.chunk.js.map",
+    "runtime-main.js": "/PokemonDex/static/js/runtime-main.a8ba6787.js",
+    "runtime-main.js.map": "/PokemonDex/static/js/runtime-main.a8ba6787.js.map",
     "static/css/2.f0f7dc4d.chunk.css": "/PokemonDex/static/css/2.f0f7dc4d.chunk.css",
-    "static/js/2.4f45df11.chunk.js": "/PokemonDex/static/js/2.4f45df11.chunk.js",
-    "static/js/2.4f45df11.chunk.js.map": "/PokemonDex/static/js/2.4f45df11.chunk.js.map",
-    "static/js/3.6b181d33.chunk.js": "/PokemonDex/static/js/3.6b181d33.chunk.js",
-    "static/js/3.6b181d33.chunk.js.map": "/PokemonDex/static/js/3.6b181d33.chunk.js.map",
+    "static/js/2.a0aad688.chunk.js": "/PokemonDex/static/js/2.a0aad688.chunk.js",
+    "static/js/2.a0aad688.chunk.js.map": "/PokemonDex/static/js/2.a0aad688.chunk.js.map",
+    "static/js/3.b24d2d3b.chunk.js": "/PokemonDex/static/js/3.b24d2d3b.chunk.js",
+    "static/js/3.b24d2d3b.chunk.js.map": "/PokemonDex/static/js/3.b24d2d3b.chunk.js.map",
     "index.html": "/PokemonDex/index.html",
-    "precache-manifest.a997f3577a382355c69c903699d7475e.js": "/PokemonDex/precache-manifest.a997f3577a382355c69c903699d7475e.js",
+    "precache-manifest.7bb336c35e57baac2811ea0fdda1e71b.js": "/PokemonDex/precache-manifest.7bb336c35e57baac2811ea0fdda1e71b.js",
     "service-worker.js": "/PokemonDex/service-worker.js",
     "static/css/2.f0f7dc4d.chunk.css.map": "/PokemonDex/static/css/2.f0f7dc4d.chunk.css.map",
     "static/css/main.661e80df.chunk.css.map": "/PokemonDex/static/css/main.661e80df.chunk.css.map",
-    "static/js/2.4f45df11.chunk.js.LICENSE.txt": "/PokemonDex/static/js/2.4f45df11.chunk.js.LICENSE.txt",
-    "static/js/3.6b181d33.chunk.js.LICENSE.txt": "/PokemonDex/static/js/3.6b181d33.chunk.js.LICENSE.txt",
+    "static/js/2.a0aad688.chunk.js.LICENSE.txt": "/PokemonDex/static/js/2.a0aad688.chunk.js.LICENSE.txt",
+    "static/js/3.b24d2d3b.chunk.js.LICENSE.txt": "/PokemonDex/static/js/3.b24d2d3b.chunk.js.LICENSE.txt",
     "static/media/PokeApi.png": "/PokemonDex/static/media/PokeApi.16319b89.png",
     "static/media/React-icon.png": "/PokemonDex/static/media/React-icon.37fe8322.png",
     "static/media/Visual_Studio_Code_1.35_icon.png": "/PokemonDex/static/media/Visual_Studio_Code_1.35_icon.97b00882.png",
@@ -38,10 +38,10 @@
     "static/media/viewMode.mp3": "/PokemonDex/static/media/viewMode.4ebcefeb.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.f494d80d.js",
+    "static/js/runtime-main.a8ba6787.js",
     "static/css/2.f0f7dc4d.chunk.css",
-    "static/js/2.4f45df11.chunk.js",
+    "static/js/2.a0aad688.chunk.js",
     "static/css/main.661e80df.chunk.css",
-    "static/js/main.0313700b.chunk.js"
+    "static/js/main.bd7dc886.chunk.js"
   ]
 }
