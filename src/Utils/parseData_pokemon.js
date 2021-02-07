@@ -64,6 +64,7 @@ const parseData_Pokemon = (
       name: startCase(pokemonData.name),
       flavorText: SpeciesFlavorText,
       genus: PikachuGenus[0].genus,
+      gender: pokemonData.gender_rate,
     },
     evolutions: pokemonEvolutionsData.map((evolPkmn) => ({
       id: evolPkmn.id,
