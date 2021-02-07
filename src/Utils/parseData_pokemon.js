@@ -1,4 +1,7 @@
 import pick from "lodash/pick";
+import get from "lodash/get";
+import last from "lodash/last";
+import isEmpty from "lodash/isEmpty";
 import startCase from "lodash/startCase";
 
 const statNameMap = {
@@ -10,16 +13,23 @@ const statNameMap = {
   "special-defense": [5, "Special Defense"],
 };
 
+const extractVersionNumber = ({ version: ver }) =>
+  parseInt(last(ver.url.split("/"))) || 0;
+
 const parseData_Pokemon = (
   pokemonData,
   varietyData,
   pokemonEvolutionsData,
   pokemonMovesData
 ) => {
-  const SpeciesFlavorText = pokemonData.flavor_text_entries.filter(
-    (entry) =>
-      entry.language.name === "en" && entry.version.name === "alpha-sapphire"
-  )[0].flavor_text;
+  const SpeciesVersions = get(pokemonData, "flavor_text_entries", []).filter(
+    (entry) => entry.language.name === "en" && !isEmpty(entry.flavor_text)
+  );
+  const SpeciesFlavorText = last(
+    SpeciesVersions.sort(
+      (a, b) => extractVersionNumber(b) - extractVersionNumber(a)
+    )
+  ).flavor_text;
 
   const PikachuGenus = pokemonData.genera.filter(
     (entry) => entry.language.name === "en"
